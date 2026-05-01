@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">CBBS mark</title>
+  <desc id="desc">A geometric CBBS public site mark with connected signal nodes.</desc>
+  <rect width="512" height="512" rx="64" fill="#0d1b2a"/>
+  <path d="M128 318c52 58 129 73 205 33 33-18 58-43 76-75" fill="none" stroke="#f2cc8f" stroke-width="26" stroke-linecap="round"/>
+  <path d="M106 244c66-72 168-92 258-48 22 11 42 25 60 43" fill="none" stroke="#3aafa9" stroke-width="26" stroke-linecap="round"/>
+  <circle cx="128" cy="318" r="34" fill="#f4f7f5"/>
+  <circle cx="256" cy="168" r="34" fill="#f4f7f5"/>
+  <circle cx="384" cy="316" r="34" fill="#f4f7f5"/>
+  <circle cx="128" cy="318" r="14" fill="#3aafa9"/>
+  <circle cx="256" cy="168" r="14" fill="#e07a5f"/>
+  <circle cx="384" cy="316" r="14" fill="#f2cc8f"/>
+  <text x="256" y="424" fill="#f4f7f5" font-family="Arial, sans-serif" font-size="64" font-weight="700" text-anchor="middle">CBBS</text>
+</svg>
+
