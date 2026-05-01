@@ -6,10 +6,9 @@ import { readdirSync, statSync } from 'node:fs';
 const root = fileURLToPath(new URL('..', import.meta.url));
 const contentRoot = join(root, 'src', 'content');
 const sourcesPath = join(root, 'docs', 'verified-sources.md');
-const privateRepoUrls = [
-  'github.com/cyberpivots/Heltec_Wifi_Lora32_V2',
-  'github.com/cyberpivots/ClaRTK-MeshBBS'
-];
+const publicSafetyPaths = [sourcesPath, join(root, 'src', 'data', 'cbbs-assets.json')];
+const privateDevelopmentReferencePattern =
+  /github\.com\/cyberpivots\/(?!GH_CBBS_PAGE(?:[\s/#?)]|$))|cyberpivots\/[^`\s]+:/i;
 const productContentPattern = /src\/content\/(?:systems|use-cases|workflows|media)\//;
 const allowedTruthStates = new Set([
   'current',
@@ -105,10 +104,8 @@ for (const file of walk(contentRoot)) {
   const data = parseFrontmatter(text);
   const displayPath = relative(root, file);
 
-  for (const privateRepoUrl of privateRepoUrls) {
-    if (text.includes(privateRepoUrl)) {
-      failures.push(`${displayPath}: content links directly to a private development repository.`);
-    }
+  if (privateDevelopmentReferencePattern.test(text)) {
+    failures.push(`${displayPath}: content references a private development repository or private source path.`);
   }
 
   if (/AKIA[0-9A-Z]{16}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/u.test(text)) {
@@ -145,6 +142,15 @@ for (const file of walk(contentRoot)) {
         }
       }
     }
+  }
+}
+
+for (const file of publicSafetyPaths) {
+  const text = await readFile(file, 'utf8');
+  const displayPath = relative(root, file);
+
+  if (privateDevelopmentReferencePattern.test(text)) {
+    failures.push(`${displayPath}: public source metadata references a private development repository or private source path.`);
   }
 }
 

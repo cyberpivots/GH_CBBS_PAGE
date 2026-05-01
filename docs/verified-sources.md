@@ -62,42 +62,34 @@ This file is the source register for public claims used on the CBBS site. Agents
 
 ### CBBS product source review
 - Status: `approved-public`
-- Scope: Sanitized public claims verified from private CBBS product docs and data files inspected on 2026-05-01.
+- Scope: Sanitized public claims verified from private CBBS product documentation, public-site assets, and public-release review materials inspected on 2026-05-01.
 - Evidence:
-  - `cyberpivots/ClaRTK-MeshBBS:README.md`
-  - `cyberpivots/ClaRTK-MeshBBS:branding/README.md`
-  - `cyberpivots/ClaRTK-MeshBBS:docs/guides/client-installation-overview.md`
-  - `cyberpivots/ClaRTK-MeshBBS:docs/guides/no-code-room-client-guide.md`
-  - `cyberpivots/ClaRTK-MeshBBS:docs/guides/no-code-agriculture-grower-ops-guide.md`
-  - `cyberpivots/ClaRTK-MeshBBS:docs/design/windows-sysop-manager-architecture.md`
-  - `cyberpivots/ClaRTK-MeshBBS:docs/design/gis-geospatial-architecture.md`
-  - `cyberpivots/ClaRTK-MeshBBS:javascript/field/stakeholder-deck/public/assets/data/*.json`
+  - Private CBBS product source review notes retained outside this public repository.
+  - Approved screenshots and brand assets already copied into this repository.
+  - Public-release content entries under `src/content/**`.
 - Notes: This source entry approves the summarized public facts in this site, not raw private source publication.
 
 ### Heltec firmware source review
 - Status: `approved-public`
-- Scope: Sanitized public claims verified from the private Heltec firmware workspace inspected on 2026-05-01.
+- Scope: Sanitized public claims verified from private CBBS field-node firmware review materials inspected on 2026-05-01.
 - Evidence:
-  - `cyberpivots/Heltec_Wifi_Lora32_V2:README.md`
-  - `cyberpivots/Heltec_Wifi_Lora32_V2:firmware/README.md`
-  - `cyberpivots/Heltec_Wifi_Lora32_V2:docs/design/off-grid-bbs-architecture.md`
-  - `cyberpivots/Heltec_Wifi_Lora32_V2:docs/design/hub-spoke-mesh-design.md`
+  - Private field-node source review notes retained outside this public repository.
+  - Approved summarized claims in published `src/content/**` entries.
 - Notes: This source entry approves the summarized public facts in this site, not raw private source publication.
 
 ### CBBS asset source review
 - Status: `approved-public`
-- Scope: Repo-owned logo and screenshot assets imported through `scripts/import-cbbs-assets.mjs`, plus generated P070 display captures from `scripts/generate-p070-screens.mjs`.
+- Scope: Repo-owned logo and screenshot assets imported through `scripts/import-cbbs-assets.mjs`, generated P070 display captures from `scripts/generate-p070-screens.mjs`, and generated social preview artwork from `scripts/generate-social-card.mjs`.
 - Evidence:
   - `src/data/cbbs-assets.json`
   - `scripts/generate-p070-screens.mjs`
-  - `cyberpivots/ClaRTK-MeshBBS:javascript/field/stakeholder-deck/sources.md`
+  - `scripts/generate-social-card.mjs`
+  - Private asset approval notes retained outside this public repository.
 - Notes: Third-party product photos and official vendor screenshots remain excluded unless separately approved.
 
 ## Internal Sources Not Approved For Publication
 
-### Private firmware repository
+### Private development repositories
 - Status: `internal-review`
 - Scope: Private CBBS-related development work.
-- URL: https://github.com/cyberpivots/Heltec_Wifi_Lora32_V2
-- Verified metadata: private repository, default branch `main`, description says it demonstrates microcontroller capability and includes example use cases and programming tools.
-- Notes: Do not publish implementation details, code, issues, screenshots, logs, roadmap items, performance claims, or architecture details from this repository unless the specific fact is copied into an approved public source entry.
+- Notes: Do not publish implementation details, code, issues, screenshots, logs, roadmap items, performance claims, repository names, branch metadata, or private paths unless the specific fact is approved for public release and summarized in an approved public source entry.

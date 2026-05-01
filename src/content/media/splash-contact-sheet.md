@@ -14,7 +14,7 @@ alt: "CBBS P800 splash contact sheet with multiple animation frames in the proje
 caption: "P800 splash contact sheet showing CBBS display branding direction."
 assetType: "contact-sheet"
 assetSourceStatus: "approved-public-prototype"
-sourcePath: "branding/nextion/animations/splash-v1/p800/cbbs-splash-p800-contact-sheet.png"
+sourcePath: "approved-private-source:p800-splash-contact-sheet"
 order: 9
 ---
 

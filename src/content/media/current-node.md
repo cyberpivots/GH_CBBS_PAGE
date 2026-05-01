@@ -14,7 +14,7 @@ alt: "CBBS node console showing local access, board ledger, mesh status, and roo
 caption: "Current node interface for local SoftAP browser clients."
 assetType: "screenshot"
 assetSourceStatus: "approved-public-current"
-sourcePath: "javascript/field/stakeholder-deck/public/assets/img/current-node.png"
+sourcePath: "approved-private-source:current-node-ui"
 order: 1
 ---
 

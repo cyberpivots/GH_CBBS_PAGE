@@ -14,7 +14,7 @@ alt: "CBBS Windows command deck showing command, provisioning, build queue, SD w
 caption: "Current Windows operator shell view with command, provisioning, build, SD writer, operations, and device-lab lanes."
 assetType: "screenshot"
 assetSourceStatus: "approved-public-current"
-sourcePath: "javascript/field/stakeholder-deck/public/assets/img/current-windows-command-deck.png"
+sourcePath: "approved-private-source:current-windows-command-deck"
 order: 3
 ---
 

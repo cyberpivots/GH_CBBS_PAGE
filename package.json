@@ -5,13 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build && pnpm run search:index && pnpm run check:publication && pnpm run check:links",
+    "build": "pnpm run assets:social && astro check && astro build && pnpm run search:index && pnpm run check:publication && pnpm run check:links",
     "preview": "astro preview",
     "check": "astro check && pnpm run check:publication",
     "lint": "pnpm run check:publication",
     "test": "vitest run",
     "test:browser": "playwright test",
     "assets:p070": "node scripts/generate-p070-screens.mjs",
+    "assets:social": "node scripts/generate-social-card.mjs",
     "search:index": "pagefind --site dist",
     "check:publication": "node scripts/check-publication.mjs",
     "check:links": "node scripts/check-links.mjs"

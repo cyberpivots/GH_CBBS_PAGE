@@ -14,7 +14,7 @@ alt: "CBBS Windows Device Lab showing device workflow panels in the operator wor
 caption: "Current CBBS Device Lab lane for device workflow review."
 assetType: "screenshot"
 assetSourceStatus: "approved-public-current"
-sourcePath: "javascript/field/stakeholder-deck/public/assets/img/current-windows-device-lab.png"
+sourcePath: "approved-private-source:current-windows-device-lab"
 order: 4
 ---
 

@@ -1,10 +1,15 @@
 export const SITE = {
   shortName: 'CBBS',
   title: 'CBBS',
+  defaultTitle: 'CBBS Off-Grid Field Communications',
   description:
-    'Off-grid bulletin board, field-node, operator-console, and display-surface systems for resilient local communications.',
+    'Off-grid bulletin boards, field nodes, operator consoles, and display surfaces for resilient local communications.',
   origin: 'https://cyberpivots.github.io',
-  repositoryBase: '/GH_CBBS_PAGE'
+  repositoryBase: '/GH_CBBS_PAGE',
+  socialImage: '/assets/social/cbbs-social-card.png',
+  socialImageWidth: 1200,
+  socialImageHeight: 630,
+  socialImageAlt: 'CBBS off-grid bulletin boards for field operations.'
 };
 
 export const navigation = [

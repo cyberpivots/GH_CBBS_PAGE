@@ -14,7 +14,7 @@ alt: "CBBS Windows Image Build Queue showing build and media workflow panels."
 caption: "Current Image Build Queue lane for hub image and media preparation workflows."
 assetType: "screenshot"
 assetSourceStatus: "approved-public-current"
-sourcePath: "javascript/field/stakeholder-deck/public/assets/img/current-windows-build-queue.png"
+sourcePath: "approved-private-source:current-windows-build-queue"
 order: 5
 ---
 

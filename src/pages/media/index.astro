@@ -13,6 +13,8 @@ const media = sortByOrderThenTitle(
 );
 const labelForMedia = (entry: (typeof media)[number]) =>
   entry.data.evidenceLabel ?? truthStateLabel(entry.data.truthState);
+const p070Media = media.filter((entry) => entry.data.image.startsWith('p070-'));
+const galleryMedia = media.filter((entry) => !entry.data.image.startsWith('p070-'));
 ---
 
 <BaseLayout
@@ -37,15 +39,46 @@ const labelForMedia = (entry: (typeof media)[number]) =>
   </section>
 
   <section class="section section--first" data-pagefind-filter="section:Media">
+    <div class="shell featured-gallery">
+      <div class="featured-gallery__copy">
+        <p class="eyebrow">Nextion / P070</p>
+        <h2>Controller screens for field-visible status</h2>
+        <p>
+          P070 display captures show the global controller, room-board, and
+          file-control surfaces as clean screen-only views.
+        </p>
+      </div>
+      <div class="display-strip display-strip--featured">
+        {
+          p070Media.map((entry) => (
+            <figure class="media-frame">
+              <MediaImage
+                image={entry.data.image}
+                alt={entry.data.alt}
+                sizes="(max-width: 820px) 92vw, 360px"
+                eager
+              />
+              <figcaption>
+                <span class="media-frame__label">{labelForMedia(entry)}</span>
+                <strong>{entry.data.title}</strong>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--muted" data-pagefind-filter="section:Media">
     <div class="shell media-grid">
       {
-        media.map((entry) => (
+        galleryMedia.map((entry, index) => (
           <figure
-            class="media-card"
+            class:list={['media-card', `media-card--${entry.data.assetType}`]}
             data-pagefind-filter={`status:${labelForMedia(entry)}`}
           >
             <div class="media-card__image">
-              <MediaImage image={entry.data.image} alt={entry.data.alt} eager />
+              <MediaImage image={entry.data.image} alt={entry.data.alt} eager={index < 2} />
             </div>
             <figcaption>
               <span>{labelForMedia(entry)}</span>

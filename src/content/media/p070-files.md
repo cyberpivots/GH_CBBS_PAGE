@@ -9,7 +9,7 @@ truthState: "proof-simulator"
 tags:
   - "p070"
   - "files"
-evidenceLabel: "P070 controller screen"
+evidenceLabel: "Prototype display"
 image: "p070-files.png"
 alt: "P070 file-control screen with local store status, package list, target node, transfer window, and queue ready state."
 caption: "P070 file-control screen with local storage, package list, target node, and transfer queue controls."

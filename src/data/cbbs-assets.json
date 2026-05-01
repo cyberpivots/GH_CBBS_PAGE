@@ -2,102 +2,102 @@
   "assets": [
     {
       "label": "CBBS primary logo",
-      "sourcePath": "branding/logo/svg/logo-primary.svg",
+      "sourcePath": "approved-private-source:brand-primary-logo",
       "destination": "public/assets/brand/logo-primary.svg",
       "status": "approved-public",
       "sha": "ee3485fcaf8b2dfc6b91a461a2a1cd40fe11c151",
       "size": 1548,
-      "sourceRepo": "cyberpivots/ClaRTK-MeshBBS"
+      "sourceRepo": "approved-private-source-review"
     },
     {
       "label": "CBBS reversed logo",
-      "sourcePath": "branding/logo/svg/logo-reversed.svg",
+      "sourcePath": "approved-private-source:brand-reversed-logo",
       "destination": "public/assets/brand/logo-reversed.svg",
       "status": "approved-public",
       "sha": "62386ff1e6ff9811c1317b0e3b33a8384c2f4f84",
       "size": 1060,
-      "sourceRepo": "cyberpivots/ClaRTK-MeshBBS"
+      "sourceRepo": "approved-private-source-review"
     },
     {
       "label": "CBBS icon logo",
-      "sourcePath": "branding/logo/svg/logo-icon.svg",
+      "sourcePath": "approved-private-source:brand-icon-logo",
       "destination": "public/assets/brand/logo-icon.svg",
       "status": "approved-public",
       "sha": "da0f22c7c343bb5640647453a099edf0bf4c0f2e",
       "size": 789,
-      "sourceRepo": "cyberpivots/ClaRTK-MeshBBS"
+      "sourceRepo": "approved-private-source-review"
     },
     {
       "label": "CBBS wordmark",
-      "sourcePath": "branding/logo/svg/logo-wordmark.svg",
+      "sourcePath": "approved-private-source:brand-wordmark",
       "destination": "public/assets/brand/logo-wordmark.svg",
       "status": "approved-public",
       "sha": "a0652794648a4bb1b3bdfedb76b807585871b631",
       "size": 614,
-      "sourceRepo": "cyberpivots/ClaRTK-MeshBBS"
+      "sourceRepo": "approved-private-source-review"
     },
     {
       "label": "Current dashboard screenshot",
-      "sourcePath": "javascript/field/stakeholder-deck/public/assets/img/current-dashboard.png",
+      "sourcePath": "approved-private-source:current-dashboard",
       "destination": "src/assets/cbbs/current-dashboard.png",
       "status": "approved-public-current",
       "sha": "fe4e63d3973c4d6cb9d41ab124fd2cf60002f6f4",
       "size": 290113,
-      "sourceRepo": "cyberpivots/ClaRTK-MeshBBS"
+      "sourceRepo": "approved-private-source-review"
     },
     {
       "label": "Current hub monitor screenshot",
-      "sourcePath": "javascript/field/stakeholder-deck/public/assets/img/current-hub-monitor.png",
+      "sourcePath": "approved-private-source:current-hub-monitor",
       "destination": "src/assets/cbbs/current-hub-monitor.png",
       "status": "approved-public-current",
       "sha": "f8d5b0074e6a005e2897b6d793a847d9923af097",
       "size": 1067431,
-      "sourceRepo": "cyberpivots/ClaRTK-MeshBBS"
+      "sourceRepo": "approved-private-source-review"
     },
     {
       "label": "Current node UI screenshot",
-      "sourcePath": "javascript/field/stakeholder-deck/public/assets/img/current-node.png",
+      "sourcePath": "approved-private-source:current-node-ui",
       "destination": "src/assets/cbbs/current-node.png",
       "status": "approved-public-current",
       "sha": "a1966d845ef63f1bf630a21a807349e43ea91cd4",
       "size": 413185,
-      "sourceRepo": "cyberpivots/ClaRTK-MeshBBS"
+      "sourceRepo": "approved-private-source-review"
     },
     {
       "label": "Current Windows command deck screenshot",
-      "sourcePath": "javascript/field/stakeholder-deck/public/assets/img/current-windows-command-deck.png",
+      "sourcePath": "approved-private-source:current-windows-command-deck",
       "destination": "src/assets/cbbs/current-windows-command-deck.png",
       "status": "approved-public-current",
       "sha": "bd6a61cb1db7ae1fef49dc3f3e52c8b41119b199",
       "size": 341682,
-      "sourceRepo": "cyberpivots/ClaRTK-MeshBBS"
+      "sourceRepo": "approved-private-source-review"
     },
     {
       "label": "Current Windows Device Lab screenshot",
-      "sourcePath": "javascript/field/stakeholder-deck/public/assets/img/current-windows-device-lab.png",
+      "sourcePath": "approved-private-source:current-windows-device-lab",
       "destination": "src/assets/cbbs/current-windows-device-lab.png",
       "status": "approved-public-current",
       "sha": "a923d0140dea2dadb10390f90ed80622de99db34",
       "size": 327371,
-      "sourceRepo": "cyberpivots/ClaRTK-MeshBBS"
+      "sourceRepo": "approved-private-source-review"
     },
     {
       "label": "Current Windows Image Build Queue screenshot",
-      "sourcePath": "javascript/field/stakeholder-deck/public/assets/img/current-windows-build-queue.png",
+      "sourcePath": "approved-private-source:current-windows-build-queue",
       "destination": "src/assets/cbbs/current-windows-build-queue.png",
       "status": "approved-public-current",
       "sha": "82b88dcf53180125c99774ec26ef98e4c0252d69",
       "size": 325908,
-      "sourceRepo": "cyberpivots/ClaRTK-MeshBBS"
+      "sourceRepo": "approved-private-source-review"
     },
     {
       "label": "P800 splash contact sheet",
-      "sourcePath": "branding/nextion/animations/splash-v1/p800/cbbs-splash-p800-contact-sheet.png",
+      "sourcePath": "approved-private-source:p800-splash-contact-sheet",
       "destination": "src/assets/cbbs/cbbs-splash-p800-contact-sheet.png",
       "status": "approved-public-prototype",
       "sha": "c9fd11027d5dbd311fc225028430f980e6c503d9",
       "size": 65761,
-      "sourceRepo": "cyberpivots/ClaRTK-MeshBBS"
+      "sourceRepo": "approved-private-source-review"
     },
     {
       "label": "P070 global controller home generated screen",

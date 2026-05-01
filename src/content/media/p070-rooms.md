@@ -9,7 +9,7 @@ truthState: "proof-simulator"
 tags:
   - "p070"
   - "rooms"
-evidenceLabel: "P070 controller screen"
+evidenceLabel: "Prototype display"
 image: "p070-rooms.png"
 alt: "P070 room-board screen with room list, field operations records, queue counts, acknowledgement, and note controls."
 caption: "P070 room-board screen with room selection, record review, queue status, and local actions."

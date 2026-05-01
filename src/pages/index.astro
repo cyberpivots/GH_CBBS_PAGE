@@ -32,6 +32,23 @@ const useCases = sortByOrderThenTitle(
 >
   <Hero />
 
+  <section class="cta-band">
+    <div class="shell cta-band__inner">
+      <div>
+        <p class="eyebrow">Public brief</p>
+        <h2>Share the current CBBS system story</h2>
+        <p>
+          The system brief brings together current systems, display surfaces,
+          field use cases, and planned capability areas in one concise view.
+        </p>
+      </div>
+      <div class="cta-band__actions" aria-label="Public brief actions">
+        <a class="button button--primary" href={withBase('/resources/system-brief/')}>Read system brief</a>
+        <a class="button button--secondary" href={withBase('/updates/')}>Follow updates</a>
+      </div>
+    </div>
+  </section>
+
   <section class="section">
     <div class="shell section__header">
       <p class="eyebrow">Field communications</p>

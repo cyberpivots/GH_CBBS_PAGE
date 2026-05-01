@@ -14,7 +14,7 @@ alt: "CBBS hub and federation sysop console with coordination map, login, health
 caption: "Current hub monitor view for account review, health, nodes, queue, and message panels."
 assetType: "screenshot"
 assetSourceStatus: "approved-public-current"
-sourcePath: "javascript/field/stakeholder-deck/public/assets/img/current-hub-monitor.png"
+sourcePath: "approved-private-source:current-hub-monitor"
 order: 2
 ---
 

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cbbs-public-v1';
+const CACHE_NAME = 'cbbs-public-v2';
 
 function scoped(path) {
   return new URL(path, self.registration.scope).toString();
@@ -20,6 +20,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS))
   );
+  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {

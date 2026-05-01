@@ -20,6 +20,7 @@ node scripts/import-cbbs-assets.mjs
 pnpm dev
 pnpm check
 pnpm test
+pnpm run assets:social
 pnpm build
 pnpm test:browser
 ```

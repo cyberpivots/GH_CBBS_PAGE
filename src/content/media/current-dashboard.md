@@ -14,7 +14,7 @@ alt: "CBBS live telemetry dashboard with a green-on-dark monitor and operator bo
 caption: "Current dashboard capture showing CBBS live telemetry and operator board panels."
 assetType: "screenshot"
 assetSourceStatus: "approved-public-current"
-sourcePath: "javascript/field/stakeholder-deck/public/assets/img/current-dashboard.png"
+sourcePath: "approved-private-source:current-dashboard"
 order: 0
 ---
 

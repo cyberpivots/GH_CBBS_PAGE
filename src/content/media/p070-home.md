@@ -9,7 +9,7 @@ truthState: "proof-simulator"
 tags:
   - "p070"
   - "display"
-evidenceLabel: "P070 controller screen"
+evidenceLabel: "Prototype display"
 image: "p070-home.png"
 alt: "P070 global controller home screen with hub connection, field status, network map, and quick action buttons."
 caption: "P070 global controller home screen with hub, node, queue, and diagnostics controls."
