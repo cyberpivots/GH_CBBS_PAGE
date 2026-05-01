@@ -1,0 +1,65 @@
+---
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import { SITE } from '../data/site';
+import { absoluteUrl, withBase } from '../lib/paths';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const {
+  title = SITE.title,
+  description = SITE.description,
+  canonicalPath = '/',
+  structuredData
+} = Astro.props;
+
+const pageTitle = title === SITE.title ? title : `${title} | ${SITE.shortName}`;
+const canonicalUrl = absoluteUrl(canonicalPath, SITE.origin);
+const socialImage = absoluteUrl('/assets/brand/logo-primary.svg', SITE.origin);
+const structuredDataJson = structuredData ? JSON.stringify(structuredData) : undefined;
+const serviceWorkerPath = withBase('/sw.js');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" href={withBase('/assets/brand/logo-icon.svg')} type="image/svg+xml" />
+    <link rel="manifest" href={withBase('/site.webmanifest')} />
+    <meta name="theme-color" content="#08111f" />
+    <meta property="og:site_name" content={SITE.title} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImage} />
+    <meta name="twitter:card" content="summary" />
+    <meta data-pagefind-filter="section[content]" content={title} />
+    {structuredDataJson && <script is:inline type="application/ld+json" set:html={structuredDataJson} />}
+    <script is:inline define:vars={{ serviceWorkerPath }}>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register(serviceWorkerPath);
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <SiteHeader />
+    <main id="main">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>

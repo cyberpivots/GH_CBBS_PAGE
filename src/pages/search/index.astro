@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { withBase } from '../../lib/paths';
+---
+
+<BaseLayout
+  title="Search"
+  description="Search CBBS systems, use cases, workflows, media, and updates."
+  canonicalPath="/search/"
+>
+  <link rel="stylesheet" href={withBase('/pagefind/pagefind-component-ui.css')} />
+  <script is:inline type="module" src={withBase('/pagefind/pagefind-component-ui.js')}></script>
+
+  <section class="page-heading shell">
+    <p class="eyebrow">Search</p>
+    <h1>Search CBBS</h1>
+    <p>Systems, use cases, workflows, screenshots, and progress updates.</p>
+  </section>
+
+  <section class="section section--first">
+    <div class="shell search-panel">
+      <pagefind-config show-empty-filters="false"></pagefind-config>
+      <pagefind-searchbox></pagefind-searchbox>
+      <div class="search-facets">
+        <pagefind-filter-pane filter="section"></pagefind-filter-pane>
+        <pagefind-filter-pane filter="status"></pagefind-filter-pane>
+      </div>
+      <pagefind-results></pagefind-results>
+    </div>
+  </section>
+</BaseLayout>

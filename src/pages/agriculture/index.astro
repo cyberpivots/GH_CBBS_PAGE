@@ -1,0 +1,86 @@
+---
+import { getCollection } from 'astro:content';
+import MediaImage from '../../components/MediaImage.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  isPublished,
+  sortByOrderThenTitle,
+  truthStateLabel
+} from '../../lib/content';
+
+const agricultureUseCases = sortByOrderThenTitle(
+  (await getCollection('useCases')).filter(
+    (entry) => isPublished(entry) && entry.data.tags.includes('agriculture')
+  )
+);
+const agricultureWorkflows = sortByOrderThenTitle(
+  (await getCollection('workflows')).filter(
+    (entry) => isPublished(entry) && entry.data.tags.includes('agriculture')
+  )
+);
+const agricultureSystems = sortByOrderThenTitle(
+  (await getCollection('systems')).filter(
+    (entry) => isPublished(entry) && entry.data.tags.includes('agriculture')
+  )
+);
+---
+
+<BaseLayout
+  title="CBBS Agriculture"
+  description="CBBS agriculture positioning for review desks, forms, input costs, observations, and advisory workflows."
+  canonicalPath="/agriculture/"
+  structuredData={{
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: 'CBBS Agriculture',
+    description:
+      'CBBS agriculture positioning for review desks, forms, input costs, observations, and advisory workflows.'
+  }}
+>
+  <section class="page-heading shell">
+    <p class="eyebrow">Agriculture operations</p>
+    <h1>Operator-reviewed agriculture records</h1>
+    <p>
+      CBBS agriculture workflows keep schedules, forms, input costs, observation
+      intake, advisory notes, and approval review available to field operators.
+    </p>
+  </section>
+
+  <section class="section section--first">
+    <div class="shell showcase">
+      <figure class="media-frame">
+        <MediaImage
+          image="current-dashboard.png"
+          alt="CBBS live telemetry dashboard with monitor and operator board panels."
+          sizes="(max-width: 820px) 92vw, 620px"
+        />
+        <figcaption>Current interface</figcaption>
+      </figure>
+      <div>
+        <p class="eyebrow">What is current</p>
+        <h2>Records, review, and advisory context</h2>
+        <p>
+          The agriculture story is strongest when it stays in the verified lane:
+          local records, forms, observations, cost tracking, and operator approval
+          patterns that can ride the same resilient CBBS substrate.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--muted" data-pagefind-filter="section:Agriculture">
+    <div class="shell info-grid">
+      {[...agricultureSystems, ...agricultureUseCases, ...agricultureWorkflows].map((entry) => (
+        <article
+          class="info-card"
+          data-pagefind-filter={`status:${truthStateLabel(entry.data.truthState)}`}
+        >
+          <p class="listing-card__meta">{truthStateLabel(entry.data.truthState)}</p>
+          <h2>{entry.data.title}</h2>
+          <p>{entry.data.summary}</p>
+          {entry.data.boundary && <p class="boundary-note">{entry.data.boundary}</p>}
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/paths';
+---
+
+<BaseLayout title="Not Found" description="CBBS systems, interfaces, workflows, and display captures.">
+  <section class="page-heading shell">
+    <p class="eyebrow">404</p>
+    <h1>Route unavailable</h1>
+    <p>Return to the CBBS overview for systems, interfaces, workflows, and display captures.</p>
+    <a class="button button--primary" href={withBase('/')}>Return home</a>
+  </section>
+</BaseLayout>

@@ -1,0 +1,7 @@
+<svg width="640" height="120" viewBox="0 0 640 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="120" rx="20" fill="#08111F"/>
+  <text x="32" y="48" fill="#7AF0FB" font-family="Inter, sans-serif" font-size="16" letter-spacing="6">CLARTK BBS</text>
+  <path d="M32 74H608" stroke="#173B5B" stroke-width="2"/>
+  <text x="32" y="100" fill="#E7F1FF" font-family="Space Grotesk, Inter, sans-serif" font-size="64" font-weight="800" letter-spacing="4">CBBS</text>
+  <text x="306" y="68" fill="#00B6D8" font-family="JetBrains Mono, monospace" font-size="26">RESILIENT FIELD BBS</text>
+</svg>

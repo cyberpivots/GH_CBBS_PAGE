@@ -1,0 +1,64 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  isPublished,
+  sortByOrderThenTitle,
+  truthStateLabel
+} from '../../lib/content';
+import { withBase } from '../../lib/paths';
+
+const useCases = sortByOrderThenTitle(
+  (await getCollection('useCases')).filter(isPublished)
+);
+---
+
+<BaseLayout
+  title="CBBS Use Cases"
+  description="Use cases for CBBS emergency, rural operations, agriculture, trade, diagnostics, and approval workflows."
+  canonicalPath="/use-cases/"
+  structuredData={{
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'CBBS Use Cases',
+    description:
+      'Use cases for CBBS emergency, rural operations, agriculture, trade, diagnostics, and approval workflows.'
+  }}
+>
+  <section class="page-heading shell">
+    <p class="eyebrow">Use cases</p>
+    <h1>Where CBBS fits</h1>
+    <p>
+      Rural coordination, emergency bulletins, agriculture records, diagnostics,
+      local trade boards, and approved command records all benefit from durable
+      local communication.
+    </p>
+    <a class="text-link" href={withBase('/agriculture/')}>Agriculture review model</a>
+  </section>
+
+  <section class="section section--first" data-pagefind-filter="section:Use Cases">
+    <div class="shell use-case-list">
+      {
+        useCases.map((entry) => (
+          <article
+            class="use-case-row"
+            data-pagefind-filter={`status:${truthStateLabel(entry.data.truthState)}`}
+          >
+            <div>
+              <p class="listing-card__meta">{truthStateLabel(entry.data.truthState)}</p>
+              <h2>{entry.data.title}</h2>
+              <p>{entry.data.summary}</p>
+            </div>
+            <div class="row-detail">
+              <h3>Problem</h3>
+              <p>{entry.data.problem}</p>
+              <h3>CBBS fit</h3>
+              <p>{entry.data.cbbsFit}</p>
+              {entry.data.boundary && <p class="boundary-note">{entry.data.boundary}</p>}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

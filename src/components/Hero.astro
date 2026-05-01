@@ -1,0 +1,33 @@
+---
+import MediaImage from './MediaImage.astro';
+import { withBase } from '../lib/paths';
+---
+
+<section class="hero">
+  <div class="shell hero__inner">
+    <div class="hero__copy">
+      <p class="eyebrow">CBBS / ClaRTK BBS</p>
+      <h1>Off-grid bulletin boards for field operations</h1>
+      <p>
+        Local records, LoRa-backed message paths, field nodes, operator consoles,
+        and dedicated display surfaces for resilient communications beyond normal
+        connectivity.
+      </p>
+      <div class="hero__actions" aria-label="Primary actions">
+        <a class="button button--primary" href={withBase('/systems/')}>Explore systems</a>
+        <a class="button button--secondary" href={withBase('/media/')}>View screenshots</a>
+      </div>
+    </div>
+    <div class="hero__media">
+      <img class="hero__logo" src={withBase('/assets/brand/logo-primary.svg')} alt="CBBS" width="260" height="100" />
+      <MediaImage
+        image="current-node.png"
+        alt="CBBS node console screenshot showing local access, board ledger, access policy, mesh status, and theme policy panels."
+        eager
+        sizes="(max-width: 820px) 92vw, 560px"
+        className="hero__screenshot"
+      />
+      <p class="status-chip">Current interface</p>
+    </div>
+  </div>
+</section>

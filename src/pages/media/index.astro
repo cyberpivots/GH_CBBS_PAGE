@@ -1,0 +1,60 @@
+---
+import { getCollection } from 'astro:content';
+import MediaImage from '../../components/MediaImage.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  isPublished,
+  sortByOrderThenTitle,
+  truthStateLabel
+} from '../../lib/content';
+
+const media = sortByOrderThenTitle(
+  (await getCollection('media')).filter(isPublished)
+);
+const labelForMedia = (entry: (typeof media)[number]) =>
+  entry.data.evidenceLabel ?? truthStateLabel(entry.data.truthState);
+---
+
+<BaseLayout
+  title="CBBS Media"
+  description="CBBS interface screenshots, operator views, and prototype display captures."
+  canonicalPath="/media/"
+  structuredData={{
+    '@context': 'https://schema.org',
+    '@type': 'ImageGallery',
+    name: 'CBBS Media',
+    description:
+      'CBBS interface screenshots, operator views, and prototype display captures.'
+  }}
+>
+  <section class="page-heading shell">
+    <p class="eyebrow">Screenshots and prototype displays</p>
+    <h1>CBBS interface gallery</h1>
+    <p>
+      Hub consoles, node-local rooms, Windows operator lanes, and Nextion/P070
+      controller screens show the CBBS operating surfaces.
+    </p>
+  </section>
+
+  <section class="section section--first" data-pagefind-filter="section:Media">
+    <div class="shell media-grid">
+      {
+        media.map((entry) => (
+          <figure
+            class="media-card"
+            data-pagefind-filter={`status:${labelForMedia(entry)}`}
+          >
+            <div class="media-card__image">
+              <MediaImage image={entry.data.image} alt={entry.data.alt} eager />
+            </div>
+            <figcaption>
+              <span>{labelForMedia(entry)}</span>
+              <strong>{entry.data.title}</strong>
+              {entry.data.caption}
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

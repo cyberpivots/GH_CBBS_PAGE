@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import ListingCard from '../../components/ListingCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { isPublished, slugForEntry, sortUpdatesNewestFirst } from '../../lib/content';
+
+const updates = sortUpdatesNewestFirst(
+  (await getCollection('updates')).filter(isPublished)
+);
+---
+
+<BaseLayout
+  title="Updates"
+  description="CBBS progress across current systems, screenshots, workflows, and planned capabilities."
+  canonicalPath="/updates/"
+>
+  <section class="page-heading shell">
+    <p class="eyebrow">Updates</p>
+    <h1>CBBS progress</h1>
+    <p>Current systems, display surfaces, field workflows, and planned capabilities as the platform evolves.</p>
+  </section>
+
+  <section class="section section--first">
+    <div class="shell listing-grid listing-grid--two">
+      {
+        updates.map((entry) => (
+          <ListingCard
+            href={`/updates/${slugForEntry(entry)}/`}
+            title={entry.data.title}
+            summary={entry.data.summary}
+            meta={entry.data.pubDate.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
+          />
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

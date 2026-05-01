@@ -1,0 +1,132 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  isPublished,
+  sortByOrderThenTitle,
+  truthStateLabel
+} from '../../lib/content';
+
+const workflows = sortByOrderThenTitle(
+  (await getCollection('workflows')).filter(isPublished)
+);
+const scenarioData = workflows.map((entry) => ({
+  title: entry.data.title,
+  state: truthStateLabel(entry.data.truthState),
+  type: entry.data.scenarioType,
+  summary: entry.data.summary,
+  steps: entry.data.steps,
+  boundary: entry.data.boundary
+}));
+const firstScenario = scenarioData[0] ?? {
+  title: 'No workflow published',
+  state: 'Draft',
+  type: 'operator',
+  summary: 'No workflow content is currently published.',
+  steps: ['Add a published workflow entry before deployment.'],
+  boundary: undefined
+};
+---
+
+<BaseLayout
+  title="CBBS Workflows"
+  description="Operator, agriculture, diagnostics, and emergency example workflows for CBBS."
+  canonicalPath="/workflows/"
+  structuredData={{
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'CBBS Workflows',
+    description:
+      'Operator, agriculture, diagnostics, and emergency example workflows for CBBS.'
+  }}
+>
+  <section class="page-heading shell">
+    <p class="eyebrow">Workflows</p>
+    <h1>Scenario-driven explanation</h1>
+    <p>
+      CBBS workflows favor durable records, operator review, local access, and
+      field-visible status across emergency, agriculture, diagnostics, and room
+      client operations.
+    </p>
+  </section>
+
+  <section class="section section--first" data-pagefind-filter="section:Workflows">
+    <div class="shell scenario-explorer" data-scenarios={JSON.stringify(scenarioData)}>
+      <div class="scenario-tabs" role="tablist" aria-label="CBBS workflow scenarios">
+        {
+          scenarioData.map((scenario, index) => (
+            <button
+              type="button"
+              role="tab"
+              aria-selected={index === 0 ? 'true' : 'false'}
+              aria-controls="scenario-panel"
+              data-scenario-index={index}
+            >
+              {scenario.title}
+            </button>
+          ))
+        }
+      </div>
+      <article id="scenario-panel" class="scenario-panel">
+        <p class="listing-card__meta">{firstScenario.state} / {firstScenario.type}</p>
+        <h2>{firstScenario.title}</h2>
+        <p>{firstScenario.summary}</p>
+        <ol>
+          {firstScenario.steps.map((step) => <li>{step}</li>)}
+        </ol>
+        {firstScenario.boundary && <p class="boundary-note">{firstScenario.boundary}</p>}
+      </article>
+    </div>
+  </section>
+
+  <script>
+    type Scenario = {
+      title: string;
+      state: string;
+      type: string;
+      summary: string;
+      steps: string[];
+      boundary?: string;
+    };
+
+    const explorer = document.querySelector('.scenario-explorer');
+    if (explorer instanceof HTMLElement) {
+      const scenarios = JSON.parse(explorer.dataset.scenarios || '[]') as Scenario[];
+      const panel = explorer.querySelector('#scenario-panel');
+      const buttons = Array.from(explorer.querySelectorAll('button[data-scenario-index]'));
+
+      function escapeHtml(value: string) {
+        return value
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#039;');
+      }
+
+      function render(index: number) {
+        const scenario = scenarios[index];
+        if (!scenario || !panel) return;
+
+        buttons.forEach((button, buttonIndex) => {
+          button.setAttribute('aria-selected', buttonIndex === index ? 'true' : 'false');
+        });
+
+        panel.innerHTML = `
+          <p class="listing-card__meta">${escapeHtml(scenario.state)} / ${escapeHtml(scenario.type)}</p>
+          <h2>${escapeHtml(scenario.title)}</h2>
+          <p>${escapeHtml(scenario.summary)}</p>
+          <ol>${scenario.steps.map((step: string) => `<li>${escapeHtml(step)}</li>`).join('')}</ol>
+          ${scenario.boundary ? `<p class="boundary-note">${escapeHtml(scenario.boundary)}</p>` : ''}
+        `;
+      }
+
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const index = Number(button.getAttribute('data-scenario-index'));
+          render(index);
+        });
+      });
+    }
+  </script>
+</BaseLayout>

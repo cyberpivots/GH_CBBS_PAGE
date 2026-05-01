@@ -1,0 +1,69 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  isPublished,
+  sortByOrderThenTitle,
+  truthStateLabel
+} from '../../lib/content';
+
+const systems = sortByOrderThenTitle(
+  (await getCollection('systems')).filter(isPublished)
+);
+---
+
+<BaseLayout
+  title="CBBS Systems"
+  description="Overview of CBBS hub, field node, operator, display, transport, and agriculture system layers."
+  canonicalPath="/systems/"
+  structuredData={{
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: 'CBBS Systems',
+    description:
+      'Overview of CBBS hub, field node, operator, display, transport, and agriculture system layers.'
+  }}
+>
+  <section class="page-heading shell">
+    <p class="eyebrow">System map</p>
+    <h1>CBBS system layers</h1>
+    <p>
+      Hub services, Heltec field nodes, local browser rooms, operator workbench
+      lanes, radio transport, agriculture records, and display surfaces form the
+      CBBS field communications stack.
+    </p>
+  </section>
+
+  <section class="section section--first" data-pagefind-filter="section:Systems">
+    <div class="shell info-grid">
+      {
+        systems.map((entry) => (
+          <article
+            class="info-card"
+            data-pagefind-filter={`status:${truthStateLabel(entry.data.truthState)}`}
+          >
+            <p class="listing-card__meta">{truthStateLabel(entry.data.truthState)}</p>
+            <h2>{entry.data.title}</h2>
+            <p>{entry.data.summary}</p>
+            <dl class="fact-list">
+              <div>
+                <dt>Role</dt>
+                <dd>{entry.data.role}</dd>
+              </div>
+              {entry.data.surface && (
+                <div>
+                  <dt>Surface</dt>
+                  <dd>{entry.data.surface}</dd>
+                </div>
+              )}
+            </dl>
+            <ul class="compact-list">
+              {entry.data.capabilities.map((capability) => <li>{capability}</li>)}
+            </ul>
+            {entry.data.boundary && <p class="boundary-note">{entry.data.boundary}</p>}
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,50 @@
+---
+import { Picture } from 'astro:assets';
+import { withBase } from '../lib/paths';
+
+interface Props {
+  image: string;
+  alt: string;
+  className?: string;
+  eager?: boolean;
+  sizes?: string;
+}
+
+const {
+  image,
+  alt,
+  className,
+  eager = false,
+  sizes = '(max-width: 820px) 92vw, 560px'
+} = Astro.props;
+
+const imageModules = import.meta.glob('../assets/cbbs/*.{png,jpg,jpeg,webp}', {
+  eager: true
+});
+const asset = imageModules[`../assets/cbbs/${image}`] as
+  | { default: ImageMetadata }
+  | undefined;
+---
+
+{
+  asset ? (
+    <Picture
+      src={asset.default}
+      alt={alt}
+      formats={['avif', 'webp']}
+      widths={[480, 720, 960, 1280, 1600]}
+      sizes={sizes}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding={eager ? 'sync' : 'async'}
+      class={className}
+    />
+  ) : (
+    <img
+      src={withBase(`/assets/cbbs/${image}`)}
+      alt={alt}
+      class={className}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding={eager ? 'sync' : 'async'}
+    />
+  )
+}

@@ -1,0 +1,19 @@
+---
+import { withBase } from '../lib/paths';
+
+interface Props {
+  href: string;
+  title: string;
+  summary: string;
+  meta?: string;
+}
+
+const { href, title, summary, meta } = Astro.props;
+---
+
+<article class="listing-card">
+  {meta && <p class="listing-card__meta">{meta}</p>}
+  <h2><a href={withBase(href)}>{title}</a></h2>
+  <p>{summary}</p>
+</article>
+

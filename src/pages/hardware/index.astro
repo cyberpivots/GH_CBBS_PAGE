@@ -1,0 +1,85 @@
+---
+import { getCollection } from 'astro:content';
+import MediaImage from '../../components/MediaImage.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  isPublished,
+  sortByOrderThenTitle,
+  truthStateLabel
+} from '../../lib/content';
+
+const systems = sortByOrderThenTitle(
+  (await getCollection('systems')).filter(isPublished)
+);
+const hardwareSystems = systems.filter((entry) =>
+  ['Heltec V2 field nodes', 'Raspberry Pi hub', 'OLED and P070 display surfaces', 'Agriculture runtime overlays'].includes(
+    entry.data.title
+  )
+);
+---
+
+<BaseLayout
+  title="CBBS Hardware"
+  description="Hardware-facing explanation for the CBBS hub, Heltec field nodes, local displays, and agriculture gateway roles."
+  canonicalPath="/hardware/"
+  structuredData={{
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: 'CBBS Hardware',
+    description:
+      'Hardware-facing explanation for the CBBS hub, Heltec field nodes, local displays, and agriculture gateway roles.'
+  }}
+>
+  <section class="page-heading shell">
+    <p class="eyebrow">Hardware under development</p>
+    <h1>Field hardware surfaces</h1>
+    <p>
+      CBBS hardware combines hub coordination, LoRa field nodes, local browser
+      access, quick-check displays, and guarded agriculture integration for
+      practical field deployment.
+    </p>
+  </section>
+
+  <section class="section section--first">
+    <div class="shell showcase showcase--reverse">
+      <div>
+        <p class="eyebrow">Actual UI capture</p>
+        <h2>Node-local room service</h2>
+        <p>
+          The Heltec room-node story is easiest to understand through the local
+          browser UI: node status, board ledger, access policy, mesh status, and
+          theme policy are visible from a nearby client.
+        </p>
+      </div>
+      <figure class="media-frame media-frame--tall">
+        <MediaImage
+          image="current-node.png"
+          alt="CBBS node console screenshot showing local access, board ledger, access policy, mesh status, and theme policy panels."
+          sizes="(max-width: 820px) 92vw, 640px"
+        />
+        <figcaption>Current interface</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section section--muted" data-pagefind-filter="section:Hardware">
+    <div class="shell info-grid">
+      {
+        hardwareSystems.map((entry) => (
+          <article
+            class="info-card"
+            data-pagefind-filter={`status:${truthStateLabel(entry.data.truthState)}`}
+          >
+            <p class="listing-card__meta">{truthStateLabel(entry.data.truthState)}</p>
+            <h2>{entry.data.title}</h2>
+            <p>{entry.data.summary}</p>
+            <ul class="compact-list">
+              {entry.data.capabilities.map((capability) => <li>{capability}</li>)}
+            </ul>
+            {entry.data.boundary && <p class="boundary-note">{entry.data.boundary}</p>}
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

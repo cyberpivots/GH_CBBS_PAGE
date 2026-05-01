@@ -1,0 +1,22 @@
+<svg width="720" height="220" viewBox="0 0 720 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cbbsGlow" x1="32" y1="20" x2="184" y2="188" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7AF0FB"/>
+      <stop offset="1" stop-color="#00B6D8"/>
+    </linearGradient>
+  </defs>
+  <rect width="720" height="220" rx="28" fill="#08111F"/>
+  <rect x="16" y="16" width="688" height="188" rx="20" stroke="#173B5B" stroke-width="2"/>
+  <circle cx="110" cy="110" r="48" fill="#0C2138" stroke="url(#cbbsGlow)" stroke-width="6"/>
+  <circle cx="110" cy="110" r="12" fill="#7AF0FB"/>
+  <circle cx="60" cy="74" r="10" fill="#00B6D8"/>
+  <circle cx="158" cy="70" r="10" fill="#00B6D8"/>
+  <circle cx="164" cy="146" r="10" fill="#00B6D8"/>
+  <path d="M68 80L101 103M152 76L119 103M156 140L120 116" stroke="#7AF0FB" stroke-width="4" stroke-linecap="round"/>
+  <path d="M58 46C84 18 137 14 169 38" stroke="#00B6D8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M178 50L189 29L200 50" stroke="#00B6D8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="248" y="58" fill="#7AF0FB" font-family="Inter, sans-serif" font-size="18" letter-spacing="4">CLARTK BBS</text>
+  <text x="248" y="146" fill="#E7F1FF" font-family="Space Grotesk, Inter, sans-serif" font-size="88" font-weight="800" letter-spacing="4">CBBS</text>
+  <path d="M612 170H690" stroke="#00B6D8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M612 182H662" stroke="#1D5B8F" stroke-width="4" stroke-linecap="round"/>
+</svg>

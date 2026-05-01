@@ -1,0 +1,38 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { isPublished, sortByOrderThenTitle } from '../../lib/content';
+
+const faqs = sortByOrderThenTitle((await getCollection('faqs')).filter(isPublished));
+const renderedFaqs = await Promise.all(
+  faqs.map(async (entry) => ({
+    entry,
+    content: await render(entry)
+  }))
+);
+---
+
+<BaseLayout
+  title="FAQ"
+  description="Common questions about CBBS systems, workflows, and current project information."
+  canonicalPath="/faq/"
+>
+  <section class="page-heading shell">
+    <p class="eyebrow">FAQ</p>
+    <h1>Common questions</h1>
+    <p>CBBS combines off-grid message records, field nodes, operator consoles, and local display surfaces.</p>
+  </section>
+
+  <section class="section section--first">
+    <div class="shell faq-list">
+      {
+        renderedFaqs.map(({ entry, content: { Content } }) => (
+          <article class="faq-item">
+            <h2>{entry.data.title}</h2>
+            <Content />
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

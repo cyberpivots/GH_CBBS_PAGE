@@ -1,0 +1,32 @@
+{
+  "name": "gh-cbbs-page",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build && pnpm run search:index && pnpm run check:publication && pnpm run check:links",
+    "preview": "astro preview",
+    "check": "astro check && pnpm run check:publication",
+    "lint": "pnpm run check:publication",
+    "test": "vitest run",
+    "test:browser": "playwright test",
+    "assets:p070": "node scripts/generate-p070-screens.mjs",
+    "search:index": "pagefind --site dist",
+    "check:publication": "node scripts/check-publication.mjs",
+    "check:links": "node scripts/check-links.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.2",
+    "astro": "^6.2.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@playwright/test": "^1.59.1",
+    "pagefind": "^1.5.2",
+    "sharp": "^0.34.5",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.5"
+  },
+  "packageManager": "pnpm@10.13.1"
+}

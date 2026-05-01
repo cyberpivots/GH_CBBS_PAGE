@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import ListingCard from '../../components/ListingCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { isPublished, slugForEntry, sortByOrderThenTitle } from '../../lib/content';
+
+const resources = sortByOrderThenTitle(
+  (await getCollection('resources')).filter(isPublished)
+);
+---
+
+<BaseLayout
+  title="Resources"
+  description="CBBS system architecture, local access, transport model, and display workflow briefs."
+  canonicalPath="/resources/"
+>
+  <section class="page-heading shell">
+    <p class="eyebrow">Resources</p>
+    <h1>CBBS technical briefs</h1>
+    <p>Hub services, field nodes, room access, LoRa transport, display controls, and operator workflows.</p>
+  </section>
+
+  <section class="section section--first">
+    <div class="shell listing-grid">
+      {
+        resources.map((entry) => (
+          <ListingCard
+            href={`/resources/${slugForEntry(entry)}/`}
+            title={entry.data.title}
+            summary={entry.data.summary}
+            meta="Field brief"
+          />
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
