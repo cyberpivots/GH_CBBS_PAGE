@@ -1,7 +1,7 @@
 {
-  "name": "CBBS Public Project Site",
+  "name": "CBBS Field Communications",
   "short_name": "CBBS",
-  "description": "Source-backed public information for the CBBS off-grid bulletin board and field-ops mesh.",
+  "description": "Off-grid bulletin board and field-operations mesh for resilient local communications.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
