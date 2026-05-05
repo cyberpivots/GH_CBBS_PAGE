@@ -1,0 +1,29 @@
+schema: cbbs-cad/hardware/v1
+id: raspberry_pi_hub_unselected
+name: Raspberry Pi hub hardware not yet selected
+units: mm
+truth_state: internal review
+measurement_status: blocked
+derivation_state: blocked
+public_release: false
+dimensions: {}
+features:
+  public_role: durable coordinator, archive, scheduler, browser operator surface, and radio-head attachment point
+source_refs:
+  - id: cbbs_pi_hub_public_content
+    title: Public CBBS Raspberry Pi hub content
+    status: approved-public
+    path: src/content/systems/pi-hub.md
+  - id: raspberry_pi_hardware_docs
+    title: Raspberry Pi computer hardware documentation
+    status: approved-public
+    url: https://www.raspberrypi.com/documentation/computers/raspberry-pi.html
+image_refs: []
+source_conflicts: []
+open_measurement_blockers:
+  - Select exact Raspberry Pi model.
+  - Confirm attached HATs, radio heads, storage, cooling, and power path.
+  - Use the selected model's official mechanical drawing or STEP before CAD.
+notes: >
+  Public CBBS content names the hub role but not the exact board model. Do not
+  generate a hub enclosure from this placeholder.

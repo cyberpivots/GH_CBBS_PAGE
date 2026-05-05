@@ -1,0 +1,69 @@
+schema: cbbs-cad/concept/v1
+id: screw_boss_coupon
+name: Screw boss pilot-hole coupon
+units: mm
+truth_state: internal review
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+model_family: screw_boss_coupon
+hardware_refs: []
+parameters:
+  length_mm: 60.0
+  width_mm: 24.0
+  base_thickness_mm: 3.0
+  boss_outer_diameter_mm: 7.0
+  boss_height_mm: 6.0
+  pilot_hole_diameters_mm:
+    - 2.0
+    - 2.4
+    - 2.8
+parameter_sources:
+  length_mm:
+    source_ref: cbbs_test_fixture_concept
+    locator: "Test fixture concept: screw boss and fastener pilot test"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  width_mm:
+    source_ref: cbbs_test_fixture_concept
+    locator: "Test fixture concept: screw boss and fastener pilot test"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  base_thickness_mm:
+    source_ref: cbbs_test_fixture_concept
+    locator: "Test fixture concept: screw boss and fastener pilot test"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  boss_outer_diameter_mm:
+    source_ref: cbbs_test_fixture_concept
+    locator: "Test fixture concept: screw boss and fastener pilot test"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  boss_height_mm:
+    source_ref: cbbs_test_fixture_concept
+    locator: "Test fixture concept: screw boss and fastener pilot test"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  pilot_hole_diameters_mm:
+    source_ref: cbbs_test_fixture_concept
+    locator: "Test fixture concept: screw boss and fastener pilot test"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+outputs:
+  - step
+  - stl
+blocked_full_case: true
+source_refs:
+  - id: cbbs_test_fixture_concept
+    title: Public-safe test fixture concept brief
+    status: internal-review
+    path: 3d-print-work/concepts/test-fixtures.md
+open_measurement_blockers:
+  - Confirm target screw standard and printer/material tolerance.
+notes: Generate before selecting screw boss dimensions for a case.

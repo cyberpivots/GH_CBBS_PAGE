@@ -1,0 +1,42 @@
+schema: cbbs-cad/hardware/v1
+id: taoglas_ti_96_a113_915mhz_antenna
+name: Taoglas TI.96.A113 915 MHz terminal antenna reference
+units: mm
+truth_state: internal review
+measurement_status: source-derived
+derivation_state: source-derived
+public_release: false
+dimensions:
+  body_diameter_mm: 12.7
+  body_length_mm: 203.0
+dimension_sources:
+  body_diameter_mm:
+    source_ref: taoglas_ti_96_product_page
+    locator: "Product page summary: Dimensions 12.7 mm diameter x 203 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: vendor-product-page
+    verification_status: verified
+    notes: Technical table rounds width and height to 13 mm; CAD keepout uses a larger concept clearance.
+  body_length_mm:
+    source_ref: taoglas_ti_96_product_page
+    locator: "Technical specification table: Length 203 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: vendor-product-page
+    verification_status: verified
+features:
+  frequency_range: 900 MHz to 940 MHz
+  connector: SMA(M)
+  mounting_style: Terminal mount hinged connector
+  component_ip_rating: IP67 antenna component rating only
+  enclosure_claim_boundary: The antenna rating does not create any CBBS enclosure rating.
+source_refs:
+  - id: taoglas_ti_96_product_page
+    title: Taoglas TI.96.A113 900-940MHz terminal antenna product page
+    status: approved-public
+    url: https://www.taoglas.com/product/900-940mhz-ip67-terminal-antenna/
+open_measurement_blockers:
+  - Confirm purchased antenna part number and connector polarity.
+  - Confirm SMA bulkhead fit, antenna swing clearance, and RF performance with the actual case material.
+notes: >
+  Source-derived antenna body for RF envelope review only. The CAD concept must
+  keep any enclosure protection class blocked until the full enclosure is tested.

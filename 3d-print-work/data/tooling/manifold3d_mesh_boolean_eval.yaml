@@ -1,0 +1,38 @@
+schema: cbbs-cad/tooling-candidate/v1
+id: manifold3d_mesh_boolean_eval
+name: manifold3d mesh boolean evaluation
+truth_state: internal review
+category: 3d-modeling
+current_repo_status: transitive-dependency
+recommendation: evaluate-sandbox
+dependency_policy: transitive-do-not-import
+automation_safety: local-generated-artifacts
+source_refs:
+  - id: manifold3d_pypi
+    title: manifold3d PyPI project
+    status: approved-public
+    url: https://pypi.org/project/manifold3d/
+  - id: tooling_capability_review
+    title: CBBS 3D modeling tooling capability review
+    status: internal-review
+    path: 3d-print-work/research/3d-modeling-tooling-capability-review.md
+evidence_refs:
+  - source_ref: manifold3d_pypi
+    locator: About Manifold, language bindings, Python PyPI binding, trimesh interoperability note
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: tooling_capability_review
+    locator: Mesh boolean and manifold candidates
+    retrieved_on: 2026-05-05
+    evidence_type: internal-review
+    verification_status: verified
+integration_paths:
+  - Evaluate through trimesh boolean paths only; do not directly import manifold3d until promoted to a direct dependency.
+risks:
+  - Mesh booleans can mask source CAD defects if used to replace BREP modeling.
+blockers:
+  - Requires explicit direct dependency decision before direct import or API use.
+blocked_claims:
+  - Manifold mesh output does not prove CAD design validity, print success, or structural reliability.
+

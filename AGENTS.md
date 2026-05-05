@@ -11,6 +11,9 @@
 - Content style: `docs/agent-guidance/content-style.md`
 - Quality gates: `docs/agent-guidance/quality-gates.md`
 - Deployment notes: `docs/agent-guidance/deployment.md`
+- CAD automation: `docs/agent-guidance/cad-automation.md`
+- Skill inventory: `docs/agent-guidance/skill-inventory.md`
+- Fusion desktop workflow skill: `$cbbs-fusion360-workflows`
 - Current decisions: `docs/decisions/`
 
 ## Development Commands
@@ -20,6 +23,10 @@
 - Run unit tests: `pnpm test`
 - Build production site: `pnpm build`
 - Run browser smoke tests after a build: `pnpm test:browser`
+- Validate CAD specs: `pnpm run cad:validate`
+- Audit CAD evidence: `pnpm run cad:audit`
+- Generate local CAD artifacts: `pnpm run cad:generate`
+- Check Fusion desktop handoff: `pnpm run cad:fusion-status`
 
 ## Engineering Rules
 - Use `rg` for search and inspect existing files before editing.

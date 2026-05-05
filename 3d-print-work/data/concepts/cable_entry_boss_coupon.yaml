@@ -1,0 +1,115 @@
+schema: cbbs-cad/concept/v1
+id: cable_entry_boss_coupon
+name: Cable-entry boss coupon
+units: mm
+truth_state: internal review
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+model_family: cable_entry_boss_coupon
+hardware_refs: []
+parameters:
+  plate_x_mm: 70.0
+  plate_y_mm: 45.0
+  wall_thickness_mm: 4.0
+  corner_radius_mm: 3.0
+  boss_outer_diameter_mm: 24.0
+  boss_height_mm: 8.0
+  cable_clearance_diameter_mm: 8.0
+  rib_width_mm: 4.0
+  rib_height_mm: 4.0
+  rib_length_mm: 18.0
+parameter_sources:
+  plate_x_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: cable-entry boss coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  plate_y_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: cable-entry boss coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  wall_thickness_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: cable-entry boss coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  corner_radius_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: cable-entry boss coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  boss_outer_diameter_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: cable clearance and strain relief checks"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  boss_height_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: cable clearance and strain relief checks"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  cable_clearance_diameter_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: cable clearance and strain relief checks"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  rib_width_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: cable-entry boss reinforcement"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  rib_height_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: cable-entry boss reinforcement"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  rib_length_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: cable-entry boss reinforcement"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+outputs:
+  - step
+  - stl
+blocked_full_case: true
+environmental_context:
+  exposure: outdoor-prototype
+  ruggedization:
+    - cable-entry
+    - reinforced-walls
+  source_refs:
+    - cbbs_outdoor_ruggedization_concept
+    - gore_protective_vents
+    - protolabs_enclosure_guide
+  validation_plan:
+    - Test with actual cable diameter, bend radius, and connector body.
+    - Record cable pull behavior and service access.
+  rating_claims: []
+source_refs:
+  - id: cbbs_outdoor_ruggedization_concept
+    title: Outdoor ruggedization test artifact concept brief
+    status: internal-review
+    path: 3d-print-work/concepts/outdoor-ruggedization.md
+  - id: gore_protective_vents
+    title: GORE screw-in protective vents for outdoor electronic enclosures
+    status: approved-public
+    url: https://www.gore.com/products/screw-protective-vents-outdoor-electronics-enclosures
+  - id: protolabs_enclosure_guide
+    title: Protolabs Network enclosure design for 3D printing guide
+    status: approved-public
+    url: https://www.hubs.com/knowledge-base/enclosure-design-3d-printing-step-step-guide/
+open_measurement_blockers:
+  - Select cable diameter, connector body, bend radius, strain relief, and venting approach.
+notes: Cable-entry boss coupon for clearance and reinforcement checks only.

@@ -1,0 +1,111 @@
+schema: cbbs-cad/concept/v1
+id: p070_rugged_bezel_fit_frame
+name: P070 rugged bezel fit-frame
+units: mm
+truth_state: proof/simulator
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+model_family: p070_rugged_bezel_fit_frame
+hardware_refs:
+  - nextion_nx8048p070_011c
+parameters:
+  border_overhang_mm: 12.0
+  frame_thickness_mm: 4.0
+  active_area_margin_mm: 0.8
+  corner_radius_mm: 4.0
+  raised_lip_width_mm: 3.0
+  raised_lip_height_mm: 1.5
+  mount_hole_clearance_mm: 0.4
+parameter_sources:
+  border_overhang_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: P070 rugged bezel fit frame"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  frame_thickness_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: P070 rugged bezel fit frame"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  active_area_margin_mm:
+    source_ref: cbbs_display_panel_concept
+    locator: "Required features: display opening based on active area and LCD outsize"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+    notes: Margin must be validated against touch edge behavior on physical hardware.
+  corner_radius_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: P070 rugged bezel fit frame"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  raised_lip_width_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: P070 raised lip and bezel protection check"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  raised_lip_height_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: P070 raised lip and bezel protection check"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  mount_hole_clearance_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: P070 rugged bezel fastener clearance"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+outputs:
+  - step
+  - stl
+blocked_full_case: true
+environmental_context:
+  exposure: outdoor-prototype
+  ruggedization:
+    - reinforced-walls
+    - gasket-seat
+    - uv-material-review
+  source_refs:
+    - cbbs_outdoor_ruggedization_concept
+    - nema_enclosure_types
+    - iec_60529_ip_code
+    - prusa_asa_kb
+  validation_plan:
+    - Confirm the exact display variant before any enclosure work.
+    - Test touch-edge clearance, cable clearance, fastener fit, and material behavior.
+  rating_claims: []
+source_refs:
+  - id: nextion_p070_dimension_pdf
+    title: Nextion NX8048P070-011C dimension drawing
+    status: approved-public
+    url: https://cdn.nextion.tech/wp-content/uploads/2022/03/NX8048P070-011C_dimension.pdf
+  - id: cbbs_display_panel_concept
+    title: Public-safe P070 display panel concept brief
+    status: internal-review
+    path: 3d-print-work/concepts/display-panel.md
+  - id: cbbs_outdoor_ruggedization_concept
+    title: Outdoor ruggedization test artifact concept brief
+    status: internal-review
+    path: 3d-print-work/concepts/outdoor-ruggedization.md
+  - id: nema_enclosure_types
+    title: NEMA Enclosure Types overview
+    status: approved-public
+    url: https://www.nema.org/docs/default-source/products-document-library/nema-enclosure-types.pdf
+  - id: iec_60529_ip_code
+    title: IEC 60529 degrees of protection provided by enclosures
+    status: approved-public
+    url: https://webstore.iec.ch/en/publication/2447
+  - id: prusa_asa_kb
+    title: Prusa ASA material knowledge base
+    status: approved-public
+    url: https://help.prusa3d.com/article/asa_1809
+open_measurement_blockers:
+  - Confirm exact display variant, rear component envelope, cable exit, and lens strategy.
+  - Confirm material, fastener standard, mounting surface, and service access.
+notes: Ruggedized P070 fit frame only; not a current production display enclosure.

@@ -1,0 +1,55 @@
+schema: cbbs-cad/concept/v1
+id: heat_set_insert_coupon
+name: Heat-set insert hole coupon
+units: mm
+truth_state: internal review
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+model_family: heat_set_insert_coupon
+hardware_refs: []
+parameters:
+  length_mm: 58.0
+  width_mm: 22.0
+  thickness_mm: 7.0
+  insert_hole_diameters_mm:
+    - 3.8
+    - 4.0
+    - 4.2
+parameter_sources:
+  length_mm:
+    source_ref: cbbs_candidate_standards
+    locator: "Candidate standards: heat-set insert testing held pending measured hardware"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  width_mm:
+    source_ref: cbbs_candidate_standards
+    locator: "Candidate standards: heat-set insert testing held pending measured hardware"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  thickness_mm:
+    source_ref: cbbs_candidate_standards
+    locator: "Candidate standards: heat-set insert testing held pending measured hardware"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  insert_hole_diameters_mm:
+    source_ref: cbbs_candidate_standards
+    locator: "Candidate standards: heat-set insert testing held pending measured hardware"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+outputs:
+  - step
+  - stl
+blocked_full_case: true
+source_refs:
+  - id: cbbs_candidate_standards
+    title: Public-safe candidate hardware standards
+    status: internal-review
+    path: 3d-print-work/bom/candidate-standards.md
+open_measurement_blockers:
+  - Select exact insert model and confirm printer/material shrink behavior.
+notes: Generate as a tolerance coupon, not as a released hardware standard.

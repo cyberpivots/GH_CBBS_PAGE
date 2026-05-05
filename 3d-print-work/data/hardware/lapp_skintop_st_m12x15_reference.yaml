@@ -1,0 +1,85 @@
+schema: cbbs-cad/hardware/v1
+id: lapp_skintop_st_m12x15_reference
+name: LAPP SKINTOP ST-M M12x1.5 cable gland reference
+units: mm
+truth_state: proof/simulator
+measurement_status: source-derived
+derivation_state: source-derived
+public_release: false
+dimensions:
+  thread_nominal_diameter_mm: 12.0
+  thread_pitch_mm: 1.5
+  cable_clamp_min_mm: 3.5
+  cable_clamp_max_mm: 7.0
+  wrench_size_mm: 15.0
+  outer_diameter_a_mm: 16.6
+  overall_length_c_mm: 30.0
+  thread_length_d_mm: 8.0
+dimension_sources:
+  thread_nominal_diameter_mm:
+    source_ref: lapp_skintop_st_m
+    locator: "Article 53111000: M 12 x 1.5"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  thread_pitch_mm:
+    source_ref: lapp_skintop_st_m
+    locator: "Article 53111000: M 12 x 1.5"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  cable_clamp_min_mm:
+    source_ref: lapp_skintop_st_m
+    locator: "Article 53111000: ØF clamping range 3.5-7 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  cable_clamp_max_mm:
+    source_ref: lapp_skintop_st_m
+    locator: "Article 53111000: ØF clamping range 3.5-7 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  wrench_size_mm:
+    source_ref: lapp_skintop_st_m
+    locator: "Article 53111000: SW wrench size 15 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  outer_diameter_a_mm:
+    source_ref: lapp_skintop_st_m_pdf
+    locator: "Data sheet 53111000: ØA = 16.6 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  overall_length_c_mm:
+    source_ref: lapp_skintop_st_m
+    locator: "Article 53111000: overall length C = 30.0 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  thread_length_d_mm:
+    source_ref: lapp_skintop_st_m
+    locator: "Article 53111000: thread length D = 8 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-datasheet
+    verification_status: verified
+features:
+  article_number: "53111000"
+  article_designation: SKINTOP ST-M 12X1.5 RAL 7001 SGY
+  use: Candidate reference for the P070 bottom cable entry.
+source_refs:
+  - id: lapp_skintop_st_m
+    title: LAPP SKINTOP ST-M M12x1.5 product data
+    status: approved-public
+    url: https://products.lappgroup.com/online-catalogue/cable-glands/skintop-cable-glands-plastic-metric/standard/skintop-st-m.html
+  - id: lapp_skintop_st_m_pdf
+    title: LAPP SKINTOP ST-M / STR-M data sheet
+    status: approved-public
+    url: https://media.lappcdn.com/6/657/65786/93b4c95a675e48aca3b44497727af351.pdf
+open_measurement_blockers:
+  - Confirm this candidate gland is actually selected for the enclosure.
+  - Confirm cable outside diameter, bend radius, nut/washer stack, and panel thickness.
+notes: >
+  The CAD model uses a clearance hole and reference cylinder only. It does not
+  model final gland threads or claim an environmental rating.

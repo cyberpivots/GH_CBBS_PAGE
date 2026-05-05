@@ -1,0 +1,50 @@
+schema: cbbs-cad/hardware/v1
+id: bioenno_blf_0612c_lifepo4_pack
+name: Bioenno BLF-0612C 6V 12Ah LiFePO4 battery reference
+units: mm
+truth_state: internal review
+measurement_status: source-derived
+derivation_state: source-derived
+public_release: false
+dimensions:
+  case_length_mm: 115.0
+  case_width_mm: 63.0
+  case_height_mm: 75.0
+dimension_sources:
+  case_length_mm:
+    source_ref: bioenno_blf_0612c_product_page
+    locator: "Key features: Dimensions 4.5 x 2.5 x 3.0 in (115 x 63 x 75 mm)"
+    retrieved_on: 2026-05-03
+    evidence_type: vendor-product-page
+    verification_status: verified
+  case_width_mm:
+    source_ref: bioenno_blf_0612c_product_page
+    locator: "Key features: Dimensions 4.5 x 2.5 x 3.0 in (115 x 63 x 75 mm)"
+    retrieved_on: 2026-05-03
+    evidence_type: vendor-product-page
+    verification_status: verified
+  case_height_mm:
+    source_ref: bioenno_blf_0612c_product_page
+    locator: "Key features: Dimensions 4.5 x 2.5 x 3.0 in (115 x 63 x 75 mm)"
+    retrieved_on: 2026-05-03
+    evidence_type: vendor-product-page
+    verification_status: verified
+features:
+  nominal_voltage: 6V
+  capacity: 12Ah
+  max_continuous_discharge: 12A
+  built_in_protection: PCM listed by vendor
+  charge_connector: DC barrel plug
+  discharge_connector: Anderson Powerpole
+source_refs:
+  - id: bioenno_blf_0612c_product_page
+    title: Bioenno BLF-0612C 6V 12Ah LFP battery product page
+    status: approved-public
+    url: https://www.bioennopower.com/en-gb/collections/6v-lifepo4-batteries/products/copy-of-6v-12ah-lfp-battery-abs-sealed
+open_measurement_blockers:
+  - Confirm delivered pack dimensions, cable exit directions, and connector strain relief.
+  - Measure runtime with real P070 brightness, Heltec transmit duty cycle, regulator load, and enclosure temperature.
+  - Confirm charging workflow and service access without mounting the AC charger inside the enclosure.
+notes: >
+  Selected as the long-run CAD/BMS reference pack for internal review. Runtime
+  remains blocked until measured under the target load and thermal conditions.

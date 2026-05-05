@@ -1,0 +1,39 @@
+[project]
+name = "cbbs-cad"
+version = "0.1.0"
+description = "Public-safe CBBS CAD automation tools for source-derived fit-test artifacts."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "cadquery>=2.5",
+  "pydantic>=2.10",
+  "pyyaml>=6.0",
+  "rich>=13.9",
+  "trimesh[easy]>=4.5",
+  "typer>=0.15",
+]
+
+[project.scripts]
+cbbs-cad = "cbbs_cad.cli:app"
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3",
+  "ruff>=0.8",
+]
+monitor = [
+  "httpx>=0.28",
+  "opencv-python-headless>=4.10",
+  "pillow>=11.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,48 @@
+schema: cbbs-cad/hardware/v1
+id: bioenno_bpc_0602dc_charger_reference
+name: Bioenno BPC-0602DC 6V LiFePO4 external charger reference
+units: mm
+truth_state: internal review
+measurement_status: source-derived
+derivation_state: source-derived
+public_release: false
+dimensions:
+  case_length_mm: 133.35
+  case_width_mm: 57.15
+  case_height_mm: 29.0
+dimension_sources:
+  case_length_mm:
+    source_ref: bioenno_bpc_0602dc_product_page
+    locator: "Key features: Dimensions 133.35 mm x 57.15 mm x 29 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: vendor-product-page
+    verification_status: verified
+  case_width_mm:
+    source_ref: bioenno_bpc_0602dc_product_page
+    locator: "Key features: Dimensions 133.35 mm x 57.15 mm x 29 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: vendor-product-page
+    verification_status: verified
+  case_height_mm:
+    source_ref: bioenno_bpc_0602dc_product_page
+    locator: "Key features: Dimensions 133.35 mm x 57.15 mm x 29 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: vendor-product-page
+    verification_status: verified
+features:
+  model: BPC-0602DC
+  output: 7.3VDC 2A
+  charge_profile: CC/CV
+  compatibility_note: Vendor states use with 6V LiFePO4 batteries that include PCM/BMS.
+  enclosure_use: External charger reference only; not mounted inside the enclosure.
+source_refs:
+  - id: bioenno_bpc_0602dc_product_page
+    title: Bioenno BPC-0602DC 7.3V 2A charger product page
+    status: approved-public
+    url: https://www.bioennopower.com/products/7-3v-2a-ac-to-dc-charger-dc-plug-for-6v-lifepo4-batteries-bpc-0602dc
+open_measurement_blockers:
+  - Confirm the purchased charger model and connector compatibility with the selected battery pack.
+  - Confirm charge procedure, service labeling, and isolation from the enclosure interior.
+notes: >
+  Charger is documented to keep charging outside the enclosure concept. It is a
+  workflow reference, not an installed CAD component.

@@ -1,0 +1,23 @@
+schema: cbbs-cad/hardware/v1
+id: agriculture_gateway_unselected
+name: Agriculture gateway hardware not yet selected
+units: mm
+truth_state: internal review
+measurement_status: blocked
+derivation_state: blocked
+public_release: false
+dimensions: {}
+features:
+  public_role: guarded gateway integration for observations, review, advisory notes, and approval workflows
+source_refs:
+  - id: cbbs_agriculture_public_content
+    title: Public CBBS agriculture runtime content
+    status: approved-public
+    path: src/content/systems/agriculture-runtime.md
+image_refs: []
+source_conflicts: []
+open_measurement_blockers:
+  - Select exact gateway board and interface hardware.
+  - Confirm cable count, cable diameter, power method, mounting target, and environment.
+  - Confirm whether DIN rail, wall, desk, or field-panel mounting is required.
+notes: Do not generate a gateway enclosure from public role descriptions alone.

@@ -1,0 +1,47 @@
+schema: cbbs-cad/tooling-candidate/v1
+id: open3d_mesh_diagnostics_eval
+name: Open3D mesh diagnostics evaluation
+truth_state: internal review
+category: 3d-modeling
+current_repo_status: not-present
+recommendation: evaluate-sandbox
+dependency_policy: candidate-do-not-install
+automation_safety: local-generated-artifacts
+source_refs:
+  - id: open3d_docs
+    title: Open3D documentation
+    status: approved-public
+    url: https://www.open3d.org/docs/release/
+  - id: open3d_mesh_properties
+    title: Open3D mesh tutorial
+    status: approved-public
+    url: https://www.open3d.org/docs/release/tutorial/geometry/mesh.html
+  - id: tooling_capability_review
+    title: CBBS 3D modeling tooling capability review
+    status: internal-review
+    path: 3d-print-work/research/3d-modeling-tooling-capability-review.md
+evidence_refs:
+  - source_ref: open3d_docs
+    locator: Open3D release documentation, geometry and visualization sections
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: open3d_mesh_properties
+    locator: Mesh properties, manifold, self-intersection, watertight, orientable checks
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: tooling_capability_review
+    locator: Mesh diagnostics candidates
+    retrieved_on: 2026-05-05
+    evidence_type: internal-review
+    verification_status: verified
+integration_paths:
+  - Evaluate as an optional diagnostics layer for manifold/self-intersection overlays that complement trimesh.
+risks:
+  - Adds a large dependency surface if adopted directly.
+blockers:
+  - Requires measured benefit over existing trimesh mesh inspection.
+blocked_claims:
+  - Mesh diagnostics do not prove structural strength, print success, or field readiness.
+

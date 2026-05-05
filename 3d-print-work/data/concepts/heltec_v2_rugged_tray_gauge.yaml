@@ -1,0 +1,110 @@
+schema: cbbs-cad/concept/v1
+id: heltec_v2_rugged_tray_gauge
+name: Heltec V2 rugged tray gauge
+units: mm
+truth_state: internal review
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+model_family: heltec_v2_rugged_tray_gauge
+hardware_refs:
+  - heltec_wifi_lora_32_v2
+parameters:
+  board_clearance_mm: 1.5
+  wall_thickness_mm: 3.0
+  floor_thickness_mm: 2.0
+  side_wall_height_mm: 8.0
+  corner_radius_mm: 3.0
+  service_notch_width_mm: 10.0
+  service_notch_depth_mm: 4.0
+parameter_sources:
+  board_clearance_mm:
+    source_ref: cbbs_node_case_concept
+    locator: "Prototype sequence: print open tray with USB, button, and antenna keepouts"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+    notes: Clearance must be replaced with measured connector and component envelopes.
+  wall_thickness_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: Heltec V2 rugged tray gauge"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  floor_thickness_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: Heltec V2 rugged tray gauge"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  side_wall_height_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: Heltec V2 rugged tray gauge"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  corner_radius_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: Heltec V2 rugged tray gauge"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  service_notch_width_mm:
+    source_ref: cbbs_node_case_concept
+    locator: "Required features: USB cable access"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+    notes: Notch is a gauge feature until connector position is physically measured.
+  service_notch_depth_mm:
+    source_ref: cbbs_node_case_concept
+    locator: "Required features: USB cable access"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+    notes: Notch is a gauge feature until connector position is physically measured.
+outputs:
+  - step
+  - stl
+blocked_full_case: true
+environmental_context:
+  exposure: outdoor-prototype
+  ruggedization:
+    - reinforced-walls
+    - cable-entry
+    - uv-material-review
+    - venting-review
+  source_refs:
+    - cbbs_outdoor_ruggedization_concept
+    - cbbs_node_case_concept
+    - prusa_asa_kb
+    - gore_protective_vents
+  validation_plan:
+    - Confirm exact board revision before enclosure work.
+    - Test board-envelope fit, connector clearance, antenna route, thermal behavior, and service access.
+  rating_claims: []
+source_refs:
+  - id: heltec_v2_pdf
+    title: Heltec WiFi LoRa 32 V2 PDF
+    status: approved-public
+    url: https://resource.heltec.cn/download/WiFi_LoRa_32/WiFi%20Lora32.pdf
+  - id: cbbs_node_case_concept
+    title: Public-safe Heltec node case concept brief
+    status: internal-review
+    path: 3d-print-work/concepts/node-case.md
+  - id: cbbs_outdoor_ruggedization_concept
+    title: Outdoor ruggedization test artifact concept brief
+    status: internal-review
+    path: 3d-print-work/concepts/outdoor-ruggedization.md
+  - id: prusa_asa_kb
+    title: Prusa ASA material knowledge base
+    status: approved-public
+    url: https://help.prusa3d.com/article/asa_1809
+  - id: gore_protective_vents
+    title: GORE screw-in protective vents for outdoor electronic enclosures
+    status: approved-public
+    url: https://www.gore.com/products/screw-protective-vents-outdoor-electronics-enclosures
+open_measurement_blockers:
+  - Confirm exact board revision, connector envelope, button locations, antenna route, and headers.
+  - Confirm material, thermal behavior, battery configuration, and field mounting need.
+notes: Open tray gauge from source-derived board envelope; not a full Heltec case.

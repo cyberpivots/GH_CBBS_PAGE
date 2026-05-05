@@ -1,0 +1,143 @@
+schema: cbbs-cad/concept/v1
+id: gasket_flange_coupon
+name: Gasket flange coupon
+units: mm
+truth_state: internal review
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+model_family: gasket_flange_coupon
+hardware_refs: []
+parameters:
+  outer_x_mm: 90.0
+  outer_y_mm: 58.0
+  opening_x_mm: 62.0
+  opening_y_mm: 30.0
+  flange_thickness_mm: 4.0
+  corner_radius_mm: 3.0
+  gasket_groove_outer_x_mm: 80.0
+  gasket_groove_outer_y_mm: 48.0
+  gasket_groove_inner_x_mm: 68.0
+  gasket_groove_inner_y_mm: 36.0
+  gasket_groove_depth_mm: 1.0
+  screw_span_x_mm: 78.0
+  screw_span_y_mm: 46.0
+  screw_clearance_diameter_mm: 3.4
+parameter_sources:
+  outer_x_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: gasket-flange coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  outer_y_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: gasket-flange coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  opening_x_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: gasket-flange coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  opening_y_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: gasket-flange coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  flange_thickness_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: gasket-flange coupon; reinforced flange test"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  corner_radius_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: gasket-flange coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  gasket_groove_outer_x_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: gasket seat geometry"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  gasket_groove_outer_y_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: gasket seat geometry"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  gasket_groove_inner_x_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: gasket seat geometry"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  gasket_groove_inner_y_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: gasket seat geometry"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  gasket_groove_depth_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: gasket seat geometry"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  screw_span_x_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: gasket seat geometry and screw spacing checks"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  screw_span_y_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: gasket seat geometry and screw spacing checks"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  screw_clearance_diameter_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: gasket seat geometry and screw spacing checks"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+outputs:
+  - step
+  - stl
+blocked_full_case: true
+environmental_context:
+  exposure: outdoor-prototype
+  ruggedization:
+    - gasket-seat
+    - reinforced-walls
+  source_refs:
+    - cbbs_outdoor_ruggedization_concept
+    - parker_oring_handbook
+    - protolabs_enclosure_guide
+  validation_plan:
+    - Test with the selected gasket material before reuse in any enclosure.
+    - Record screw torque, compression marks, and service-cycle behavior.
+  rating_claims: []
+source_refs:
+  - id: cbbs_outdoor_ruggedization_concept
+    title: Outdoor ruggedization test artifact concept brief
+    status: internal-review
+    path: 3d-print-work/concepts/outdoor-ruggedization.md
+  - id: parker_oring_handbook
+    title: Parker O-Ring Handbook request/download page
+    status: approved-public
+    url: https://discover.parker.com/Parker-ORing-Handbook-ORD-5700
+  - id: protolabs_enclosure_guide
+    title: Protolabs Network enclosure design for 3D printing guide
+    status: approved-public
+    url: https://www.hubs.com/knowledge-base/enclosure-design-3d-printing-step-step-guide/
+open_measurement_blockers:
+  - Select gasket material, compression target, screw standard, and torque method.
+notes: Gasket flange coupon only; no enclosure protection claim.

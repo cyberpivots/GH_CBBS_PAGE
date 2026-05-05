@@ -1,0 +1,400 @@
+schema: cbbs-cad/concept/v1
+id: p070_heltec_outdoor_controller_enclosure
+name: P070 Heltec outdoor-blocked controller enclosure
+units: mm
+truth_state: internal review
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+model_family: p070_heltec_outdoor_controller_enclosure
+hardware_refs:
+  - nextion_nx8048p070_011c
+  - heltec_wifi_lora_32_v2
+  - taoglas_ti_96_a113_915mhz_antenna
+  - adafruit_sma_ufl_pigtail_851
+  - bioenno_blf_0612c_lifepo4_pack
+  - pololu_s13v30f5_regulator
+  - bioenno_bpc_0602dc_charger_reference
+  - creality_k1_series_asa_profile
+  - jst_xh_4p_reference
+  - lapp_skintop_st_m12x15_reference
+  - m3_pin_clearance_reference
+parameters:
+  heltec_bay_x_mm: 61.0
+  heltec_bay_y_mm: 36.0
+  heltec_bay_z_mm: 18.0
+  regulator_bay_x_mm: 33.0
+  regulator_bay_y_mm: 33.0
+  regulator_bay_z_mm: 18.0
+  battery_service_bay_x_mm: 125.0
+  battery_service_bay_y_mm: 73.0
+  battery_service_bay_z_mm: 90.0
+  antenna_keepout_diameter_mm: 25.0
+  antenna_keepout_sweep_mm: 230.0
+  rear_pod_wall_thickness_mm: 3.2
+  rear_pod_floor_thickness_mm: 3.2
+  rear_pod_corner_radius_mm: 4.0
+  battery_strap_slot_width_mm: 6.0
+  battery_strap_slot_length_mm: 82.0
+  electronics_standoff_height_mm: 4.0
+  electronics_standoff_outer_diameter_mm: 7.0
+  electronics_standoff_hole_diameter_mm: 2.2
+  sma_boss_outer_diameter_mm: 18.0
+  sma_bulkhead_clearance_diameter_mm: 6.5
+  sma_boss_length_mm: 12.0
+  drip_lip_height_mm: 1.2
+  wire_channel_width_mm: 5.0
+  front_contour_rail_width_mm: 1.8
+  front_contour_rail_height_mm: 1.2
+  front_contour_rail_clearance_mm: 3.0
+  rear_pod_macro_rib_width_mm: 1.8
+  rear_pod_macro_rib_height_mm: 1.2
+  rear_pod_macro_rib_pitch_mm: 18.0
+  raised_brand_relief_mm: 1.2
+  raised_brand_text_font_size_mm: 10.0
+  raised_brand_icon_diameter_mm: 14.0
+  surface_feature_edge_chamfer_mm: 0.2
+  display_mount_thread_mode: m3_printed_pilot
+  display_mount_thread_nominal: M3x0.5
+  display_mount_thread_pilot_diameter_mm: 2.6
+parameter_sources:
+  heltec_bay_x_mm:
+    source_ref: p070_heltec_power_rf_findings
+    locator: "CAD keepouts: Heltec bay minimum 61 x 36 x 18 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  heltec_bay_y_mm:
+    source_ref: p070_heltec_power_rf_findings
+    locator: "CAD keepouts: Heltec bay minimum 61 x 36 x 18 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  heltec_bay_z_mm:
+    source_ref: p070_heltec_power_rf_findings
+    locator: "CAD keepouts: Heltec bay minimum 61 x 36 x 18 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  regulator_bay_x_mm:
+    source_ref: p070_heltec_power_rf_findings
+    locator: "CAD keepouts: regulator bay minimum 33 x 33 x 18 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  regulator_bay_y_mm:
+    source_ref: p070_heltec_power_rf_findings
+    locator: "CAD keepouts: regulator bay minimum 33 x 33 x 18 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  regulator_bay_z_mm:
+    source_ref: p070_heltec_power_rf_findings
+    locator: "CAD keepouts: regulator bay minimum 33 x 33 x 18 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  battery_service_bay_x_mm:
+    source_ref: p070_heltec_power_rf_findings
+    locator: "CAD keepouts: battery service bay minimum 125 x 73 x 90 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  battery_service_bay_y_mm:
+    source_ref: p070_heltec_power_rf_findings
+    locator: "CAD keepouts: battery service bay minimum 125 x 73 x 90 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  battery_service_bay_z_mm:
+    source_ref: p070_heltec_power_rf_findings
+    locator: "CAD keepouts: battery service bay minimum 125 x 73 x 90 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  antenna_keepout_diameter_mm:
+    source_ref: p070_heltec_power_rf_findings
+    locator: "CAD keepouts: antenna external sweep 25 mm diameter x 230 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  antenna_keepout_sweep_mm:
+    source_ref: p070_heltec_power_rf_findings
+    locator: "CAD keepouts: antenna external sweep 25 mm diameter x 230 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  rear_pod_wall_thickness_mm:
+    source_ref: p070_hinged_wall_enclosure_spec
+    locator: "Existing P070 hinged enclosure wall_thickness_mm = 3.2"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  rear_pod_floor_thickness_mm:
+    source_ref: p070_hinged_wall_enclosure_spec
+    locator: "Existing P070 hinged enclosure floor_thickness_mm = 3.2"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  rear_pod_corner_radius_mm:
+    source_ref: p070_hinged_wall_enclosure_spec
+    locator: "Existing P070 hinged enclosure corner_radius_mm = 4.0"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  battery_strap_slot_width_mm:
+    source_ref: cbbs_validation_checklists
+    locator: "Assembly checks: retainers do not damage hardware and can be serviced"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  battery_strap_slot_length_mm:
+    source_ref: cbbs_validation_checklists
+    locator: "Assembly checks: retainers do not damage hardware and can be serviced"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  electronics_standoff_height_mm:
+    source_ref: cbbs_validation_checklists
+    locator: "Assembly checks: lid closes without compressing electronics"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  electronics_standoff_outer_diameter_mm:
+    source_ref: cbbs_candidate_bom_standards
+    locator: "Fasteners and inserts rules"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  electronics_standoff_hole_diameter_mm:
+    source_ref: cbbs_candidate_bom_standards
+    locator: "Fasteners and inserts rules"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  sma_boss_outer_diameter_mm:
+    source_ref: adafruit_product_851
+    locator: "Product page identifies panel-mount SMA cable end; printed boss remains a review parameter"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  sma_bulkhead_clearance_diameter_mm:
+    source_ref: adafruit_product_851
+    locator: "Product page identifies panel-mount SMA cable end; exact panel hole must be measured"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  sma_boss_length_mm:
+    source_ref: adafruit_product_851
+    locator: "Product page identifies panel-mount SMA cable end; boss length remains a review parameter"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  drip_lip_height_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts include drip-lip seam coupon and gasket flange coupon"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  wire_channel_width_mm:
+    source_ref: p070_heltec_power_rf_findings
+    locator: "RF pigtail routed with strain relief and physical connector verification blocker"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  front_contour_rail_width_mm:
+    source_ref: p070_futuristic_surface_reinforcement_findings
+    locator: "Selected CAD defaults: front contour rails 1.8 mm wide x 1.2 mm raised"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  front_contour_rail_height_mm:
+    source_ref: p070_futuristic_surface_reinforcement_findings
+    locator: "Selected CAD defaults: front contour rails 1.8 mm wide x 1.2 mm raised"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  front_contour_rail_clearance_mm:
+    source_ref: p070_futuristic_surface_reinforcement_findings
+    locator: "CAD placement rules: keep raised front-door features outside the P070 display window"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  rear_pod_macro_rib_width_mm:
+    source_ref: p070_futuristic_surface_reinforcement_findings
+    locator: "Selected CAD defaults: rear pod macro ribs 1.8 mm wide x 1.2 mm protrusion"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  rear_pod_macro_rib_height_mm:
+    source_ref: p070_futuristic_surface_reinforcement_findings
+    locator: "Selected CAD defaults: rear pod macro ribs 1.8 mm wide x 1.2 mm protrusion"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  rear_pod_macro_rib_pitch_mm:
+    source_ref: p070_futuristic_surface_reinforcement_findings
+    locator: "Selected CAD defaults: rear pod macro ribs 18.0 mm nominal pitch"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  raised_brand_relief_mm:
+    source_ref: p070_futuristic_surface_reinforcement_findings
+    locator: "Selected CAD defaults: raised CBBS text and icon relief 1.2 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  raised_brand_text_font_size_mm:
+    source_ref: p070_futuristic_surface_reinforcement_findings
+    locator: "Selected CAD defaults: raised CBBS text 10.0 mm font size"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  raised_brand_icon_diameter_mm:
+    source_ref: p070_futuristic_surface_reinforcement_findings
+    locator: "Selected CAD defaults: raised brand icon badge 14.0 mm reference diameter"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  surface_feature_edge_chamfer_mm:
+    source_ref: p070_model_review
+    locator: "Review findings: raised features, edges, and service handling require printed checks"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  display_mount_thread_pilot_diameter_mm:
+    source_ref: cbbs_candidate_bom_standards
+    locator: "Fasteners and inserts rules"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+    notes: 2.6 mm is a first-pass printed pilot for M3 thread forming/tapping in ASA bosses.
+outputs:
+  - step
+  - stl
+blocked_full_case: true
+generation_enabled: true
+generation_blockers:
+  - Physical fit, thermal, RF, charging, and service validation remain open before any release case.
+environmental_context:
+  exposure: outdoor-blocked
+  ruggedization:
+    - reinforced-walls
+    - gasket-seat
+    - drip-lip
+    - cable-entry
+    - mounting-tabs
+    - uv-material-review
+    - venting-review
+  source_refs:
+    - p070_heltec_power_rf_findings
+    - cbbs_outdoor_ruggedization_concept
+  validation_plan:
+    - Measure P070, Heltec, battery, regulator, SMA, and cable stack with the actual parts.
+    - Validate RF performance, regulator heat, battery retention, service access, and condensation handling.
+    - Keep charger external and confirm field charging workflow before release review.
+  rating_claims: []
+source_refs:
+  - id: p070_heltec_power_rf_findings
+    title: P070 Heltec outdoor power/RF findings
+    status: internal-review
+    path: 3d-print-work/research/p070-heltec-outdoor-power-rf-findings.md
+  - id: p070_futuristic_surface_reinforcement_findings
+    title: P070 futuristic surface reinforcement findings
+    status: internal-review
+    path: 3d-print-work/research/p070-futuristic-surface-reinforcement-findings.md
+  - id: p070_structural_strengthening_findings
+    title: P070 structural strengthening findings
+    status: internal-review
+    path: 3d-print-work/research/p070-structural-strengthening-findings.md
+  - id: p070_model_review
+    title: P070 Heltec outdoor model review
+    status: internal-review
+    path: 3d-print-work/reviews/p070-heltec-outdoor-model-review.md
+  - id: p070_hinged_wall_enclosure_spec
+    title: Existing P070 hinged wall enclosure CAD spec
+    status: internal-review
+    path: 3d-print-work/data/concepts/p070_hinged_wall_enclosure.yaml
+  - id: cbbs_brand_assets
+    title: Approved CBBS brand asset inventory
+    status: internal-review
+    path: src/data/cbbs-assets.json
+  - id: cbbs_brand_logo_primary_svg
+    title: Approved CBBS primary logo SVG
+    status: internal-review
+    path: public/assets/brand/logo-primary.svg
+  - id: cbbs_outdoor_ruggedization_concept
+    title: Outdoor ruggedization test artifact concept brief
+    status: internal-review
+    path: 3d-print-work/concepts/outdoor-ruggedization.md
+  - id: cbbs_validation_checklists
+    title: CBBS 3D print validation checklists
+    status: internal-review
+    path: 3d-print-work/validation/checklists.md
+  - id: cbbs_candidate_bom_standards
+    title: CBBS candidate BOM standards
+    status: internal-review
+    path: 3d-print-work/bom/candidate-standards.md
+  - id: heltec_v2_pdf
+    title: Heltec WiFi LoRa 32 V2 PDF
+    status: approved-public
+    url: https://resource.heltec.cn/download/WiFi_LoRa_32/WiFi%20Lora32.pdf
+  - id: taoglas_ti_96_product_page
+    title: Taoglas TI.96.A113 900-940MHz terminal antenna product page
+    status: approved-public
+    url: https://www.taoglas.com/product/900-940mhz-ip67-terminal-antenna/
+  - id: adafruit_product_851
+    title: Adafruit SMA to uFL/u.FL/IPX/IPEX RF adapter cable product page
+    status: approved-public
+    url: https://www.adafruit.com/product/851
+  - id: bioenno_blf_0612c_product_page
+    title: Bioenno BLF-0612C 6V 12Ah LFP battery product page
+    status: approved-public
+    url: https://www.bioennopower.com/en-gb/collections/6v-lifepo4-batteries/products/copy-of-6v-12ah-lfp-battery-abs-sealed
+  - id: pololu_s13v30f5_product_page
+    title: Pololu S13V30F5 regulator product page
+    status: approved-public
+    url: https://www.pololu.com/product/4082
+  - id: bioenno_bpc_0602dc_product_page
+    title: Bioenno BPC-0602DC charger product page
+    status: approved-public
+    url: https://www.bioennopower.com/products/7-3v-2a-ac-to-dc-charger-dc-plug-for-6v-lifepo4-batteries-bpc-0602dc
+  - id: prusa_fdm_modeling_guidance
+    title: Prusa modeling with 3D printing in mind
+    status: approved-public
+    url: https://help.prusa3d.com/article/modeling-with-3d-printing-in-mind_164135/
+  - id: prusa_asa_guidance
+    title: Prusa ASA material guidance
+    status: approved-public
+    url: https://help.prusa3d.com/article/asa_1809
+  - id: xometry_fdm_mini_guide
+    title: Xometry FDM mini-guide
+    status: approved-public
+    url: https://www.xometry.com/resources/3d-printing/mini-guide-fdm-3d-printing/
+  - id: efunda_rib_design_guidance
+    title: eFunda plastic rib design guidance
+    status: approved-public
+    url: https://www.efunda.com/designstandards/plastic_design/ribs.cfm
+  - id: gore_screw_in_vents
+    title: Gore screw-in vents for outdoor electronics
+    status: approved-public
+    url: https://www.gore.com/products/screw-protective-vents-outdoor-electronics-enclosures
+  - id: nema_enclosure_types
+    title: NEMA enclosure types
+    status: approved-public
+    url: https://www.nema.org/docs/default-source/products-document-library/nema-enclosure-types.pdf
+  - id: cadquery_text_docs
+    title: CadQuery text API documentation
+    status: approved-public
+    url: https://cadquery.readthedocs.io/en/stable/classreference.html
+open_measurement_blockers:
+  - Confirm exact Heltec V2 board revision, connector population, buttons, OLED location, and LoRa pigtail route.
+  - Confirm battery pack, regulator, charger connector, display load, Heltec transmit duty cycle, heat rise, and cable retention.
+  - Confirm gasket, drip-lip, fastener, venting, material, and service-cycle behavior with printed prototypes.
+  - Confirm RF antenna placement and bulkhead connector compatibility before release review.
+  - Confirm raised CBBS text, contour rails, and macro rib texture print cleanly in the intended material and do not interfere with service handling.
+notes: >
+  Internal review all-in-one P070 controller concept with rear battery pod,
+  Heltec V2 reference board, external antenna keepout, and long-run power
+  reference. It includes prototype raised surface treatment and carries no
+  enclosure protection class or field-readiness claim.

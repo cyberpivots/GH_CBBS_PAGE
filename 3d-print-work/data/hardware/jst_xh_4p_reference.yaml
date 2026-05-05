@@ -1,0 +1,68 @@
+schema: cbbs-cad/hardware/v1
+id: jst_xh_4p_reference
+name: JST XH 4-position connector reference envelope
+units: mm
+truth_state: proof/simulator
+measurement_status: source-derived
+derivation_state: source-derived
+public_release: false
+dimensions:
+  pitch_mm: 2.5
+  xhp_4_housing_a_mm: 7.5
+  xhp_4_housing_b_mm: 10.7
+  xhp_4_housing_c_mm: 12.3
+  b4b_xh_a_header_a_mm: 7.5
+  b4b_xh_a_header_b_mm: 12.4
+dimension_sources:
+  pitch_mm:
+    source_ref: jst_xh_pdf
+    locator: "JST XH connector datasheet: 2.5 mm pitch"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  xhp_4_housing_a_mm:
+    source_ref: jst_xh_pdf
+    locator: "XHP-4 table: A = 7.5 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  xhp_4_housing_b_mm:
+    source_ref: jst_xh_pdf
+    locator: "XHP-4 table: B = 10.7 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  xhp_4_housing_c_mm:
+    source_ref: jst_xh_pdf
+    locator: "XHP-4 table: C = 12.3 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  b4b_xh_a_header_a_mm:
+    source_ref: jst_xh_pdf
+    locator: "B4B-XH-A through-hole shrouded header table: A = 7.5 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  b4b_xh_a_header_b_mm:
+    source_ref: jst_xh_pdf
+    locator: "B4B-XH-A through-hole shrouded header table: B = 12.4 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-datasheet
+    verification_status: verified
+features:
+  connector_family: JST XH
+  circuits: 4
+  use: Reference clearance for the P070 USART harness path.
+source_refs:
+  - id: jst_xh_pdf
+    title: JST XH connector datasheet
+    status: approved-public
+    url: https://www.jst-mfg.com/product/pdf/eng/eXH.pdf
+open_measurement_blockers:
+  - Confirm the actual harness connector orientation and wire exit direction.
+  - Measure the local cable bundle diameter and bend radius.
+notes: >
+  The P070 product page labels the USART port as XH2.54 4P, but JST's XH
+  datasheet uses a 2.5 mm pitch. Treat this as a harness clearance reference
+  until the cable assembly is measured.

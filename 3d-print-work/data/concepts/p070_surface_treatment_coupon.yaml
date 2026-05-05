@@ -1,0 +1,132 @@
+schema: cbbs-cad/concept/v1
+id: p070_surface_treatment_coupon
+name: P070 surface treatment coupon
+units: mm
+truth_state: internal review
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+model_family: p070_surface_treatment_coupon
+hardware_refs:
+  - creality_k1_series_asa_profile
+parameters:
+  coupon_length_mm: 96.0
+  coupon_width_mm: 44.0
+  coupon_thickness_mm: 2.4
+  front_contour_rail_width_mm: 1.8
+  front_contour_rail_height_mm: 1.2
+  rear_pod_macro_rib_width_mm: 1.8
+  rear_pod_macro_rib_height_mm: 1.2
+  rear_pod_macro_rib_pitch_mm: 18.0
+  raised_brand_relief_mm: 1.2
+  raised_brand_text_font_size_mm: 10.0
+  raised_brand_icon_diameter_mm: 14.0
+  surface_feature_edge_chamfer_mm: 0.2
+parameter_sources:
+  coupon_length_mm:
+    source_ref: p070_model_review
+    locator: "Review findings: test raised surface treatment as a coupon before relying on a full enclosure print"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  coupon_width_mm:
+    source_ref: p070_model_review
+    locator: "Review findings: test raised surface treatment as a coupon before relying on a full enclosure print"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  coupon_thickness_mm:
+    source_ref: p070_futuristic_surface_reinforcement_findings
+    locator: "Selected CAD defaults keep macro-scale raised features above a single FDM perimeter"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  front_contour_rail_width_mm:
+    source_ref: p070_futuristic_surface_reinforcement_findings
+    locator: "Selected CAD defaults: front contour rails 1.8 mm wide x 1.2 mm raised"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  front_contour_rail_height_mm:
+    source_ref: p070_futuristic_surface_reinforcement_findings
+    locator: "Selected CAD defaults: front contour rails 1.8 mm wide x 1.2 mm raised"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  rear_pod_macro_rib_width_mm:
+    source_ref: p070_futuristic_surface_reinforcement_findings
+    locator: "Selected CAD defaults: rear pod macro ribs 1.8 mm wide x 1.2 mm protrusion"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  rear_pod_macro_rib_height_mm:
+    source_ref: p070_futuristic_surface_reinforcement_findings
+    locator: "Selected CAD defaults: rear pod macro ribs 1.8 mm wide x 1.2 mm protrusion"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  rear_pod_macro_rib_pitch_mm:
+    source_ref: p070_futuristic_surface_reinforcement_findings
+    locator: "Selected CAD defaults: rear pod macro ribs 18.0 mm nominal pitch"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  raised_brand_relief_mm:
+    source_ref: p070_futuristic_surface_reinforcement_findings
+    locator: "Selected CAD defaults: raised CBBS text and icon relief 1.2 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  raised_brand_text_font_size_mm:
+    source_ref: p070_futuristic_surface_reinforcement_findings
+    locator: "Selected CAD defaults: raised CBBS text 10.0 mm font size"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  raised_brand_icon_diameter_mm:
+    source_ref: p070_futuristic_surface_reinforcement_findings
+    locator: "Selected CAD defaults: raised brand icon badge 14.0 mm reference diameter"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  surface_feature_edge_chamfer_mm:
+    source_ref: p070_model_review
+    locator: "Review findings: raised features, edges, and service handling require printed checks"
+    retrieved_on: 2026-05-03
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+outputs:
+  - step
+  - stl
+blocked_full_case: true
+generation_enabled: true
+generation_blockers:
+  - Surface-treatment coupon must be printed before accepting the full enclosure raised-feature finish.
+source_refs:
+  - id: p070_model_review
+    title: P070 Heltec outdoor model review
+    status: internal-review
+    path: 3d-print-work/reviews/p070-heltec-outdoor-model-review.md
+  - id: p070_futuristic_surface_reinforcement_findings
+    title: P070 futuristic surface reinforcement findings
+    status: internal-review
+    path: 3d-print-work/research/p070-futuristic-surface-reinforcement-findings.md
+  - id: cbbs_brand_assets
+    title: Approved CBBS brand asset inventory
+    status: internal-review
+    path: src/data/cbbs-assets.json
+  - id: cbbs_brand_logo_primary_svg
+    title: Approved CBBS primary logo SVG
+    status: internal-review
+    path: public/assets/brand/logo-primary.svg
+  - id: creality_k1_series_profile
+    title: Creality K1-series ASA print envelope reference
+    status: internal-review
+    path: 3d-print-work/data/hardware/creality_k1_series_asa_profile.yaml
+open_measurement_blockers:
+  - Print the coupon in the intended material and orientation.
+  - Confirm raised text readability, contour rail edge feel, macro-rib cleanup, and slicer support behavior.
+notes: >
+  Internal review coupon for testing the P070 raised CBBS marking, contour
+  rails, and macro rib texture before accepting the surface treatment on the
+  full blocked enclosure concept.

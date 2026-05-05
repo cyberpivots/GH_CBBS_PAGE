@@ -1,0 +1,91 @@
+schema: cbbs-cad/printer/v1
+id: anycubic_kobra2_max
+name: Anycubic Kobra 2 Max large-bed fallback workflow
+units: mm
+truth_state: internal review
+measurement_status: source-derived
+derivation_state: source-derived
+public_release: false
+printer_type: bedslinger-large
+build_volume_kind: fixed
+dimensions:
+  build_x_mm: 420.0
+  build_y_mm: 420.0
+  build_z_mm: 500.0
+dimension_sources:
+  build_x_mm:
+    source_ref: anycubic_kobra2_max_product
+    locator: "Printing volume: 420 x 420 x 500 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: vendor-product-page
+    verification_status: verified
+  build_y_mm:
+    source_ref: anycubic_kobra2_max_product
+    locator: "Printing volume: 420 x 420 x 500 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: vendor-product-page
+    verification_status: verified
+  build_z_mm:
+    source_ref: anycubic_kobra2_max_product
+    locator: "Printing volume: 420 x 420 x 500 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: vendor-product-page
+    verification_status: verified
+default_material: PETG
+material_policies:
+  - material: PLA
+    status: fallback
+    source_refs:
+      - anycubic_kobra2_max_product
+    notes: Large-bed fit-check fallback only.
+  - material: PETG
+    status: fallback
+    source_refs:
+      - anycubic_kobra2_max_product
+      - prusa_petg_guidance
+    notes: Large-bed fit-check fallback only; validate local bed adhesion and cooling.
+  - material: ASA
+    status: blocked
+    source_refs:
+      - anycubic_kobra2_max_product
+      - prusa_asa_guidance
+    notes: >
+      Not the default ASA path because official Kobra 2 Max specs list a
+      260 C nozzle and 90 C bed; use only with explicit blocked/experimental
+      review and measured local workflow.
+capabilities:
+  nozzle_temperature_max_c: 260
+  heatbed_temperature_max_c: 90
+  connectivity:
+    - Anycubic app/cloud
+  video_or_ai_support: not recorded in the official product specs used here
+  gcode_export_default: false
+slicer_guidance:
+  - Use as a large-bed PLA/PETG fallback only after confirming geometry and local profiles.
+  - Do not use as the default ASA target.
+process_notes:
+  - May be useful for large flat fit checks where K1 split packaging is not required.
+  - Generated packages remain STL/STEP-only and internal-review.
+source_refs:
+  - id: anycubic_kobra2_max_product
+    title: Anycubic Kobra 2 Max official product page
+    status: approved-public
+    url: https://store.anycubic.com/collections/fdm-printer/products/kobra-2-max
+  - id: anycubic_kobra2_series_specs
+    title: Anycubic Kobra 2 series specs and features comparison
+    status: approved-public
+    url: https://store.anycubic.com/blogs/3d-printing-guides/anycubic-kobra-2-series-specs-and-features-comparison
+  - id: prusa_asa_guidance
+    title: Prusa ASA material guidance
+    status: approved-public
+    url: https://help.prusa3d.com/article/asa_1809
+  - id: prusa_petg_guidance
+    title: Prusa PETG material guidance
+    status: approved-public
+    url: https://help.prusa3d.com/article/petg_2059
+open_measurement_blockers:
+  - Confirm the local Kobra 2 Max nozzle, bed surface, actual usable margins, and profile limits.
+  - Validate any PETG/PLA fallback package on the local printer before relying on dimensions.
+notes: >
+  Internal-review fallback record. The large bed may fit geometry that is tight
+  on a K1, but ASA is blocked by default until a local process review overrides it.

@@ -1,0 +1,82 @@
+schema: cbbs-cad/printer/v1
+id: creality_cr30_belt
+name: Creality CR-30 belt printer experimental workflow
+units: mm
+truth_state: internal review
+measurement_status: blocked
+derivation_state: blocked
+public_release: false
+printer_type: belt
+build_volume_kind: blocked
+dimensions: {}
+dimension_sources: {}
+default_material: PLA
+material_policies:
+  - material: PLA
+    status: experimental
+    source_refs:
+      - creality_cr30_download
+      - creality_cr30_japan_store
+    notes: Blocked until belt orientation, slicer profile, and usable geometry are measured.
+  - material: PETG
+    status: experimental
+    source_refs:
+      - creality_cr30_download
+      - creality_cr30_japan_store
+    notes: Blocked until belt adhesion, temperature behavior, and profile support are measured.
+  - material: ASA
+    status: blocked
+    source_refs:
+      - prusa_asa_guidance
+    notes: No ASA workflow is accepted for this belt printer record.
+capabilities:
+  belt_printer: true
+  gcode_export_default: false
+  slicer_status: blocked until local belt slicer/profile is verified
+slicer_guidance:
+  - Do not package P070 enclosure prints for CR-30 until belt coordinate mapping and usable volume are measured.
+  - Do not generate belt-printer G-code in v1.
+process_notes:
+  - The CR-30 path is experimental only and currently blocked for P070 packaging.
+source_conflicts:
+  - id: cr30_build_volume_conflict
+    summary: >
+      Current public Creality-related sources conflict: the official download
+      page does not expose a usable spec table, a Creality store page lists a
+      conventional 300 x 300 x 400 mm print size, and a Creality Japan listing
+      records 200 x 170 x infinite mm belt geometry.
+    source_refs:
+      - creality_cr30_download
+      - creality_cr30_ca_store
+      - creality_cr30_japan_store
+    affects_geometry: true
+    resolved: false
+    blocked_claims:
+      - usable CR-30 build volume
+      - belt orientation
+      - P070 compatibility
+source_refs:
+  - id: creality_cr30_download
+    title: Creality CR-30 downloads page
+    status: approved-public
+    url: https://www.creality.com/download/creality-cr-30-3d-printer
+  - id: creality_cr30_ca_store
+    title: Creality Official Store Canada CR-30 product page
+    status: approved-public
+    url: https://store.creality.com/ca/products/cr-30-3d-printer
+  - id: creality_cr30_japan_store
+    title: Creality Japan CR-30 product page
+    status: approved-public
+    url: https://creality-3d.jp/shopdetail/000000000009/
+  - id: prusa_asa_guidance
+    title: Prusa ASA material guidance
+    status: approved-public
+    url: https://help.prusa3d.com/article/asa_1809
+open_measurement_blockers:
+  - Resolve public source conflict against the physical CR-30 machine and manual.
+  - Measure usable belt width, belt coordinate mapping, nozzle approach angle, and safe part height.
+  - Verify slicer support, material limits, bed adhesion, and belt removal behavior.
+  - Confirm whether any P070 part orientation is mechanically sensible before packaging.
+notes: >
+  Experimental blocked record retained to prevent accidental CR-30 package
+  generation from public-source ambiguity.

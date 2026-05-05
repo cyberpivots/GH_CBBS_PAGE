@@ -1,0 +1,47 @@
+schema: cbbs-cad/tooling-candidate/v1
+id: pyvista_vtk_visualization_eval
+name: PyVista and VTK visualization evaluation
+truth_state: internal review
+category: rendering
+current_repo_status: not-present
+recommendation: evaluate-sandbox
+dependency_policy: candidate-do-not-install
+automation_safety: local-generated-artifacts
+source_refs:
+  - id: pyvista_docs
+    title: PyVista documentation
+    status: approved-public
+    url: https://docs.pyvista.org/
+  - id: pyvista_overview
+    title: PyVista project overview
+    status: approved-public
+    url: https://pyvista.org/
+  - id: tooling_capability_review
+    title: CBBS 3D modeling tooling capability review
+    status: internal-review
+    path: 3d-print-work/research/3d-modeling-tooling-capability-review.md
+evidence_refs:
+  - source_ref: pyvista_docs
+    locator: Overview, VTK helper library, mesh data structures and plotting
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: pyvista_overview
+    locator: Python 3.10+, MIT license, mesh analysis, glTF support, image regression ecosystem
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: tooling_capability_review
+    locator: Rendering and diagnostics candidates
+    retrieved_on: 2026-05-05
+    evidence_type: internal-review
+    verification_status: verified
+integration_paths:
+  - Evaluate only in a generated visualization sandbox for mesh overlays or image regression.
+risks:
+  - VTK wheels are large; direct dependency adoption may slow setup.
+blockers:
+  - Direct VTK imports remain blocked unless promoted through a direct dependency decision.
+blocked_claims:
+  - Visualization output is advisory and cannot authorize CAD dimensions or product claims.
+

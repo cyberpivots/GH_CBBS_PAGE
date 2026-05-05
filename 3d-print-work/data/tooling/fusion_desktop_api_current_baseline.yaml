@@ -1,0 +1,48 @@
+schema: cbbs-cad/tooling-candidate/v1
+id: fusion_desktop_api_current_baseline
+name: Autodesk Fusion desktop API current baseline
+truth_state: internal review
+category: fusion360
+current_repo_status: external-workflow
+recommendation: keep-baseline
+dependency_policy: external-tool-no-install
+automation_safety: local-generated-artifacts
+source_refs:
+  - id: fusion_export_execute
+    title: Fusion ExportManager execute method
+    status: approved-public
+    url: https://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/ExportManager_execute.htm
+  - id: fusion_viewport_capture
+    title: Fusion Viewport saveAsImageFile method
+    status: approved-public
+    url: https://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/Viewport_saveAsImageFile.htm
+  - id: tooling_capability_review
+    title: CBBS 3D modeling tooling capability review
+    status: internal-review
+    path: 3d-print-work/research/3d-modeling-tooling-capability-review.md
+evidence_refs:
+  - source_ref: fusion_export_execute
+    locator: Description and parameters
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: fusion_viewport_capture
+    locator: Viewport image capture method
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: tooling_capability_review
+    locator: Fusion-specific recommendations
+    retrieved_on: 2026-05-05
+    evidence_type: internal-review
+    verification_status: verified
+integration_paths:
+  - Keep the local Fusion desktop add-in and generated job JSON workflow as the active Fusion review path.
+  - Keep Fusion logs, exports, snapshots, and renders under 3d-print-work/generated/fusion/.
+risks:
+  - Fusion desktop state can include unsaved user documents; use only guarded commands.
+blockers:
+  - Do not restart, kill, or close unsaved Fusion work without explicit user approval.
+blocked_claims:
+  - Fusion screenshots and renders are internal review assets until separately approved.
+

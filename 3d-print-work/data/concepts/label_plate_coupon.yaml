@@ -1,0 +1,59 @@
+schema: cbbs-cad/concept/v1
+id: label_plate_coupon
+name: Public-safe label plate coupon
+units: mm
+truth_state: internal review
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+model_family: label_plate_coupon
+hardware_refs: []
+parameters:
+  length_mm: 64.0
+  width_mm: 22.0
+  thickness_mm: 1.2
+  corner_hole_diameter_mm: 2.5
+  corner_hole_inset_mm: 5.0
+parameter_sources:
+  length_mm:
+    source_ref: cbbs_publication_policy
+    locator: "Sensitive material and review checklist for public-safe markings"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  width_mm:
+    source_ref: cbbs_publication_policy
+    locator: "Sensitive material and review checklist for public-safe markings"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  thickness_mm:
+    source_ref: cbbs_publication_policy
+    locator: "Sensitive material and review checklist for public-safe markings"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  corner_hole_diameter_mm:
+    source_ref: cbbs_publication_policy
+    locator: "Sensitive material and review checklist for public-safe markings"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  corner_hole_inset_mm:
+    source_ref: cbbs_publication_policy
+    locator: "Sensitive material and review checklist for public-safe markings"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+outputs:
+  - step
+  - stl
+blocked_full_case: true
+source_refs:
+  - id: cbbs_publication_policy
+    title: CBBS publication policy
+    status: approved-public
+    path: docs/agent-guidance/publication-policy.md
+open_measurement_blockers:
+  - Confirm label material, mounting method, and public-safe marking text.
+notes: Label plate is for public-safe prototype markings only.

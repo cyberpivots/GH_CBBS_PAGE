@@ -1,0 +1,48 @@
+schema: cbbs-cad/concept/v1
+id: p070_fit_frame
+name: P070 flat bezel fit-frame
+units: mm
+truth_state: proof/simulator
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+model_family: p070_fit_frame
+hardware_refs:
+  - nextion_nx8048p070_011c
+parameters:
+  frame_thickness_mm: 2.0
+  active_area_margin_mm: 0.6
+parameter_sources:
+  frame_thickness_mm:
+    source_ref: cbbs_display_panel_concept
+    locator: "Prototype sequence: print flat fit frame from official dimensions"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+    notes: Fit-frame thickness is a local prototype parameter.
+  active_area_margin_mm:
+    source_ref: cbbs_display_panel_concept
+    locator: "Required features: display opening based on active area and LCD outsize"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+    notes: Margin must be validated against touch edge behavior on physical hardware.
+outputs:
+  - step
+  - stl
+blocked_full_case: true
+source_refs:
+  - id: nextion_p070_dimension_pdf
+    title: Nextion NX8048P070-011C dimension drawing
+    status: approved-public
+    url: https://cdn.nextion.tech/wp-content/uploads/2022/03/NX8048P070-011C_dimension.pdf
+  - id: cbbs_display_panel_concept
+    title: Public-safe P070 display panel concept brief
+    status: internal-review
+    path: 3d-print-work/concepts/display-panel.md
+open_measurement_blockers:
+  - Confirm exact P070 display variant in hand.
+  - Confirm cable exit direction and rear clearance before enclosure work.
+notes: >
+  Generates a flat fit-frame from official dimensions. It is not a current
+  production display enclosure.

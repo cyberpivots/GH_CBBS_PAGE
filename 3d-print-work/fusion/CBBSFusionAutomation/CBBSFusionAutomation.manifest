@@ -1,0 +1,13 @@
+{
+  "autodeskProduct": "Fusion360",
+  "type": "addin",
+  "author": "CBBS",
+  "description": {
+    "": "Imports CBBS source-derived CAD artifacts, starts local render jobs, and exports review STEP/STL files."
+  },
+  "supportedOS": "windows",
+  "editEnabled": true,
+  "id": "2fa4e407-0637-4568-9647-0d25e4fc7a1f",
+  "version": "0.1.0",
+  "runOnStartup": false
+}

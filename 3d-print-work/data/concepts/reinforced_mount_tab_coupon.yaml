@@ -1,0 +1,124 @@
+schema: cbbs-cad/concept/v1
+id: reinforced_mount_tab_coupon
+name: Reinforced mount-tab coupon
+units: mm
+truth_state: internal review
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+model_family: reinforced_mount_tab_coupon
+hardware_refs: []
+parameters:
+  body_x_mm: 60.0
+  body_y_mm: 36.0
+  tab_x_mm: 22.0
+  tab_y_mm: 26.0
+  base_thickness_mm: 3.0
+  corner_radius_mm: 2.0
+  boss_outer_diameter_mm: 14.0
+  boss_height_mm: 4.0
+  mount_hole_diameter_mm: 5.0
+  rib_width_mm: 3.0
+  rib_height_mm: 4.0
+  rib_length_mm: 20.0
+parameter_sources:
+  body_x_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: reinforced mount-tab coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  body_y_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: reinforced mount-tab coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  tab_x_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: reinforced mount-tab coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  tab_y_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: reinforced mount-tab coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  base_thickness_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: reinforced mount-tab coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  corner_radius_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: reinforced mount-tab coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  boss_outer_diameter_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: reinforced mount-tab coupon; boss and fastener checks"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  boss_height_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: reinforced mount-tab coupon; boss and fastener checks"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  mount_hole_diameter_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: reinforced mount-tab coupon; boss and fastener checks"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  rib_width_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: reinforced mount-tab coupon; ribs and reinforcement"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  rib_height_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: reinforced mount-tab coupon; ribs and reinforcement"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  rib_length_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: reinforced mount-tab coupon; ribs and reinforcement"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+outputs:
+  - step
+  - stl
+blocked_full_case: true
+environmental_context:
+  exposure: outdoor-prototype
+  ruggedization:
+    - mounting-tabs
+    - reinforced-walls
+  source_refs:
+    - cbbs_outdoor_ruggedization_concept
+    - protolabs_enclosure_guide
+  validation_plan:
+    - Test fastener fit and pull behavior on the selected mounting surface.
+    - Record crack initiation, layer split, and repeated service behavior.
+  rating_claims: []
+source_refs:
+  - id: cbbs_outdoor_ruggedization_concept
+    title: Outdoor ruggedization test artifact concept brief
+    status: internal-review
+    path: 3d-print-work/concepts/outdoor-ruggedization.md
+  - id: protolabs_enclosure_guide
+    title: Protolabs Network enclosure design for 3D printing guide
+    status: approved-public
+    url: https://www.hubs.com/knowledge-base/enclosure-design-3d-printing-step-step-guide/
+open_measurement_blockers:
+  - Select mounting surface, fastener family, load target, material, and orientation.
+notes: Reinforced mounting-tab coupon for fastener and rib checks only.

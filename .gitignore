@@ -16,7 +16,17 @@ playwright-report/
 test-results/
 .cache/
 
+# CAD automation output
+3d-print-work/generated/
+3d-print-work/fusion/CBBSFusionAutomation/job_path.txt
+tools/cad/.venv/
+tools/cad/.pytest_cache/
+tools/cad/.ruff_cache/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
 # OS/editor files
 .DS_Store
 Thumbs.db
-

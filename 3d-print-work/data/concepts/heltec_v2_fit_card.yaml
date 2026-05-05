@@ -1,0 +1,55 @@
+schema: cbbs-cad/concept/v1
+id: heltec_v2_fit_card
+name: Heltec V2 board-envelope fit card
+units: mm
+truth_state: internal review
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+model_family: heltec_v2_fit_card
+hardware_refs:
+  - heltec_wifi_lora_32_v2
+parameters:
+  card_thickness_mm: 1.6
+  usb_relief_width_mm: 8.0
+  usb_relief_depth_mm: 3.0
+parameter_sources:
+  card_thickness_mm:
+    source_ref: cbbs_node_case_concept
+    locator: "Prototype sequence: board outline and mount-hole fit card"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+    notes: Fit-card thickness is a conservative local test parameter, not a hardware dimension.
+  usb_relief_width_mm:
+    source_ref: cbbs_node_case_concept
+    locator: "Required features: USB cable access"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+    notes: Relief must be replaced with measured connector clearance before case work.
+  usb_relief_depth_mm:
+    source_ref: cbbs_node_case_concept
+    locator: "Required features: USB cable access"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+    notes: Relief must be replaced with measured connector clearance before case work.
+outputs:
+  - step
+  - stl
+blocked_full_case: true
+source_refs:
+  - id: heltec_v2_pdf
+    title: Heltec WiFi LoRa 32 V2 PDF
+    status: approved-public
+    url: https://resource.heltec.cn/download/WiFi_LoRa_32/WiFi%20Lora32.pdf
+  - id: cbbs_node_case_concept
+    title: Public-safe Heltec node case concept brief
+    status: internal-review
+    path: 3d-print-work/concepts/node-case.md
+open_measurement_blockers:
+  - Confirm exact board revision before any case or tray work.
+  - Confirm connector keepouts and button positions with measured hardware.
+notes: >
+  Generates only a source-derived board-envelope fit card, not a product case.

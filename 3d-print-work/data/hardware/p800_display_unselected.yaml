@@ -1,0 +1,22 @@
+schema: cbbs-cad/hardware/v1
+id: p800_display_unselected
+name: P800 display hardware not yet selected
+units: mm
+truth_state: internal review
+measurement_status: blocked
+derivation_state: blocked
+public_release: false
+dimensions: {}
+features:
+  public_role: display branding direction only
+source_refs:
+  - id: cbbs_p800_public_media_content
+    title: Public CBBS P800 splash contact sheet content
+    status: approved-public
+    path: src/content/media/splash-contact-sheet.md
+image_refs: []
+source_conflicts: []
+open_measurement_blockers:
+  - Select exact P800 display module, if this becomes a hardware target.
+  - Confirm official drawing, cable path, mounting strategy, and public release status.
+notes: Current P800 content is branding direction, not a selected enclosure target.

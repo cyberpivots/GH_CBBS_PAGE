@@ -1,0 +1,147 @@
+schema: cbbs-cad/hardware/v1
+id: nextion_nx8048p070_011c
+name: Nextion NX8048P070-011C display envelope
+units: mm
+truth_state: proof/simulator
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+dimensions:
+  outsize_x_mm: 181.0
+  outsize_y_mm: 108.0
+  lcd_outsize_x_mm: 164.9
+  lcd_outsize_y_mm: 100.0
+  active_area_x_mm: 154.08
+  active_area_y_mm: 85.92
+  mount_hole_span_x_mm: 174.6
+  mount_hole_span_y_mm: 101.6
+  mount_hole_diameter_mm: 3.2
+  pcb_thickness_mm: 1.6
+  front_stack_thickness_mm: 7.6
+dimension_sources:
+  outsize_x_mm:
+    source_ref: nextion_p070_dimension_pdf
+    locator: "NX8048P070-011C drawing page 1: 181.00(OUTSIZE)"
+    retrieved_on: 2026-05-01
+    evidence_type: official-drawing
+    verification_status: verified
+  outsize_y_mm:
+    source_ref: nextion_p070_dimension_pdf
+    locator: "NX8048P070-011C drawing page 1: 108.00(OUTSIZE)"
+    retrieved_on: 2026-05-01
+    evidence_type: official-drawing
+    verification_status: verified
+  lcd_outsize_x_mm:
+    source_ref: nextion_p070_dimension_pdf
+    locator: "NX8048P070-011C drawing page 1: 164.9(LCD OUTSIZE)"
+    retrieved_on: 2026-05-01
+    evidence_type: official-drawing
+    verification_status: verified
+  lcd_outsize_y_mm:
+    source_ref: nextion_p070_dimension_pdf
+    locator: "NX8048P070-011C drawing page 1: 100.00(LCDOUTSIZE)"
+    retrieved_on: 2026-05-01
+    evidence_type: official-drawing
+    verification_status: verified
+  active_area_x_mm:
+    source_ref: nextion_p070_dimension_pdf
+    locator: "NX8048P070-011C drawing page 1: 154.08(LCD AA)"
+    retrieved_on: 2026-05-01
+    evidence_type: official-drawing
+    verification_status: verified
+  active_area_y_mm:
+    source_ref: nextion_p070_dimension_pdf
+    locator: "NX8048P070-011C drawing page 1: 85.92(LCDAA)"
+    retrieved_on: 2026-05-01
+    evidence_type: official-drawing
+    verification_status: verified
+  mount_hole_span_x_mm:
+    source_ref: nextion_p070_dimension_pdf
+    locator: "NX8048P070-011C drawing page 1: 174.60"
+    retrieved_on: 2026-05-01
+    evidence_type: official-drawing
+    verification_status: verified
+  mount_hole_span_y_mm:
+    source_ref: nextion_p070_dimension_pdf
+    locator: "NX8048P070-011C drawing page 1: 101.60"
+    retrieved_on: 2026-05-01
+    evidence_type: official-drawing
+    verification_status: verified
+  mount_hole_diameter_mm:
+    source_ref: nextion_p070_dimension_pdf
+    locator: "NX8048P070-011C drawing page 1: 4-dia 3.20"
+    retrieved_on: 2026-05-01
+    evidence_type: official-drawing
+    verification_status: verified
+  pcb_thickness_mm:
+    source_ref: nextion_p070_dimension_pdf
+    locator: "NX8048P070-011C drawing page 1: PCB1.60+/-0.1"
+    retrieved_on: 2026-05-01
+    evidence_type: official-drawing
+    verification_status: verified
+  front_stack_thickness_mm:
+    source_ref: nextion_p070_dimension_pdf
+    locator: "NX8048P070-011C drawing page 1: 7.60+/-0.2"
+    retrieved_on: 2026-05-01
+    evidence_type: official-drawing
+    verification_status: verified
+features:
+  resolution: 800 x 480
+  input_power: DC 5 V 1 A
+  usart_port: XH2.54 4P
+  drawing_tolerance_mm: 0.2
+  reference_enclosed_variant:
+    model: NX8048P070-011R/C-Y
+    drawing_outer_x_mm: 218.1
+    drawing_outer_y_mm: 150.0
+    drawing_depth_mm: 22.5
+    use: Reference envelope only; not the target CBBS enclosure design.
+source_refs:
+  - id: itead_p070_product_page
+    title: ITEAD Nextion 7.0 inch Intelligent Series product page
+    status: approved-public
+    url: https://itead.cc/product/7-0-nextion-intelligent-series-hmi-resistivecapacitive-touch-display-without-enclosure/
+  - id: nextion_p070_dimension_pdf
+    title: Nextion NX8048P070-011C dimension drawing
+    status: approved-public
+    url: https://cdn.nextion.tech/wp-content/uploads/2022/03/NX8048P070-011C_dimension.pdf
+  - id: nextion_p070_y_dimension_pdf
+    title: Nextion NX8048P070-011R/C-Y enclosure dimension drawing
+    status: approved-public
+    url: https://cdn.nextion.tech/wp-content/uploads/2022/03/NX8048P070-011C-Y_dimension.pdf
+    notes: Reference-only enclosed variant envelope; not the target bare 011C display model.
+  - id: nextion_p070_y_emc_report
+    title: Nextion NX8048P070-011C-Y EMC certificate report
+    status: approved-public
+    url: https://cdn.nextion.tech/wp-content/uploads/2019/07/NX8048P070-011C-Y-EMC-Certificate-Report.pdf
+    notes: Confirms the enclosed -Y model identity for reference only.
+  - id: cbbs_display_surfaces_public_content
+    title: Public CBBS display-surface content
+    status: approved-public
+    path: src/content/systems/display-surfaces.md
+image_refs:
+  - id: itead_p070_vendor_gallery
+    title: ITEAD P070 vendor product gallery
+    allowed_use: reference-only
+    provenance: Vendor product page gallery inspected on 2026-05-01; image files were not copied.
+    source_ref: itead_p070_product_page
+    url: https://itead.cc/product/7-0-nextion-intelligent-series-hmi-resistivecapacitive-touch-display-without-enclosure/
+source_conflicts:
+  - id: p070_variant_dimension_link_context
+    summary: >
+      The ITEAD product page includes both NX8048P070-011C and NX8048P070-011R
+      variants. CAD dimensions here are only from the explicit NX8048P070-011C drawing.
+    source_refs:
+      - itead_p070_product_page
+      - nextion_p070_dimension_pdf
+    affects_geometry: false
+    resolved: true
+    blocked_claims:
+      - Applying resistive 011R dimensions to the capacitive 011C display
+open_measurement_blockers:
+  - Confirm the exact physical display variant is NX8048P070-011C.
+  - Confirm cable exit direction and rear component clearances.
+  - Confirm mounting target and protective lens approach.
+notes: >
+  Dimensions come from the official drawing for a flat fit-frame only. Keep
+  P070 CAD labeled as prototype or internal review until public content changes.

@@ -1,0 +1,39 @@
+schema: cbbs-cad/tooling-candidate/v1
+id: build123d_cad_as_code_eval
+name: build123d CAD-as-code evaluation
+truth_state: internal review
+category: 3d-modeling
+current_repo_status: not-present
+recommendation: evaluate-sandbox
+dependency_policy: candidate-do-not-install
+automation_safety: local-generated-artifacts
+source_refs:
+  - id: build123d_docs
+    title: build123d documentation
+    status: approved-public
+    url: https://build123d.readthedocs.io/en/stable/index.html
+  - id: tooling_capability_review
+    title: CBBS 3D modeling tooling capability review
+    status: internal-review
+    path: 3d-print-work/research/3d-modeling-tooling-capability-review.md
+evidence_refs:
+  - source_ref: build123d_docs
+    locator: About build123d, BREP modeling, Open Cascade, manufacturing exports
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: tooling_capability_review
+    locator: Design and engineering candidates
+    retrieved_on: 2026-05-05
+    evidence_type: internal-review
+    verification_status: verified
+integration_paths:
+  - Evaluate on isolated coupons where build123d readability may reduce CadQuery complexity.
+  - Do not port existing generators until a prototype proves lower maintenance cost.
+risks:
+  - A second CAD-as-code API increases maintenance and contributor burden.
+blockers:
+  - Requires side-by-side generated geometry comparison against existing CadQuery outputs.
+blocked_claims:
+  - Alternative CAD syntax does not authorize new dimensions or hardware claims.
+

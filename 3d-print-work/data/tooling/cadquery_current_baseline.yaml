@@ -1,0 +1,40 @@
+schema: cbbs-cad/tooling-candidate/v1
+id: cadquery_current_baseline
+name: CadQuery current baseline
+truth_state: internal review
+category: 3d-modeling
+current_repo_status: direct-dependency
+recommendation: keep-baseline
+dependency_policy: current-direct
+automation_safety: local-generated-artifacts
+direct_import_allowed: true
+source_refs:
+  - id: cadquery_import_export
+    title: CadQuery importing and exporting files
+    status: approved-public
+    url: https://cadquery.readthedocs.io/en/latest/importexport.html
+  - id: tooling_capability_review
+    title: CBBS 3D modeling tooling capability review
+    status: internal-review
+    path: 3d-print-work/research/3d-modeling-tooling-capability-review.md
+evidence_refs:
+  - source_ref: cadquery_import_export
+    locator: Importing STEP, Exporting STEP, Exporting Assemblies with Metadata
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: tooling_capability_review
+    locator: Current baseline recommendations
+    retrieved_on: 2026-05-05
+    evidence_type: internal-review
+    verification_status: verified
+integration_paths:
+  - Keep CadQuery as the primary repo-local parametric CAD generator for source-derived STEP/STL artifacts.
+  - Continue exporting generated artifacts only under 3d-print-work/generated/.
+risks:
+  - OpenCascade operations can still fail on complex geometry; keep mesh inspection and source-gated parameters.
+blockers:
+  - No blocker for current baseline use.
+blocked_claims:
+  - No generated CAD artifact is a public product asset without a later source review.
+

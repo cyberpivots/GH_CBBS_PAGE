@@ -1,0 +1,26 @@
+schema: cbbs-cad/hardware/v1
+id: radio_head_hardware_unselected
+name: Hub radio-head hardware not yet selected
+units: mm
+truth_state: internal review
+measurement_status: blocked
+derivation_state: blocked
+public_release: false
+dimensions: {}
+features:
+  public_role: radio-head attachment for hub or transport-layer concepts
+source_refs:
+  - id: cbbs_pi_hub_public_content
+    title: Public CBBS Raspberry Pi hub content
+    status: approved-public
+    path: src/content/systems/pi-hub.md
+  - id: cbbs_transport_public_content
+    title: Public CBBS transport-layer content
+    status: approved-public
+    path: src/content/systems/transport-layers.md
+image_refs: []
+source_conflicts: []
+open_measurement_blockers:
+  - Identify exact radio-head module, board, cable, antenna, and mounting method.
+  - Confirm whether the radio head is internal, cabled, HAT-mounted, USB, or remote.
+notes: Do not generate hub radio-head brackets until hardware selection is verified.

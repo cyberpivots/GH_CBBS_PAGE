@@ -1,0 +1,37 @@
+schema: cbbs-cad/hardware/v1
+id: adafruit_sma_ufl_pigtail_851
+name: Adafruit SMA to uFL IPEX RF adapter cable reference
+units: mm
+truth_state: internal review
+measurement_status: source-derived
+derivation_state: source-derived
+public_release: false
+dimensions:
+  cable_length_mm: 150.0
+dimension_sources:
+  cable_length_mm:
+    source_ref: adafruit_product_851
+    locator: "Description: RG178 cable is 15 cm long excluding the SMA connector"
+    retrieved_on: 2026-05-03
+    evidence_type: vendor-product-page
+    verification_status: verified
+features:
+  product_id: "851"
+  cable_type: RG178
+  board_connector_names:
+    - uFL
+    - IPEX
+    - IPX
+  panel_connector: SMA panel-mount
+  verification_boundary: SMA versus RP-SMA must be physically checked before release.
+source_refs:
+  - id: adafruit_product_851
+    title: Adafruit SMA to uFL/u.FL/IPX/IPEX RF adapter cable product page
+    status: approved-public
+    url: https://www.adafruit.com/product/851
+open_measurement_blockers:
+  - Confirm the Heltec V2 board-side connector mates correctly without stressing the IPEX pad.
+  - Confirm panel nut, washer stack, bend radius, and strain relief geometry.
+notes: >
+  Cable length is source-derived. Connector stack and cable bend envelope remain
+  measurement blockers for any closed enclosure.

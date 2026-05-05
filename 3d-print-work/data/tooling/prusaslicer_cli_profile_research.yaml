@@ -1,0 +1,38 @@
+schema: cbbs-cad/tooling-candidate/v1
+id: prusaslicer_cli_profile_research
+name: PrusaSlicer CLI profile research
+truth_state: internal review
+category: 3d-print-methods
+current_repo_status: not-present
+recommendation: defer
+dependency_policy: manual-only
+automation_safety: manual-only
+source_refs:
+  - id: prusaslicer_cli_wiki
+    title: PrusaSlicer command line interface wiki
+    status: approved-public
+    url: https://github.com/prusa3d/PrusaSlicer/wiki/Command-Line-Interface
+  - id: tooling_capability_review
+    title: CBBS 3D modeling tooling capability review
+    status: internal-review
+    path: 3d-print-work/research/3d-modeling-tooling-capability-review.md
+evidence_refs:
+  - source_ref: prusaslicer_cli_wiki
+    locator: Command Line Interface, maintenance warning, use --help for current interface, profile loading notes
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: tooling_capability_review
+    locator: Print method awareness candidates
+    retrieved_on: 2026-05-05
+    evidence_type: internal-review
+    verification_status: verified
+integration_paths:
+  - Keep slicer use manual until local printer/material profiles and current local CLI help are captured.
+risks:
+  - Upstream wiki says the CLI page is no longer maintained.
+blockers:
+  - Requires local PrusaSlicer executable, K1/ASA profile verification, and explicit G-code policy decision.
+blocked_claims:
+  - No G-code publication, print-success claim, unattended-print claim, or automatic print intervention claim.
+

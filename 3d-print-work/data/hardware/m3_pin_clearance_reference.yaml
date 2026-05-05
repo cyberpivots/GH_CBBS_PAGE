@@ -1,0 +1,51 @@
+schema: cbbs-cad/hardware/v1
+id: m3_pin_clearance_reference
+name: M3 hinge pin and clearance reference
+units: mm
+truth_state: proof/simulator
+measurement_status: source-derived
+derivation_state: source-derived
+public_release: false
+dimensions:
+  pin_nominal_diameter_mm: 3.0
+  close_clearance_hole_mm: 3.2
+  normal_clearance_hole_mm: 3.4
+  loose_clearance_hole_mm: 3.6
+dimension_sources:
+  pin_nominal_diameter_mm:
+    source_ref: nbk_metric_clearance_holes
+    locator: "Metric table row M3"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  close_clearance_hole_mm:
+    source_ref: nbk_metric_clearance_holes
+    locator: "Metric clearance table: M3 close = 3.2 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  normal_clearance_hole_mm:
+    source_ref: nbk_metric_clearance_holes
+    locator: "Metric clearance table: M3 normal = 3.4 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  loose_clearance_hole_mm:
+    source_ref: nbk_metric_clearance_holes
+    locator: "Metric clearance table: M3 loose = 3.6 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-datasheet
+    verification_status: verified
+features:
+  use: Candidate removable hinge pin and printed bore clearance.
+source_refs:
+  - id: nbk_metric_clearance_holes
+    title: NBK metric clearance holes and counterbores
+    status: approved-public
+    url: https://www.nbk1560.com/en-US/resources/other/article/technical-20-diameter-of-clearance-holes-and-counterbores-for-bolts-and-screws
+open_measurement_blockers:
+  - Confirm the actual hinge pin stock, surface finish, and retained length.
+  - Validate printed ASA bore clearance after cooling and repeated door cycling.
+notes: >
+  The P070 prototype uses the normal M3 clearance diameter as the first-pass
+  printed hinge bore and keeps latch/hinge cycling as a validation blocker.

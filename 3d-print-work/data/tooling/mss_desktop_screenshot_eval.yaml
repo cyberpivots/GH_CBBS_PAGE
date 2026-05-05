@@ -1,0 +1,38 @@
+schema: cbbs-cad/tooling-candidate/v1
+id: mss_desktop_screenshot_eval
+name: MSS desktop screenshot evaluation
+truth_state: internal review
+category: computer-vision-screen
+current_repo_status: not-present
+recommendation: evaluate-sandbox
+dependency_policy: candidate-do-not-install
+automation_safety: read-only
+source_refs:
+  - id: python_mss_docs
+    title: Python MSS documentation
+    status: approved-public
+    url: https://python-mss.readthedocs.io/stable/
+  - id: tooling_capability_review
+    title: CBBS 3D modeling tooling capability review
+    status: internal-review
+    path: 3d-print-work/research/3d-modeling-tooling-capability-review.md
+evidence_refs:
+  - source_ref: python_mss_docs
+    locator: Welcome page screenshot features and OpenCV/Pillow integration notes
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: tooling_capability_review
+    locator: Computer vision and screen viewing candidates
+    retrieved_on: 2026-05-05
+    evidence_type: internal-review
+    verification_status: verified
+integration_paths:
+  - Evaluate in a generated sandbox only for deterministic desktop screenshot capture when Fusion viewport capture is insufficient.
+risks:
+  - Desktop screenshots can expose private windows, file paths, or logs.
+blockers:
+  - Add explicit output scoping and redaction review before any adoption.
+blocked_claims:
+  - Desktop screenshots are never public assets without separate approval.
+

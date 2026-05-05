@@ -1,0 +1,48 @@
+schema: cbbs-cad/tooling-candidate/v1
+id: pywinauto_fusion_ui_eval
+name: pywinauto Fusion UI wrapper evaluation
+truth_state: internal review
+category: computer-vision-screen
+current_repo_status: not-present
+recommendation: evaluate-sandbox
+dependency_policy: candidate-do-not-install
+automation_safety: read-only
+source_refs:
+  - id: pywinauto_docs
+    title: pywinauto documentation
+    status: approved-public
+    url: https://pywinauto.readthedocs.io/en/latest/
+  - id: pywinauto_getting_started
+    title: pywinauto getting started guide
+    status: approved-public
+    url: https://pywinauto.readthedocs.io/en/latest/getting_started.html
+  - id: tooling_capability_review
+    title: CBBS 3D modeling tooling capability review
+    status: internal-review
+    path: 3d-print-work/research/3d-modeling-tooling-capability-review.md
+evidence_refs:
+  - source_ref: pywinauto_docs
+    locator: What is pywinauto and installation notes
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: pywinauto_getting_started
+    locator: Supported backends and UIA backend notes
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: tooling_capability_review
+    locator: Computer vision and screen viewing candidates
+    retrieved_on: 2026-05-05
+    evidence_type: internal-review
+    verification_status: verified
+integration_paths:
+  - Evaluate only if direct Microsoft UIA code becomes hard to maintain.
+  - Keep any UI driving behind the same guarded Fusion command allowlists.
+risks:
+  - High-level UI wrappers can make destructive UI actions easier to call accidentally.
+blockers:
+  - Requires a Windows/Fusion sandbox and regression tests before adoption.
+blocked_claims:
+  - UI automation does not authorize product, CAD, or print capability claims.
+

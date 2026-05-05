@@ -1,0 +1,101 @@
+schema: cbbs-cad/printer/v1
+id: creality_k1_modified_asa
+name: Modified Creality K1 ASA print workflow
+units: mm
+truth_state: internal review
+measurement_status: source-derived
+derivation_state: source-derived
+public_release: false
+printer_type: corexy-enclosed
+build_volume_kind: fixed
+dimensions:
+  build_x_mm: 220.0
+  build_y_mm: 220.0
+  build_z_mm: 250.0
+dimension_sources:
+  build_x_mm:
+    source_ref: creality_k1_series_compare
+    locator: "K1/K1C build volume: 220 x 220 x 250 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: vendor-product-page
+    verification_status: verified
+  build_y_mm:
+    source_ref: creality_k1_series_compare
+    locator: "K1/K1C build volume: 220 x 220 x 250 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: vendor-product-page
+    verification_status: verified
+  build_z_mm:
+    source_ref: creality_k1_series_compare
+    locator: "K1/K1C build volume: 220 x 220 x 250 mm"
+    retrieved_on: 2026-05-03
+    evidence_type: vendor-product-page
+    verification_status: verified
+default_material: ASA
+material_policies:
+  - material: ASA
+    status: primary
+    source_refs:
+      - creality_k1_series_compare
+      - prusa_asa_guidance
+    notes: >
+      Primary local target per task instruction. Still validation-gated for
+      chamber behavior, bed adhesion, ventilation, and exact local profile.
+  - material: PETG
+    status: fallback
+    source_refs:
+      - creality_k1_series_compare
+      - prusa_petg_guidance
+    notes: Lower-risk fallback for geometry checks when ASA validation is not ready.
+  - material: PLA
+    status: fallback
+    source_refs:
+      - creality_k1_series_compare
+    notes: Fit-check material only; not a substitute for ASA validation.
+capabilities:
+  nozzle_temperature_max_c: 300
+  heatbed_temperature_max_c: 100
+  connectivity:
+    - WiFi
+  slicer_default: Creality Print
+  hardened_nozzle_status: accepted-from-current-task-instruction; physically verify before abrasive or ASA runs
+  camera_status: optional/unverified until a local read-only probe captures live endpoints
+  gcode_export_default: false
+slicer_guidance:
+  - Use Creality Print manually until local K1 ASA profiles are measured and reviewed.
+  - Keep generated packages STL/STEP-only by default; do not create or commit G-code.
+  - Treat the effective K1 bed for P070 ASA as 208 x 208 mm after a 6 mm brim margin.
+process_notes:
+  - "Package P070 outdoor geometry as component-level plates: rear panel core, rear battery pod, and front display door."
+  - Do not accept a monolithic rear tray, single-piece enclosure, or combined K1 P070 plate.
+monitoring:
+  default_host: 192.168.200.243
+  read_only_only: true
+  endpoints_unverified: true
+source_refs:
+  - id: creality_k1_series_compare
+    title: Creality K1 flagship series comparison
+    status: approved-public
+    url: https://www.creality.com/compare/compare-k1-flagship-series/
+  - id: creality_ai_camera_store
+    title: Creality AI Camera for K1/K1 Max/K1C
+    status: approved-public
+    url: https://store.creality.com/products/creality-ai-camera-for-k1
+  - id: prusa_asa_guidance
+    title: Prusa ASA material guidance
+    status: approved-public
+    url: https://help.prusa3d.com/article/asa_1809
+  - id: prusa_petg_guidance
+    title: Prusa PETG material guidance
+    status: approved-public
+    url: https://help.prusa3d.com/article/petg_2059
+open_measurement_blockers:
+  - Confirm the exact modified K1 hardware, nozzle material, nozzle diameter, and usable bed margins.
+  - Validate ASA chamber behavior, bed adhesion, odor/fume controls, and ventilation before routine use.
+  - Capture a read-only local camera/webcam endpoint probe before relying on monitoring.
+notes: >
+  Internal-review printer/process record. It constrains packages to the official
+  220 x 220 x 250 mm K1-class build envelope and records the current modified
+  K1 as the primary ASA target without claiming print success. P070 outdoor
+  packages must stay component-level until physical joining and ASA behavior are
+  validated.

@@ -1,0 +1,84 @@
+schema: cbbs-cad/hardware/v1
+id: creality_k1_series_asa_profile
+name: Creality K1 series ASA print envelope reference
+units: mm
+truth_state: proof/simulator
+measurement_status: source-derived
+derivation_state: source-derived
+public_release: false
+dimensions:
+  k1_min_build_x_mm: 220.0
+  k1_min_build_y_mm: 220.0
+  k1_min_build_z_mm: 250.0
+  k1_max_build_x_mm: 300.0
+  k1_max_build_y_mm: 300.0
+  k1_max_build_z_mm: 300.0
+  nozzle_diameter_mm: 0.4
+dimension_sources:
+  k1_min_build_x_mm:
+    source_ref: creality_k1_series_compare
+    locator: "K1/K1C build volume: 220 x 220 x 250 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-product-page
+    verification_status: verified
+  k1_min_build_y_mm:
+    source_ref: creality_k1_series_compare
+    locator: "K1/K1C build volume: 220 x 220 x 250 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-product-page
+    verification_status: verified
+  k1_min_build_z_mm:
+    source_ref: creality_k1_series_compare
+    locator: "K1/K1C build volume: 220 x 220 x 250 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-product-page
+    verification_status: verified
+  k1_max_build_x_mm:
+    source_ref: creality_k1_series_compare
+    locator: "K1 Max build volume: 300 x 300 x 300 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-product-page
+    verification_status: verified
+  k1_max_build_y_mm:
+    source_ref: creality_k1_series_compare
+    locator: "K1 Max build volume: 300 x 300 x 300 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-product-page
+    verification_status: verified
+  k1_max_build_z_mm:
+    source_ref: creality_k1_series_compare
+    locator: "K1 Max build volume: 300 x 300 x 300 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-product-page
+    verification_status: verified
+  nozzle_diameter_mm:
+    source_ref: creality_k1c_support
+    locator: "K1C parameter/specification table: nozzle diameter 0.4 mm"
+    retrieved_on: 2026-05-02
+    evidence_type: vendor-product-page
+    verification_status: verified
+features:
+  target_material: ASA
+  smallest_series_target: K1/K1C 220 x 220 x 250 mm
+  print_process_notes:
+    - Use the smallest K1-series build volume as the default CAD constraint.
+    - Keep large ASA parts split into printable tray and door components.
+source_refs:
+  - id: creality_k1_series_compare
+    title: Creality K1 flagship series comparison
+    status: approved-public
+    url: https://www.creality.com/compare/compare-k1-flagship-series/
+  - id: creality_k1c_support
+    title: Creality K1C support page
+    status: approved-public
+    url: https://www.creality.com/support/k1c-carbon-3d-printer
+  - id: prusa_asa_guidance
+    title: Prusa ASA material guidance
+    status: approved-public
+    url: https://help.prusa3d.com/article/asa_1809
+open_measurement_blockers:
+  - Confirm the exact local K1-series printer model and usable bed margins.
+  - Confirm the modified printer's ASA chamber, bed-adhesion, and ventilation workflow.
+notes: >
+  This is a printer/process envelope for CAD constraints, not a product claim
+  about CBBS hardware or a guarantee that every ASA print will succeed.

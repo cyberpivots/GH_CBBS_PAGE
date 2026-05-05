@@ -1,0 +1,48 @@
+schema: cbbs-cad/tooling-candidate/v1
+id: blender_cli_render_eval
+name: Blender CLI render evaluation
+truth_state: internal review
+category: rendering
+current_repo_status: not-present
+recommendation: evaluate-sandbox
+dependency_policy: external-tool-no-install
+automation_safety: local-generated-artifacts
+source_refs:
+  - id: blender_command_line
+    title: Blender command line arguments
+    status: approved-public
+    url: https://docs.blender.org/manual/en/latest/advanced/command_line/render.html
+  - id: blender_render_ops
+    title: Blender render operators API
+    status: approved-public
+    url: https://docs.blender.org/api/current/bpy.ops.render.html
+  - id: tooling_capability_review
+    title: CBBS 3D modeling tooling capability review
+    status: internal-review
+    path: 3d-print-work/research/3d-modeling-tooling-capability-review.md
+evidence_refs:
+  - source_ref: blender_command_line
+    locator: Background and render options
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: blender_render_ops
+    locator: Render operator API
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: tooling_capability_review
+    locator: Rendering candidates
+    retrieved_on: 2026-05-05
+    evidence_type: internal-review
+    verification_status: verified
+integration_paths:
+  - Evaluate as an external renderer for review-only images after STEP/GLB export is already source-derived.
+  - Keep rendered output under 3d-print-work/generated/tool-evals/blender/.
+risks:
+  - Blender materials/imports may diverge from Fusion review state.
+blockers:
+  - Do not add Blender as a repo dependency; require local executable detection and sandbox tests first.
+blocked_claims:
+  - Blender renders are visual review aids, not measured CAD evidence.
+

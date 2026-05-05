@@ -1,0 +1,59 @@
+schema: cbbs-cad/concept/v1
+id: cable_relief_coupon
+name: Cable relief slot coupon
+units: mm
+truth_state: internal review
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+model_family: cable_relief_coupon
+hardware_refs: []
+parameters:
+  length_mm: 50.0
+  width_mm: 30.0
+  thickness_mm: 3.0
+  slot_x_mm: 18.0
+  slot_y_mm: 6.0
+parameter_sources:
+  length_mm:
+    source_ref: cbbs_test_fixture_concept
+    locator: "Test fixture concept: cable relief and strain-relief coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  width_mm:
+    source_ref: cbbs_test_fixture_concept
+    locator: "Test fixture concept: cable relief and strain-relief coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  thickness_mm:
+    source_ref: cbbs_test_fixture_concept
+    locator: "Test fixture concept: cable relief and strain-relief coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  slot_x_mm:
+    source_ref: cbbs_test_fixture_concept
+    locator: "Test fixture concept: cable relief and strain-relief coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  slot_y_mm:
+    source_ref: cbbs_test_fixture_concept
+    locator: "Test fixture concept: cable relief and strain-relief coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+outputs:
+  - step
+  - stl
+blocked_full_case: true
+source_refs:
+  - id: cbbs_test_fixture_concept
+    title: Public-safe test fixture concept brief
+    status: internal-review
+    path: 3d-print-work/concepts/test-fixtures.md
+open_measurement_blockers:
+  - Select exact cable diameter, jacket stiffness, and bend radius.
+notes: Generic strain-relief print used before full case geometry.

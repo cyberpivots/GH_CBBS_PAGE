@@ -1,0 +1,99 @@
+schema: cbbs-cad/concept/v1
+id: rugged_wall_section_coupon
+name: Rugged wall-section coupon
+units: mm
+truth_state: internal review
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+model_family: rugged_wall_section_coupon
+hardware_refs: []
+parameters:
+  length_mm: 80.0
+  width_mm: 50.0
+  wall_thickness_mm: 3.0
+  corner_radius_mm: 3.0
+  rib_width_mm: 4.0
+  rib_height_mm: 4.0
+  rib_inset_mm: 8.0
+parameter_sources:
+  length_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: wall-section coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  width_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: wall-section coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  wall_thickness_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: wall-section coupon; default rugged prototype wall target"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  corner_radius_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: wall-section coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  rib_width_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: wall-section coupon; ribs and reinforcement"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  rib_height_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: wall-section coupon; ribs and reinforcement"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  rib_inset_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: wall-section coupon; ribs and reinforcement"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+outputs:
+  - step
+  - stl
+blocked_full_case: true
+environmental_context:
+  exposure: outdoor-prototype
+  ruggedization:
+    - reinforced-walls
+    - uv-material-review
+  source_refs:
+    - cbbs_outdoor_ruggedization_concept
+    - prusa_asa_kb
+    - prusa_petg_kb
+    - protolabs_enclosure_guide
+  validation_plan:
+    - Print in the intended material and orientation.
+    - Record wall stiffness, warp, layer adhesion, and corner behavior.
+  rating_claims: []
+source_refs:
+  - id: cbbs_outdoor_ruggedization_concept
+    title: Outdoor ruggedization test artifact concept brief
+    status: internal-review
+    path: 3d-print-work/concepts/outdoor-ruggedization.md
+  - id: prusa_asa_kb
+    title: Prusa ASA material knowledge base
+    status: approved-public
+    url: https://help.prusa3d.com/article/asa_1809
+  - id: prusa_petg_kb
+    title: Prusa PETG material knowledge base
+    status: approved-public
+    url: https://help.prusa3d.com/article/petg_2059
+  - id: protolabs_enclosure_guide
+    title: Protolabs Network enclosure design for 3D printing guide
+    status: approved-public
+    url: https://www.hubs.com/knowledge-base/enclosure-design-3d-printing-step-step-guide/
+open_measurement_blockers:
+  - Select material, print orientation, wall count, and expected installed load.
+notes: Reinforced wall-section coupon for material and rib behavior only.

@@ -1,0 +1,40 @@
+schema: cbbs-cad/tooling-candidate/v1
+id: trimesh_current_baseline
+name: trimesh current baseline
+truth_state: internal review
+category: 3d-modeling
+current_repo_status: direct-dependency
+recommendation: keep-baseline
+dependency_policy: current-direct
+automation_safety: local-generated-artifacts
+direct_import_allowed: true
+source_refs:
+  - id: trimesh_docs
+    title: trimesh documentation
+    status: approved-public
+    url: https://trimesh.org/index.html
+  - id: tooling_capability_review
+    title: CBBS 3D modeling tooling capability review
+    status: internal-review
+    path: 3d-print-work/research/3d-modeling-tooling-capability-review.md
+evidence_refs:
+  - source_ref: trimesh_docs
+    locator: Features, watertight surfaces, mesh loading, repair, and inspection
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: tooling_capability_review
+    locator: Current baseline recommendations
+    retrieved_on: 2026-05-05
+    evidence_type: internal-review
+    verification_status: verified
+integration_paths:
+  - Keep trimesh as the mesh inspection layer for watertight, bounds, Euler number, and broken-face checks.
+  - Treat repair functions as diagnostics unless a future task explicitly approves mesh repair output.
+risks:
+  - Mesh repair can hide CAD-generation defects if used automatically.
+blockers:
+  - Automated repair promotion remains blocked until acceptance rules are added.
+blocked_claims:
+  - Mesh inspection passing does not prove print success, structural strength, or environmental readiness.
+

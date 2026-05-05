@@ -1,0 +1,51 @@
+schema: cbbs-cad/hardware/v1
+id: pololu_s13v30f5_regulator
+name: Pololu S13V30F5 5V 3A buck-boost regulator reference
+units: mm
+truth_state: internal review
+measurement_status: source-derived
+derivation_state: source-derived
+public_release: false
+dimensions:
+  board_length_mm: 22.9
+  board_width_mm: 22.9
+  envelope_height_mm: 9.7
+dimension_sources:
+  board_length_mm:
+    source_ref: pololu_s13v30f5_product_page
+    locator: "Features: compact size 0.9 x 0.9 x 0.38 in (22.9 x 22.9 x 9.7 mm)"
+    retrieved_on: 2026-05-03
+    evidence_type: vendor-product-page
+    verification_status: verified
+  board_width_mm:
+    source_ref: pololu_s13v30f5_product_page
+    locator: "Features: compact size 0.9 x 0.9 x 0.38 in (22.9 x 22.9 x 9.7 mm)"
+    retrieved_on: 2026-05-03
+    evidence_type: vendor-product-page
+    verification_status: verified
+  envelope_height_mm:
+    source_ref: pololu_s13v30f5_product_page
+    locator: "Features: compact size 0.9 x 0.9 x 0.38 in (22.9 x 22.9 x 9.7 mm)"
+    retrieved_on: 2026-05-03
+    evidence_type: vendor-product-page
+    verification_status: verified
+features:
+  output_voltage: 5V
+  typical_max_output_current: 3A class near output voltage
+  input_voltage_range: 2.8V to 22V
+  protection_features:
+    - reverse-voltage protection up to 20V
+    - over-current protection
+    - over-temperature shutoff
+  thermal_blocker: Vendor notes achievable output current depends on thermal dissipation.
+source_refs:
+  - id: pololu_s13v30f5_product_page
+    title: Pololu 5V 3A Step-Up/Step-Down Voltage Regulator S13V30F5 product page
+    status: approved-public
+    url: https://www.pololu.com/product/4082
+open_measurement_blockers:
+  - Confirm terminal/header assembly height and selected wiring method.
+  - Measure regulator temperature under P070 and Heltec load inside the enclosure concept.
+notes: >
+  Regulator is source-derived and selected for headroom review. Final supply
+  acceptance requires load and heat testing.

@@ -1,0 +1,143 @@
+schema: cbbs-cad/concept/v1
+id: drip_lip_seam_coupon
+name: Drip-lip seam coupon
+units: mm
+truth_state: internal review
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+model_family: drip_lip_seam_coupon
+hardware_refs: []
+parameters:
+  base_x_mm: 80.0
+  base_y_mm: 40.0
+  base_thickness_mm: 3.0
+  corner_radius_mm: 3.0
+  inner_wall_outer_x_mm: 68.0
+  inner_wall_outer_y_mm: 28.0
+  inner_wall_opening_x_mm: 58.0
+  inner_wall_opening_y_mm: 18.0
+  inner_wall_height_mm: 4.0
+  lip_outer_x_mm: 76.0
+  lip_outer_y_mm: 36.0
+  lip_opening_x_mm: 66.0
+  lip_opening_y_mm: 26.0
+  lip_height_mm: 2.0
+parameter_sources:
+  base_x_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: drip-lip seam coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  base_y_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: drip-lip seam coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  base_thickness_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: drip-lip seam coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  corner_radius_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: drip-lip seam coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  inner_wall_outer_x_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: drip-lip geometry"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  inner_wall_outer_y_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: drip-lip geometry"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  inner_wall_opening_x_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: drip-lip geometry"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  inner_wall_opening_y_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: drip-lip geometry"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  inner_wall_height_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: drip-lip geometry"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  lip_outer_x_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: drip-lip geometry"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  lip_outer_y_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: drip-lip geometry"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  lip_opening_x_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: drip-lip geometry"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  lip_opening_y_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: drip-lip geometry"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  lip_height_mm:
+    source_ref: cbbs_outdoor_ruggedization_concept
+    locator: "Prototype artifacts: drip-lip geometry"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+outputs:
+  - step
+  - stl
+blocked_full_case: true
+environmental_context:
+  exposure: outdoor-prototype
+  ruggedization:
+    - drip-lip
+    - gasket-seat
+  source_refs:
+    - cbbs_outdoor_ruggedization_concept
+    - nema_enclosure_types
+    - iec_60529_ip_code
+  validation_plan:
+    - Test lid alignment, seam clearance, and print orientation effects.
+    - Record whether the geometry sheds water in a non-rated bench check.
+  rating_claims: []
+source_refs:
+  - id: cbbs_outdoor_ruggedization_concept
+    title: Outdoor ruggedization test artifact concept brief
+    status: internal-review
+    path: 3d-print-work/concepts/outdoor-ruggedization.md
+  - id: nema_enclosure_types
+    title: NEMA Enclosure Types overview
+    status: approved-public
+    url: https://www.nema.org/docs/default-source/products-document-library/nema-enclosure-types.pdf
+  - id: iec_60529_ip_code
+    title: IEC 60529 degrees of protection provided by enclosures
+    status: approved-public
+    url: https://webstore.iec.ch/en/publication/2447
+open_measurement_blockers:
+  - Select lid geometry, gasket strategy, fastener spacing, material, and orientation.
+notes: Drip-lip seam coupon for geometry checks only; no environmental rating claim.

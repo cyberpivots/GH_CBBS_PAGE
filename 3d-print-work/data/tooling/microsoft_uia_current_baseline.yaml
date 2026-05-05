@@ -1,0 +1,39 @@
+schema: cbbs-cad/tooling-candidate/v1
+id: microsoft_uia_current_baseline
+name: Microsoft UI Automation current baseline
+truth_state: internal review
+category: computer-vision-screen
+current_repo_status: external-workflow
+recommendation: keep-baseline
+dependency_policy: external-tool-no-install
+automation_safety: read-only
+source_refs:
+  - id: microsoft_uia_overview
+    title: Microsoft UI Automation overview
+    status: approved-public
+    url: https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-uiautomationoverview
+  - id: tooling_capability_review
+    title: CBBS 3D modeling tooling capability review
+    status: internal-review
+    path: 3d-print-work/research/3d-modeling-tooling-capability-review.md
+evidence_refs:
+  - source_ref: microsoft_uia_overview
+    locator: UI Automation overview, client applications, UI tree model
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: tooling_capability_review
+    locator: Fusion UI inspection recommendations
+    retrieved_on: 2026-05-05
+    evidence_type: internal-review
+    verification_status: verified
+integration_paths:
+  - Keep direct UIA usage for guarded Fusion UI state capture and command invocation.
+  - Prefer Fusion add-in bridge actions before UI driving.
+risks:
+  - UI element trees can change with Fusion updates or window state.
+blockers:
+  - Do not use UIA to drive destructive Fusion operations without explicit user approval.
+blocked_claims:
+  - UI snapshots and logs are private/internal review artifacts unless separately approved.
+

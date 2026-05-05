@@ -1,0 +1,65 @@
+schema: cbbs-cad/concept/v1
+id: oled_window_coupon
+name: OLED window visibility coupon
+units: mm
+truth_state: internal review
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+model_family: oled_window_coupon
+hardware_refs:
+  - heltec_wifi_lora_32_v2
+parameters:
+  outer_x_mm: 42.0
+  outer_y_mm: 22.0
+  thickness_mm: 2.0
+  window_x_mm: 28.0
+  window_y_mm: 12.0
+parameter_sources:
+  outer_x_mm:
+    source_ref: cbbs_test_fixture_concept
+    locator: "Test fixture concept: oled-window-coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  outer_y_mm:
+    source_ref: cbbs_test_fixture_concept
+    locator: "Test fixture concept: oled-window-coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  thickness_mm:
+    source_ref: cbbs_test_fixture_concept
+    locator: "Test fixture concept: oled-window-coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  window_x_mm:
+    source_ref: cbbs_test_fixture_concept
+    locator: "Test fixture concept: oled-window-coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  window_y_mm:
+    source_ref: cbbs_test_fixture_concept
+    locator: "Test fixture concept: oled-window-coupon"
+    retrieved_on: 2026-05-01
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+outputs:
+  - step
+  - stl
+blocked_full_case: true
+source_refs:
+  - id: cbbs_display_surfaces_public_content
+    title: Public CBBS display-surface content
+    status: approved-public
+    path: src/content/systems/display-surfaces.md
+  - id: cbbs_test_fixture_concept
+    title: Public-safe test fixture concept brief
+    status: internal-review
+    path: 3d-print-work/concepts/test-fixtures.md
+open_measurement_blockers:
+  - Measure actual OLED active area and board position.
+  - Select lens/window material before final bezel geometry.
+notes: Window dimensions are placeholders for a visibility coupon only.

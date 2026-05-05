@@ -1,0 +1,38 @@
+schema: cbbs-cad/tooling-candidate/v1
+id: curaengine_cli_profile_research
+name: CuraEngine CLI profile research
+truth_state: internal review
+category: 3d-print-methods
+current_repo_status: not-present
+recommendation: defer
+dependency_policy: manual-only
+automation_safety: manual-only
+source_refs:
+  - id: curaengine_docs
+    title: CuraEngine developer portal
+    status: approved-public
+    url: https://ultimaker.github.io/CuraEngine/
+  - id: tooling_capability_review
+    title: CBBS 3D modeling tooling capability review
+    status: internal-review
+    path: 3d-print-work/research/3d-modeling-tooling-capability-review.md
+evidence_refs:
+  - source_ref: curaengine_docs
+    locator: Back-end slicer of Cura, pipeline and exporting to G-Code documentation
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: tooling_capability_review
+    locator: Print method awareness candidates
+    retrieved_on: 2026-05-05
+    evidence_type: internal-review
+    verification_status: verified
+integration_paths:
+  - Keep CuraEngine as a research-only slicer candidate until local profiles and CLI invocation are verified.
+risks:
+  - Direct slicer engine use needs complete printer/material settings, not just STL input.
+blockers:
+  - Requires local engine, settings JSON/profile proof, and explicit G-code policy decision.
+blocked_claims:
+  - No G-code publication, print-success claim, unattended-print claim, or automatic print intervention claim.
+

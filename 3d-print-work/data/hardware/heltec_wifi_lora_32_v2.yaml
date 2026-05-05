@@ -1,0 +1,81 @@
+schema: cbbs-cad/hardware/v1
+id: heltec_wifi_lora_32_v2
+name: Heltec WiFi LoRa 32 V2 board envelope
+units: mm
+truth_state: internal review
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+dimensions:
+  board_length_mm: 51.0
+  board_width_mm: 25.5
+  envelope_height_mm: 10.6
+dimension_sources:
+  board_length_mm:
+    source_ref: heltec_v2_product_page
+    locator: "Specifications table, dimensions row: 51 * 25.5 * 10.6 mm"
+    retrieved_on: 2026-05-01
+    evidence_type: vendor-product-page
+    verification_status: verified
+    notes: Matches the vendor V2 PDF dimensions used for a board-envelope fit card.
+  board_width_mm:
+    source_ref: heltec_v2_product_page
+    locator: "Specifications table, dimensions row: 51 * 25.5 * 10.6 mm"
+    retrieved_on: 2026-05-01
+    evidence_type: vendor-product-page
+    verification_status: verified
+    notes: Matches the vendor V2 PDF dimensions used for a board-envelope fit card.
+  envelope_height_mm:
+    source_ref: heltec_v2_product_page
+    locator: "Specifications table, dimensions row: 51 * 25.5 * 10.6 mm"
+    retrieved_on: 2026-05-01
+    evidence_type: vendor-product-page
+    verification_status: verified
+    notes: Source-derived envelope only; tallest component must still be measured.
+features:
+  display: onboard 0.96 inch OLED
+  usb: Micro USB, physical board revision still required
+  lora_antenna: IPEX interface, antenna route must be measured on hardware
+  battery_connector: SH1.25 x 2 socket noted by vendor source
+source_refs:
+  - id: heltec_v2_product_page
+    title: Heltec WiFi LoRa 32 V2 product page
+    status: approved-public
+    url: https://heltec.org/project/wifi-lora-32v2/
+  - id: heltec_v2_pdf
+    title: Heltec WiFi LoRa 32 V2 PDF
+    status: approved-public
+    url: https://resource.heltec.cn/download/WiFi_LoRa_32/WiFi%20Lora32.pdf
+  - id: cbbs_heltec_public_content
+    title: Public CBBS Heltec field-node content
+    status: approved-public
+    path: src/content/systems/heltec-field-nodes.md
+image_refs:
+  - id: heltec_vendor_product_gallery
+    title: Heltec V2 vendor product gallery
+    allowed_use: reference-only
+    provenance: Vendor product page gallery inspected on 2026-05-01; image files were not copied.
+    source_ref: heltec_v2_product_page
+    url: https://heltec.org/project/wifi-lora-32v2/
+source_conflicts:
+  - id: heltec_v2_chipset_label_conflict
+    summary: >
+      The current product page title references SX1262, while the description,
+      specifications, and vendor V2 PDF identify SX1276/SX1278.
+    source_refs:
+      - heltec_v2_product_page
+      - heltec_v2_pdf
+    affects_geometry: false
+    resolved: false
+    blocked_claims:
+      - LoRa chipset identity
+    notes: Do not name the LoRa chipset in enclosure notes or public copy until the board is confirmed.
+open_measurement_blockers:
+  - Confirm exact board revision in hand.
+  - Confirm USB connector type and clearance on the physical board.
+  - Confirm OLED active area and position from measured hardware.
+  - Confirm antenna configuration, cable path, and header population.
+notes: >
+  Board outline is source-derived for fit-test coupons only. Do not generate
+  full Heltec cases until the physical board revision and connector clearances
+  are measured.

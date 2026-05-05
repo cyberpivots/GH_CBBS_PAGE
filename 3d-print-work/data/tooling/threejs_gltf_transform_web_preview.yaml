@@ -1,0 +1,47 @@
+schema: cbbs-cad/tooling-candidate/v1
+id: threejs_gltf_transform_web_preview
+name: Three.js and glTF Transform web preview research
+truth_state: internal review
+category: web-preview
+current_repo_status: not-present
+recommendation: defer
+dependency_policy: candidate-do-not-install
+automation_safety: local-generated-artifacts
+source_refs:
+  - id: threejs_gltf_loading
+    title: Three.js loading 3D models guide
+    status: approved-public
+    url: https://threejs.org/manual/en/loading-3d-models.html
+  - id: gltf_transform_cli
+    title: glTF Transform CLI documentation
+    status: approved-public
+    url: https://gltf-transform.dev/cli
+  - id: tooling_capability_review
+    title: CBBS 3D modeling tooling capability review
+    status: internal-review
+    path: 3d-print-work/research/3d-modeling-tooling-capability-review.md
+evidence_refs:
+  - source_ref: threejs_gltf_loading
+    locator: Loading 3D models and glTF loader guidance
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: gltf_transform_cli
+    locator: CLI inspect, validate, optimize, and geometry commands
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: tooling_capability_review
+    locator: Web preview candidates
+    retrieved_on: 2026-05-05
+    evidence_type: internal-review
+    verification_status: verified
+integration_paths:
+  - Defer public web 3D previews until generated GLB assets have public release approval and size budgets.
+risks:
+  - Public GLB files can expose unapproved geometry and increase GitHub Pages asset weight.
+blockers:
+  - Requires public asset approval, asset size limits, and browser smoke tests.
+blocked_claims:
+  - Web previews cannot imply product availability, production readiness, or field validation.
+

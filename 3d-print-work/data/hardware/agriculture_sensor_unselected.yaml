@@ -1,0 +1,22 @@
+schema: cbbs-cad/hardware/v1
+id: agriculture_sensor_unselected
+name: Agriculture sensor hardware not yet selected
+units: mm
+truth_state: internal review
+measurement_status: blocked
+derivation_state: blocked
+public_release: false
+dimensions: {}
+features:
+  public_role: sensor observation intake for review and advisory records
+source_refs:
+  - id: cbbs_agriculture_public_content
+    title: Public CBBS agriculture runtime content
+    status: approved-public
+    path: src/content/systems/agriculture-runtime.md
+image_refs: []
+source_conflicts: []
+open_measurement_blockers:
+  - Identify exact sensor boards, probe bodies, connectors, cable exits, and service access.
+  - Confirm operating environment before material, sealing, or mounting decisions.
+notes: Do not generate sensor-node enclosures until exact hardware is verified.

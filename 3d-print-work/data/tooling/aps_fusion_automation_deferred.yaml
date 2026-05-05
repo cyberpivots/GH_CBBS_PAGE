@@ -1,0 +1,38 @@
+schema: cbbs-cad/tooling-candidate/v1
+id: aps_fusion_automation_deferred
+name: Autodesk Platform Services Fusion Automation deferred path
+truth_state: internal review
+category: fusion360
+current_repo_status: not-present
+recommendation: defer
+dependency_policy: deferred-credentials-required
+automation_safety: deferred-credentials
+source_refs:
+  - id: aps_automation_apis
+    title: Autodesk Platform Services Automation APIs
+    status: approved-public
+    url: https://aps.autodesk.com/automation-apis
+  - id: tooling_capability_review
+    title: CBBS 3D modeling tooling capability review
+    status: internal-review
+    path: 3d-print-work/research/3d-modeling-tooling-capability-review.md
+evidence_refs:
+  - source_ref: aps_automation_apis
+    locator: Fusion Automation API section
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: tooling_capability_review
+    locator: Fusion-specific deferred paths
+    retrieved_on: 2026-05-05
+    evidence_type: internal-review
+    verification_status: verified
+integration_paths:
+  - Keep APS Fusion Automation deferred; do not add cloud job wiring, credentials, tenant details, or PAT handling to this public repo.
+risks:
+  - Cloud automation introduces credential handling, account cost, and private artifact exposure risks.
+blockers:
+  - Requires explicit user request, credentials/PAT, privacy review, and separate cloud workflow design.
+blocked_claims:
+  - Cloud automation availability does not authorize public CAD, render, or manufacturing claims.
+

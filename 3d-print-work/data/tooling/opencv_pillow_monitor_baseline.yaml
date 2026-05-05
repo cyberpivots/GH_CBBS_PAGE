@@ -1,0 +1,49 @@
+schema: cbbs-cad/tooling-candidate/v1
+id: opencv_pillow_monitor_baseline
+name: OpenCV and Pillow K1 monitoring baseline
+truth_state: internal review
+category: computer-vision-screen
+current_repo_status: optional-dependency
+recommendation: keep-baseline
+dependency_policy: current-optional
+automation_safety: read-only
+direct_import_allowed: true
+source_refs:
+  - id: opencv_videocapture
+    title: OpenCV VideoCapture class reference
+    status: approved-public
+    url: https://docs.opencv.org/4.x/d8/dfe/classcv_1_1VideoCapture.html
+  - id: pillow_docs
+    title: Pillow documentation
+    status: approved-public
+    url: https://pillow.readthedocs.io/en/stable/
+  - id: tooling_capability_review
+    title: CBBS 3D modeling tooling capability review
+    status: internal-review
+    path: 3d-print-work/research/3d-modeling-tooling-capability-review.md
+evidence_refs:
+  - source_ref: opencv_videocapture
+    locator: VideoCapture class reference and read/open behavior
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: pillow_docs
+    locator: Overview and image processing capabilities
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
+  - source_ref: tooling_capability_review
+    locator: Computer vision and screen viewing recommendations
+    retrieved_on: 2026-05-05
+    evidence_type: internal-review
+    verification_status: verified
+integration_paths:
+  - Keep OpenCV and Pillow limited to optional read-only K1 camera monitoring and local image metrics.
+  - Store captures and metrics only under 3d-print-work/generated/monitoring/k1/.
+risks:
+  - Video stream properties depend on device, backend, and endpoint behavior.
+blockers:
+  - Automatic intervention and print-failure decisions remain deferred.
+blocked_claims:
+  - K1 monitoring output does not authorize unattended printing, print success, or automatic intervention claims.
+
