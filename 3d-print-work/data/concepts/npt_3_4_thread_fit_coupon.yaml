@@ -1,0 +1,123 @@
+schema: cbbs-cad/concept/v1
+id: npt_3_4_thread_fit_coupon
+name: 3/4 NPT printed thread-fit coupon
+units: mm
+truth_state: internal review
+measurement_status: measurement-required
+derivation_state: source-derived
+public_release: false
+model_family: npt_3_4_thread_fit_coupon
+hardware_refs:
+  - lapp_skintop_str_npt_3_4_reference
+  - creality_k1_series_asa_profile
+parameters:
+  coupon_plate_x_mm: 118.0
+  coupon_plate_y_mm: 58.0
+  coupon_wall_thickness_mm: 6.0
+  coupon_corner_radius_mm: 3.0
+  npt_boss_outer_diameter_mm: 44.0
+  npt_thread_depth_mm: 15.0
+  npt_thread_major_diameter_mm: 26.67
+  npt_threads_per_inch: 14.0
+  npt_taper_diameter_per_length_mm_per_mm: 0.0625
+  npt_thread_clearance_variants_mm:
+    - 0.35
+    - 0.55
+parameter_sources:
+  coupon_plate_x_mm:
+    source_ref: p070_npt_thread_entry_findings
+    locator: "Thread-fit coupon: two 3/4 NPT boss variants on one K1-compatible plate"
+    retrieved_on: 2026-05-05
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  coupon_plate_y_mm:
+    source_ref: p070_npt_thread_entry_findings
+    locator: "Thread-fit coupon: two 3/4 NPT boss variants on one K1-compatible plate"
+    retrieved_on: 2026-05-05
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  coupon_wall_thickness_mm:
+    source_ref: p070_npt_thread_entry_findings
+    locator: "Thread-fit coupon: thicker coupon plate for 3/4 NPT boss load path testing"
+    retrieved_on: 2026-05-05
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  coupon_corner_radius_mm:
+    source_ref: p070_npt_thread_entry_findings
+    locator: "Thread-fit coupon: local handling radius; validate on printed coupon"
+    retrieved_on: 2026-05-05
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  npt_boss_outer_diameter_mm:
+    source_ref: p070_npt_thread_entry_findings
+    locator: "Printed boss selected larger than LAPP ØA 36.2 mm with wall margin for ASA review"
+    retrieved_on: 2026-05-05
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  npt_thread_depth_mm:
+    source_ref: lapp_skintop_str_npt_3_4_reference
+    locator: "LAPP STR NPT 3/4 row includes 15 mm dimension; use as a prototype engagement-depth target pending physical part check"
+    retrieved_on: 2026-05-05
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  npt_thread_major_diameter_mm:
+    source_ref: lapp_skintop_str_npt_3_4_reference
+    locator: "Hardware record npt_3_4_major_diameter_mm = 26.67"
+    retrieved_on: 2026-05-05
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  npt_threads_per_inch:
+    source_ref: lapp_skintop_str_npt_3_4_reference
+    locator: "Hardware record npt_3_4_threads_per_inch = 14"
+    retrieved_on: 2026-05-05
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  npt_taper_diameter_per_length_mm_per_mm:
+    source_ref: lapp_skintop_str_npt_3_4_reference
+    locator: "Hardware record npt_3_4_taper_diameter_per_length_mm_per_mm = 0.0625"
+    retrieved_on: 2026-05-05
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  npt_thread_clearance_variants_mm:
+    source_ref: p070_npt_thread_entry_findings
+    locator: "FDM printed threads need coupon-based clearance tuning before accepting an enclosure thread"
+    retrieved_on: 2026-05-05
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+outputs:
+  - step
+  - stl
+blocked_full_case: true
+generation_enabled: true
+generation_blockers:
+  - Print and test this coupon before relying on the rear-pod 3/4 NPT boss.
+environmental_context:
+  exposure: outdoor-prototype
+  ruggedization:
+    - cable-entry
+    - reinforced-walls
+  source_refs:
+    - p070_npt_thread_entry_findings
+  validation_plan:
+    - Test LAPP 53016150 engagement by hand and with conservative service torque.
+    - Record fit, cross-threading, layer damage, and cable retention behavior.
+  rating_claims: []
+source_refs:
+  - id: p070_npt_thread_entry_findings
+    title: P070 3/4 NPT field-entry and hinge strengthening findings
+    status: internal-review
+    path: 3d-print-work/research/p070-npt-field-entry-and-hinge-strengthening.md
+  - id: lapp_skintop_str_npt_3_4_reference
+    title: LAPP SKINTOP STR NPT 3/4 cable gland reference
+    status: internal-review
+    path: 3d-print-work/data/hardware/lapp_skintop_str_npt_3_4_reference.yaml
+  - id: creality_k1_modified_asa
+    title: Creality K1 modified ASA printer record
+    status: internal-review
+    path: 3d-print-work/data/printers/creality_k1_modified_asa.yaml
+open_measurement_blockers:
+  - Print coupon in the intended ASA profile and test with actual LAPP 53016150 hardware.
+  - Confirm cable count, cable diameters, bend radius, and service-loop path.
+notes: >
+  Thread-fit coupon for a segmented printed 3/4 NPT prototype thread. This is
+  not an enclosure rating, sealing, pullout, or service-life claim.

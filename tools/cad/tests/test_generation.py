@@ -144,6 +144,29 @@ def test_p070_surface_treatment_coupon_generates_watertight(tmp_path) -> None:
     assert mesh.is_watertight
 
 
+def test_npt_3_4_thread_fit_coupon_generates_watertight(tmp_path) -> None:
+    bundle = load_specs(data_dir=DEFAULT_DATA_DIR)
+    manifest = generate_concepts(
+        bundle,
+        output_dir=tmp_path,
+        concept_ids=["npt_3_4_thread_fit_coupon"],
+    )
+    artifact = _artifact_by_id(manifest, "npt_3_4_thread_fit_coupon")
+
+    assert artifact["truth_state"] == "internal review"
+    assert artifact["public_release"] is False
+    assert artifact["blocked_full_case"] is True
+    assert artifact["bounds_mm"]["x"] == pytest.approx(118.0, abs=0.2)
+    assert artifact["bounds_mm"]["y"] == pytest.approx(58.0, abs=0.2)
+    assert artifact["bounds_mm"]["z"] > 20.0
+
+    stl_path = tmp_path / "npt_3_4_thread_fit_coupon.stl"
+    assert stl_path.is_file()
+    mesh = trimesh.load_mesh(stl_path, force="mesh")
+    assert mesh.is_watertight
+    assert _broken_face_count(mesh) == 0
+
+
 def test_p070_hinged_enclosure_generates_as_blocked_internal_review(tmp_path) -> None:
     bundle = load_specs(data_dir=DEFAULT_DATA_DIR)
     manifest = generate_concepts(
@@ -238,6 +261,7 @@ def test_p070_heltec_outdoor_enclosure_exports_power_rf_references(tmp_path) -> 
         "lifepo4_battery_reference",
         "buckboost_regulator_reference",
         "sma_bulkhead_reference",
+        "field_gland_reference",
         "antenna_keepout_reference",
         "wire_channel_reference",
     } <= set(parts)
@@ -263,6 +287,8 @@ def test_p070_heltec_outdoor_enclosure_exports_power_rf_references(tmp_path) -> 
     assert reinforcement["front_door_edge_corner_reinforcement"]["outside_display_window"] is True
     assert reinforcement["rear_pod_floor_ribs"]["count"] == 5
     assert reinforcement["rear_pod_side_wall_ledges"]["count"] == 4
+    assert reinforcement["field_gland_support_webs"]["count"] == 4
+    assert reinforcement["wire_route_rails"]["count"] == 6
     _assert_p070_display_mount(metadata["display_mount"])
     hardware_placement = metadata["hardware_placement"]
     assert hardware_placement["heat_set_inserts"]["status"] == "deferred"
@@ -277,6 +303,25 @@ def test_p070_heltec_outdoor_enclosure_exports_power_rf_references(tmp_path) -> 
     assert interface["body_clearance_from_display_y_mm"] >= 12.0
     assert interface["connector"]["type"] == "printed tongue and landing"
     assert metadata["mechanical_reinforcement"]["rear_pod_sidecar_connected"] is True
+    field_entry = metadata["field_cable_entry"]
+    assert field_entry["hardware_ref"] == "lapp_skintop_str_npt_3_4_reference"
+    assert field_entry["article_number"] == "53016150"
+    assert field_entry["thread"] == "3/4 NPT"
+    assert field_entry["thread_mode"] == "segmented_printed_internal_thread"
+    assert field_entry["prototype_thread"]["threads_per_inch"] == pytest.approx(14.0)
+    assert field_entry["prototype_thread"]["pitch_mm"] == pytest.approx(25.4 / 14, abs=0.001)
+    assert field_entry["prototype_thread"]["ridge_segment_count"] > 20
+    assert field_entry["placement"]["part"] == "rear_battery_pod"
+    assert field_entry["placement"]["separated_from_rf_sma"] is True
+    assert "thread-fit coupon" in field_entry["validation_required"]
+    wire_routing = metadata["wire_routing"]
+    assert wire_routing["rail_count"] == 6
+    assert {route["id"] for route in wire_routing["routes"]} == {
+        "field_entry_to_regulator",
+        "regulator_to_heltec_power",
+        "heltec_to_sma_rf",
+    }
+    assert wire_routing["routes"][0]["channel_width_mm"] == pytest.approx(12.0)
     review = metadata["review"]
     assert review["baseline_run_id"] == "fusion-20260503T022638Z"
     assert review["review_status"] == "generated-fusion-baseline-clean; physical-validation-blocked"
@@ -301,10 +346,16 @@ def test_p070_heltec_outdoor_enclosure_exports_power_rf_references(tmp_path) -> 
     structural = metadata["structural_review"]
     assert structural["schema"] == "cbbs-cad/structural-review/v1"
     assert structural["strengthened_features"]["hinge_root_pads"] == 5
+    assert structural["strengthened_features"]["hinge_backer_rails"] == 5
+    assert structural["strengthened_features"]["hinge_gusset_webs"] == 10
     assert structural["strengthened_features"]["rear_pod_floor_ribs"] == 5
-    assert structural["strengthened_features"]["heltec_alignment_aids"] == 4
-    assert structural["strengthened_features"]["regulator_alignment_aids"] == 4
+    assert structural["strengthened_features"]["heltec_alignment_aids"] == 8
+    assert structural["strengthened_features"]["regulator_alignment_aids"] == 8
+    assert structural["strengthened_features"]["field_gland_threaded_boss"] == 1
+    assert structural["strengthened_features"]["field_gland_support_webs"] == 4
+    assert structural["strengthened_features"]["wire_route_rails"] == 6
     assert structural["k1_margins_mm"]["legacy_or_combined_plate_accepted"] is False
+    assert "3/4 NPT thread-fit coupon" in structural["validation_required"]
     assert "heat validation" in structural["validation_required"]
     assert "RF validation" in structural["validation_required"]
 
@@ -376,8 +427,14 @@ def test_p070_hinge_is_symmetric_and_k1_print_parts_fit(tmp_path) -> None:
     assert root["records"][0]["center_y_mm"] == pytest.approx(-root["records"][-1]["center_y_mm"])
     assert root["records"][1]["center_y_mm"] == pytest.approx(-root["records"][-2]["center_y_mm"])
     assert all(item["owner_specific"] for item in root["records"])
+    assert root["backer_rails"]["count"] == 5
+    assert root["backer_rails"]["owner_pattern"] == owners
+    assert root["gusset_webs"]["count"] == 10
+    assert set(root["gusset_webs"]["owner_pattern"]) == {"tray", "door"}
 
     reinforcement = metadata["mechanical_reinforcement"]
+    assert reinforcement["hinge_backer_rails"]["count"] == 5
+    assert reinforcement["hinge_gusset_webs"]["count"] == 10
     assert reinforcement["rear_panel_floor_rib_lattice"]["count"] == 6
     assert reinforcement["rear_panel_floor_rib_lattice"]["symmetric"] is True
     assert reinforcement["display_boss_to_floor_webs"]["count"] == 8
@@ -385,6 +442,8 @@ def test_p070_hinge_is_symmetric_and_k1_print_parts_fit(tmp_path) -> None:
     structural = metadata["structural_review"]
     assert structural["strengthened_features"] == {
         "hinge_root_pads": 5,
+        "hinge_backer_rails": 5,
+        "hinge_gusset_webs": 10,
         "rear_panel_floor_ribs": 6,
         "rear_panel_inner_perimeter_rails": 4,
         "display_boss_webs": 8,

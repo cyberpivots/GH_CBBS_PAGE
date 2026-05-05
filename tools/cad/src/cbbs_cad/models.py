@@ -355,6 +355,7 @@ ModelFamily = Literal[
     "p070_rugged_bezel_fit_frame",
     "p070_hinged_wall_enclosure",
     "p070_heltec_outdoor_controller_enclosure",
+    "npt_3_4_thread_fit_coupon",
     "p070_surface_treatment_coupon",
     "rugged_wall_section_coupon",
     "gasket_flange_coupon",

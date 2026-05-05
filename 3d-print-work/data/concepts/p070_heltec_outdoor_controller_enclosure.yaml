@@ -18,6 +18,7 @@ hardware_refs:
   - creality_k1_series_asa_profile
   - jst_xh_4p_reference
   - lapp_skintop_st_m12x15_reference
+  - lapp_skintop_str_npt_3_4_reference
   - m3_pin_clearance_reference
 parameters:
   heltec_bay_x_mm: 61.0
@@ -57,6 +58,13 @@ parameters:
   display_mount_thread_mode: m3_printed_pilot
   display_mount_thread_nominal: M3x0.5
   display_mount_thread_pilot_diameter_mm: 2.6
+  field_gland_boss_outer_diameter_mm: 44.0
+  field_gland_thread_depth_mm: 15.0
+  field_gland_thread_major_diameter_mm: 26.67
+  field_gland_threads_per_inch: 14.0
+  field_gland_taper_diameter_per_length_mm_per_mm: 0.0625
+  field_gland_thread_clearance_mm: 0.45
+  field_wire_trunk_channel_width_mm: 12.0
 parameter_sources:
   heltec_bay_x_mm:
     source_ref: p070_heltec_power_rf_findings
@@ -269,6 +277,48 @@ parameter_sources:
     evidence_type: design-parameter
     verification_status: pending-measurement
     notes: 2.6 mm is a first-pass printed pilot for M3 thread forming/tapping in ASA bosses.
+  field_gland_boss_outer_diameter_mm:
+    source_ref: p070_npt_thread_entry_findings
+    locator: "Printed 3/4 NPT boss selected larger than LAPP ØA 36.2 mm with wall margin for ASA review"
+    retrieved_on: 2026-05-05
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  field_gland_thread_depth_mm:
+    source_ref: lapp_skintop_str_npt_3_4_reference
+    locator: "LAPP STR NPT 3/4 row includes 15 mm dimension; use as a prototype engagement-depth target pending physical part check"
+    retrieved_on: 2026-05-05
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  field_gland_thread_major_diameter_mm:
+    source_ref: lapp_skintop_str_npt_3_4_reference
+    locator: "Hardware record npt_3_4_major_diameter_mm = 26.67"
+    retrieved_on: 2026-05-05
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  field_gland_threads_per_inch:
+    source_ref: lapp_skintop_str_npt_3_4_reference
+    locator: "Hardware record npt_3_4_threads_per_inch = 14"
+    retrieved_on: 2026-05-05
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  field_gland_taper_diameter_per_length_mm_per_mm:
+    source_ref: lapp_skintop_str_npt_3_4_reference
+    locator: "Hardware record npt_3_4_taper_diameter_per_length_mm_per_mm = 0.0625"
+    retrieved_on: 2026-05-05
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  field_gland_thread_clearance_mm:
+    source_ref: p070_npt_thread_entry_findings
+    locator: "FDM printed threads need coupon-based clearance tuning before accepting an enclosure thread"
+    retrieved_on: 2026-05-05
+    evidence_type: design-parameter
+    verification_status: pending-measurement
+  field_wire_trunk_channel_width_mm:
+    source_ref: p070_npt_thread_entry_findings
+    locator: "3/4 NPT field-entry route uses a non-claiming 12 mm prototype trunk pending cable stack measurement"
+    retrieved_on: 2026-05-05
+    evidence_type: design-parameter
+    verification_status: pending-measurement
 outputs:
   - step
   - stl
@@ -307,6 +357,14 @@ source_refs:
     title: P070 structural strengthening findings
     status: internal-review
     path: 3d-print-work/research/p070-structural-strengthening-findings.md
+  - id: p070_npt_thread_entry_findings
+    title: P070 3/4 NPT field-entry and hinge strengthening findings
+    status: internal-review
+    path: 3d-print-work/research/p070-npt-field-entry-and-hinge-strengthening.md
+  - id: lapp_skintop_str_npt_3_4_reference
+    title: LAPP SKINTOP STR NPT 3/4 cable gland reference
+    status: internal-review
+    path: 3d-print-work/data/hardware/lapp_skintop_str_npt_3_4_reference.yaml
   - id: p070_model_review
     title: P070 Heltec outdoor model review
     status: internal-review
@@ -392,6 +450,7 @@ open_measurement_blockers:
   - Confirm battery pack, regulator, charger connector, display load, Heltec transmit duty cycle, heat rise, and cable retention.
   - Confirm gasket, drip-lip, fastener, venting, material, and service-cycle behavior with printed prototypes.
   - Confirm RF antenna placement and bulkhead connector compatibility before release review.
+  - Confirm LAPP 53016150 gland fit, printed thread engagement, cable stack, service torque, and cable retention.
   - Confirm raised CBBS text, contour rails, and macro rib texture print cleanly in the intended material and do not interfere with service handling.
 notes: >
   Internal review all-in-one P070 controller concept with rear battery pod,

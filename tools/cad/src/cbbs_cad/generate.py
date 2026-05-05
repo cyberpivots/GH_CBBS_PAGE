@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
-from math import atan2, degrees, hypot
+from math import atan2, degrees, hypot, pi
 from pathlib import Path
 from typing import Any
 
@@ -68,6 +68,18 @@ def _integer(params: dict[str, Any], name: str, default: int) -> int:
     if not isinstance(value, int):
         raise ValueError(f"parameter {name} must be an integer")
     return value
+
+
+def _number_list(params: dict[str, Any], name: str, default: list[float]) -> list[float]:
+    value = params.get(name, default)
+    if not isinstance(value, list) or not value:
+        raise ValueError(f"parameter {name} must be a non-empty numeric list")
+    numbers: list[float] = []
+    for item in value:
+        if not isinstance(item, int | float):
+            raise ValueError(f"parameter {name} must be a non-empty numeric list")
+        numbers.append(float(item))
+    return numbers
 
 
 def _box(cq: Any, x: float, y: float, z: float) -> Any:
@@ -297,6 +309,66 @@ def _build_cable_entry_boss_coupon(cq: Any, concept: ConceptSpec) -> Any:
     return model.faces(">Z").workplane().hole(cable_hole)
 
 
+def _build_npt_3_4_thread_fit_coupon(cq: Any, concept: ConceptSpec) -> Any:
+    params = concept.parameters
+    plate_x = _number(params, "coupon_plate_x_mm", 118.0)
+    plate_y = _number(params, "coupon_plate_y_mm", 58.0)
+    wall = _number(params, "coupon_wall_thickness_mm", 6.0)
+    corner = _number(params, "coupon_corner_radius_mm", 3.0)
+    boss_outer = _number(params, "npt_boss_outer_diameter_mm", 44.0)
+    thread_depth = _number(params, "npt_thread_depth_mm", 15.0)
+    major_diameter = _number(params, "npt_thread_major_diameter_mm", 26.67)
+    threads_per_inch = _number(params, "npt_threads_per_inch", 14.0)
+    taper = _number(params, "npt_taper_diameter_per_length_mm_per_mm", 0.0625)
+    clearances = _number_list(params, "npt_thread_clearance_variants_mm", [0.35, 0.55])
+
+    model = rounded_plate(cq, plate_x, plate_y, wall, corner)
+    spacing = plate_x / (len(clearances) + 1)
+    centers = [(-plate_x / 2 + spacing * (index + 1), 0.0) for index in range(len(clearances))]
+    for center, clearance in zip(centers, clearances, strict=True):
+        cut_depth = wall + 0.8
+        bore_geometry = _npt_thread_geometry(
+            major_diameter,
+            threads_per_inch,
+            taper,
+            clearance,
+            cut_depth,
+        )
+        wall_cut = cq.Solid.makeCone(
+            float(bore_geometry["minor_radius_start_mm"]),
+            float(bore_geometry["minor_radius_end_mm"]),
+            cut_depth,
+            pnt=cq.Vector(center[0], center[1], -0.4),
+            dir=cq.Vector(0, 0, 1),
+        )
+        model = model.cut(wall_cut)
+        boss, _record = _build_segmented_npt_boss_z(
+            cq,
+            boss_outer,
+            thread_depth,
+            major_diameter,
+            threads_per_inch,
+            taper,
+            clearance,
+        )
+        model = model.union(boss.translate((center[0], center[1], wall)))
+
+    label_rail_width = 1.2
+    for center, clearance in zip(centers, clearances, strict=True):
+        marker_length = max(8.0, min(18.0, boss_outer * 0.35 + clearance * 6))
+        model = add_box_feature(
+            model,
+            cq,
+            marker_length,
+            label_rail_width,
+            0.8,
+            center[0],
+            -plate_y / 2 + 7.0,
+            wall,
+        )
+    return model
+
+
 def _build_drip_lip_seam_coupon(cq: Any, concept: ConceptSpec) -> Any:
     params = concept.parameters
     base_x = _number(params, "base_x_mm", 80.0)
@@ -379,6 +451,177 @@ def _cylinder_y(
     if hole_diameter:
         profile = profile.circle(hole_diameter / 2)
     return profile.extrude(length).translate((0, y_start, 0))
+
+
+def _cone_y(
+    cq: Any,
+    center_x: float,
+    y_start: float,
+    center_z: float,
+    start_diameter: float,
+    end_diameter: float,
+    length: float,
+) -> Any:
+    cone = cq.Solid.makeCone(
+        start_diameter / 2,
+        end_diameter / 2,
+        length,
+        pnt=cq.Vector(0, 0, 0),
+        dir=cq.Vector(0, 0, 1),
+    )
+    return cq.Workplane("XY").add(cone).rotate((0, 0, 0), (1, 0, 0), -90).translate(
+        (center_x, y_start, center_z)
+    )
+
+
+def _npt_thread_geometry(
+    major_diameter: float,
+    threads_per_inch: float,
+    taper_diameter_per_length: float,
+    clearance: float,
+    depth: float,
+) -> dict[str, float | int]:
+    pitch = 25.4 / threads_per_inch
+    taper_radius_per_length = taper_diameter_per_length / 2
+    thread_radial_depth = min(1.25, pitch * 0.68)
+    minor_radius_start = major_diameter / 2 - thread_radial_depth + clearance
+    radial_width = max(0.9, min(1.15, pitch * 0.62))
+    tangential_width = max(1.6, min(2.3, pitch * 1.2))
+    axial_width = max(0.55, min(0.9, pitch * 0.45))
+    turns = depth / pitch
+    segments_per_turn = 6
+    segment_count = max(12, int(turns * segments_per_turn))
+    return {
+        "pitch_mm": round(pitch, 4),
+        "minor_radius_start_mm": minor_radius_start,
+        "minor_radius_end_mm": minor_radius_start + taper_radius_per_length * depth,
+        "taper_radius_per_length_mm_per_mm": taper_radius_per_length,
+        "thread_radial_depth_mm": round(thread_radial_depth, 4),
+        "ridge_radial_width_mm": round(radial_width, 4),
+        "ridge_tangential_width_mm": round(tangential_width, 4),
+        "ridge_axial_width_mm": round(axial_width, 4),
+        "turns": round(turns, 4),
+        "segments_per_turn": segments_per_turn,
+        "segment_count": segment_count,
+    }
+
+
+def _build_segmented_npt_boss_z(
+    cq: Any,
+    outer_diameter: float,
+    depth: float,
+    major_diameter: float,
+    threads_per_inch: float,
+    taper_diameter_per_length: float,
+    clearance: float,
+) -> tuple[Any, dict[str, Any]]:
+    if threads_per_inch <= 0:
+        raise ValueError("NPT threads_per_inch must be positive")
+    if depth <= 0 or outer_diameter <= major_diameter:
+        raise ValueError("NPT boss dimensions must be positive and larger than the thread")
+    geometry = _npt_thread_geometry(
+        major_diameter,
+        threads_per_inch,
+        taper_diameter_per_length,
+        clearance,
+        depth,
+    )
+    model = cq.Workplane("XY").circle(outer_diameter / 2).extrude(depth)
+    bore = cq.Solid.makeCone(
+        float(geometry["minor_radius_start_mm"]),
+        float(geometry["minor_radius_end_mm"]),
+        depth + 0.6,
+        pnt=cq.Vector(0, 0, -0.3),
+        dir=cq.Vector(0, 0, 1),
+    )
+    model = model.cut(bore)
+
+    turns = float(geometry["turns"])
+    segment_count = int(geometry["segment_count"])
+    taper_radius_per_length = float(geometry["taper_radius_per_length_mm_per_mm"])
+    minor_radius_start = float(geometry["minor_radius_start_mm"])
+    radial_width = float(geometry["ridge_radial_width_mm"])
+    tangential_width = float(geometry["ridge_tangential_width_mm"])
+    axial_width = float(geometry["ridge_axial_width_mm"])
+    for index in range(segment_count):
+        t = (index + 0.5) / segment_count
+        theta = 2 * pi * turns * t
+        z = depth * t
+        radius = minor_radius_start + taper_radius_per_length * z + radial_width * 0.32
+        pad = (
+            cq.Workplane("XY")
+            .box(radial_width, tangential_width, axial_width, centered=(True, True, True))
+            .translate((radius, 0, z))
+            .rotate((0, 0, 0), (0, 0, 1), degrees(theta))
+        )
+        model = model.union(pad)
+
+    return model, {
+        "thread_form": "segmented-helical-internal-ridges",
+        "clearance_mm": round(clearance, 4),
+        "major_diameter_mm": round(major_diameter, 4),
+        "threads_per_inch": round(threads_per_inch, 4),
+        "pitch_mm": geometry["pitch_mm"],
+        "depth_mm": round(depth, 4),
+        "taper_diameter_per_length_mm_per_mm": round(taper_diameter_per_length, 6),
+        "ridge_segment_count": segment_count,
+        "segments_per_turn": geometry["segments_per_turn"],
+        "validation_status": "coupon-and-physical-gland-fit-required",
+    }
+
+
+def _build_segmented_npt_boss_y(
+    cq: Any,
+    center_x: float,
+    y_start: float,
+    center_z: float,
+    outer_diameter: float,
+    depth: float,
+    major_diameter: float,
+    threads_per_inch: float,
+    taper_diameter_per_length: float,
+    clearance: float,
+) -> tuple[Any, dict[str, Any]]:
+    boss_z, record = _build_segmented_npt_boss_z(
+        cq,
+        outer_diameter,
+        depth,
+        major_diameter,
+        threads_per_inch,
+        taper_diameter_per_length,
+        clearance,
+    )
+    boss_y = boss_z.rotate((0, 0, 0), (1, 0, 0), -90).translate((center_x, y_start, center_z))
+    return boss_y, record
+
+
+def _npt_wall_cut_y(
+    cq: Any,
+    center_x: float,
+    y_start: float,
+    center_z: float,
+    depth: float,
+    major_diameter: float,
+    threads_per_inch: float,
+    taper_diameter_per_length: float,
+    clearance: float,
+) -> Any:
+    geometry = _npt_thread_geometry(
+        major_diameter,
+        threads_per_inch,
+        taper_diameter_per_length,
+        clearance,
+        depth,
+    )
+    return _cone_y(
+        cq,
+        center_x,
+        y_start,
+        center_z,
+        float(geometry["minor_radius_start_mm"]) * 2,
+        float(geometry["minor_radius_end_mm"]) * 2,
+        depth,
+    )
 
 
 def _hinge_barrel_y(
@@ -732,6 +975,88 @@ def _build_p070_hinged_wall_enclosure(
         "rear_tray": _model_bounds_mm(tray),
         "front_display_door": _model_bounds_mm(door),
     }
+    hinge_backer_rail_records: list[dict[str, Any]] = []
+    hinge_gusset_records: list[dict[str, Any]] = []
+    backer_x_length = max(wall * 2.0, rib_width * 4)
+    backer_x_center = -outer_x / 2 + wall + backer_x_length / 2
+    backer_z_height = min(rib_height * 1.1, hinge_outer / 2 - door_thickness / 2)
+    gusset_y_length = max(rib_width, min(3.2, root_pad_y_length / 4))
+    gusset_x_start = root_pad_x_min + min(rib_width, hinge_outer / 5)
+    gusset_x_end = -outer_x / 2 + max(wall * 2.2, backer_x_length)
+    gusset_z_start = root_pad_z_base + min(0.3, rib_height / 6)
+    gusset_z_end = min(
+        hinge_z + hinge_outer / 2 - 0.2,
+        root_pad_z_base + root_pad_z_height,
+    )
+    for record in hinge_records:
+        y_center = record["center_y_mm"]
+        if record["owner"] == "tray":
+            z_base = max(floor, hinge_z - backer_z_height / 2)
+            tray = add_box_feature(
+                tray,
+                cq,
+                backer_x_length,
+                root_pad_y_length,
+                backer_z_height,
+                backer_x_center,
+                y_center,
+                z_base,
+            )
+        else:
+            z_base = door_top_z
+            door = add_box_feature(
+                door,
+                cq,
+                backer_x_length,
+                root_pad_y_length,
+                backer_z_height,
+                backer_x_center,
+                y_center,
+                z_base,
+            )
+        hinge_backer_rail_records.append(
+            {
+                "index": record["index"],
+                "owner": record["owner"],
+                "center_y_mm": round(y_center, 4),
+                "x_length_mm": round(backer_x_length, 4),
+                "y_length_mm": round(root_pad_y_length, 4),
+                "height_mm": round(backer_z_height, 4),
+                "owner_specific": True,
+            }
+        )
+
+        for y_offset in (-root_pad_y_length * 0.32, root_pad_y_length * 0.32):
+            gusset = (
+                cq.Workplane("XZ")
+                .polyline(
+                    [
+                        (gusset_x_start, gusset_z_start),
+                        (gusset_x_end, gusset_z_start),
+                        (gusset_x_end, gusset_z_end),
+                    ]
+                )
+                .close()
+                .extrude(gusset_y_length)
+                .translate((0, y_center + y_offset - gusset_y_length / 2, 0))
+            )
+            if record["owner"] == "tray":
+                tray = tray.union(gusset)
+            else:
+                door = door.union(gusset)
+            hinge_gusset_records.append(
+                {
+                    "index": record["index"],
+                    "owner": record["owner"],
+                    "center_y_mm": round(y_center + y_offset, 4),
+                    "length_y_mm": round(gusset_y_length, 4),
+                    "x_start_mm": round(gusset_x_start, 4),
+                    "x_end_mm": round(gusset_x_end, 4),
+                    "z_start_mm": round(gusset_z_start, 4),
+                    "z_end_mm": round(gusset_z_end, 4),
+                    "owner_specific": True,
+                }
+            )
 
     pin_y_start = hinge_y_start - 1.0
     pin_length = total_hinge_span + 2.0
@@ -1042,6 +1367,16 @@ def _build_p070_hinged_wall_enclosure(
                 "count": len(hinge_root_pad_records),
                 "records": hinge_root_pad_records,
                 "owner_pattern": [record["owner"] for record in hinge_root_pad_records],
+                "backer_rails": {
+                    "count": len(hinge_backer_rail_records),
+                    "records": hinge_backer_rail_records,
+                    "owner_pattern": [record["owner"] for record in hinge_backer_rail_records],
+                },
+                "gusset_webs": {
+                    "count": len(hinge_gusset_records),
+                    "records": hinge_gusset_records,
+                    "owner_pattern": [record["owner"] for record in hinge_gusset_records],
+                },
                 "minimum_gap_between_pads_mm": round(
                     hinge_gap + root_pad_y_trim * 2,
                     4,
@@ -1053,6 +1388,16 @@ def _build_p070_hinged_wall_enclosure(
             },
         },
         "mechanical_reinforcement": {
+            "hinge_backer_rails": {
+                "count": len(hinge_backer_rail_records),
+                "records": hinge_backer_rail_records,
+                "owner_specific": True,
+            },
+            "hinge_gusset_webs": {
+                "count": len(hinge_gusset_records),
+                "records": hinge_gusset_records,
+                "owner_specific": True,
+            },
             "rear_panel_floor_rib_lattice": {
                 "count": len(floor_lattice_records),
                 "records": floor_lattice_records,
@@ -1089,6 +1434,8 @@ def _build_p070_hinged_wall_enclosure(
             ],
             "strengthened_features": {
                 "hinge_root_pads": len(hinge_root_pad_records),
+                "hinge_backer_rails": len(hinge_backer_rail_records),
+                "hinge_gusset_webs": len(hinge_gusset_records),
                 "rear_panel_floor_ribs": len(floor_lattice_records),
                 "rear_panel_inner_perimeter_rails": len(inner_perimeter_rail_records),
                 "display_boss_webs": len(display_boss_web_records) * 2,
@@ -1106,6 +1453,8 @@ def _build_p070_hinged_wall_enclosure(
             },
             "weak_points_addressed": [
                 "hinge barrel root contact",
+                "hinge leaf root shear at printed door knuckles",
+                "hinge-side frame flex at alternating knuckle gaps",
                 "rear panel floor oil-canning",
                 "display mount boss floor pull-through",
                 "front display door corner and edge flex",
@@ -1213,6 +1562,55 @@ def _raised_bar_between(
     return _try_chamfer_vertical_edges(feature, chamfer, length, width, height)
 
 
+def _add_route_rail_pair_between(
+    model: Any,
+    cq: Any,
+    start: tuple[float, float],
+    end: tuple[float, float],
+    channel_width: float,
+    rail_width: float,
+    rail_height: float,
+    z_base: float,
+    route_id: str,
+    chamfer: float = 0.0,
+) -> tuple[Any, list[dict[str, Any]]]:
+    length = hypot(end[0] - start[0], end[1] - start[1])
+    if length <= 0:
+        return model, []
+    dx = (end[0] - start[0]) / length
+    dy = (end[1] - start[1]) / length
+    px = -dy
+    py = dx
+    records: list[dict[str, Any]] = []
+    for side, sign in (("left", -1.0), ("right", 1.0)):
+        offset = channel_width / 2 * sign
+        rail_start = (start[0] + px * offset, start[1] + py * offset)
+        rail_end = (end[0] + px * offset, end[1] + py * offset)
+        model = model.union(
+            _raised_bar_between(
+                cq,
+                rail_start,
+                rail_end,
+                rail_width,
+                rail_height,
+                z_base,
+                chamfer,
+            )
+        )
+        records.append(
+            {
+                "route_id": route_id,
+                "side": side,
+                "start_mm": {"x": round(rail_start[0], 4), "y": round(rail_start[1], 4)},
+                "end_mm": {"x": round(rail_end[0], 4), "y": round(rail_end[1], 4)},
+                "length_mm": round(length, 4),
+                "rail_width_mm": round(rail_width, 4),
+                "rail_height_mm": round(rail_height, 4),
+            }
+        )
+    return model, records
+
+
 def _raised_annular_badge(
     cq: Any,
     center_x: float,
@@ -1294,6 +1692,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
     battery = _hardware_by_required_id(hardware_by_id, "bioenno_blf_0612c_lifepo4_pack")
     regulator = _hardware_by_required_id(hardware_by_id, "pololu_s13v30f5_regulator")
     antenna = _hardware_by_required_id(hardware_by_id, "taoglas_ti_96_a113_915mhz_antenna")
+    field_gland = _hardware_by_required_id(hardware_by_id, "lapp_skintop_str_npt_3_4_reference")
 
     base = _build_p070_hinged_wall_enclosure(cq, concept, display)
     if not base.assembly:
@@ -1356,6 +1755,17 @@ def _build_p070_heltec_outdoor_controller_enclosure(
     raised_brand_text_font_size = _number(params, "raised_brand_text_font_size_mm", 10.0)
     raised_brand_icon_diameter = _number(params, "raised_brand_icon_diameter_mm", 14.0)
     surface_chamfer = _number(params, "surface_feature_edge_chamfer_mm", 0.2)
+    field_gland_boss_outer = _number(params, "field_gland_boss_outer_diameter_mm", 44.0)
+    field_gland_thread_depth = _number(params, "field_gland_thread_depth_mm", 15.0)
+    field_gland_thread_major = _number(params, "field_gland_thread_major_diameter_mm", 26.67)
+    field_gland_threads_per_inch = _number(params, "field_gland_threads_per_inch", 14.0)
+    field_gland_taper = _number(
+        params,
+        "field_gland_taper_diameter_per_length_mm_per_mm",
+        0.0625,
+    )
+    field_gland_clearance = _number(params, "field_gland_thread_clearance_mm", 0.45)
+    field_wire_trunk_width = _number(params, "field_wire_trunk_channel_width_mm", 12.0)
 
     pod_outer_x = min(outer_x - 16.0, battery_bay_x + pod_wall * 2)
     pod_outer_y = battery_bay_y + pod_wall * 2
@@ -1641,6 +2051,30 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                     "length_mm": round(rail_y, 4),
                 }
             )
+        if label in {"heltec_v2", "regulator"}:
+            corner_pad = rail_width * 1.8
+            for sx in (-1.0, 1.0):
+                for sy in (-1.0, 1.0):
+                    pad_x = center[0] + sx * x_offset
+                    pad_y = center[1] + sy * y_offset
+                    model = add_box_feature(
+                        model,
+                        cq,
+                        corner_pad,
+                        corner_pad,
+                        feature_height,
+                        pad_x,
+                        pad_y,
+                        z_base,
+                    )
+                    records.append(
+                        {
+                            "kind": "corner_capture_pad",
+                            "center_x_mm": round(pad_x, 4),
+                            "center_y_mm": round(pad_y, 4),
+                            "length_mm": round(corner_pad, 4),
+                        }
+                    )
         hardware_alignment_records[label] = {
             "type": "alignment rails and stops",
             "feature_count": len(records),
@@ -1729,6 +2163,134 @@ def _build_p070_heltec_outdoor_controller_enclosure(
         "verification_status": "pending-measurement",
     }
 
+    field_gland_x = max(
+        -pod_outer_x / 2 + field_gland_boss_outer / 2 + pod_wall,
+        -pod_outer_x / 2 + field_gland_boss_outer / 2 + 4.0,
+    )
+    field_gland_z = pod_base_z + pod_floor + max(field_gland_boss_outer / 2 + 8.0, 32.0)
+    field_gland_y_start = pod_center_y + pod_outer_y / 2 - 1.0
+    field_wall_cut = _npt_wall_cut_y(
+        cq,
+        field_gland_x,
+        pod_center_y + pod_outer_y / 2 - pod_wall - 0.6,
+        field_gland_z,
+        pod_wall + 1.2,
+        field_gland_thread_major,
+        field_gland_threads_per_inch,
+        field_gland_taper,
+        field_gland_clearance,
+    )
+    rear_pod_module = rear_pod_module.cut(field_wall_cut)
+    field_thread_boss, field_thread_record = _build_segmented_npt_boss_y(
+        cq,
+        field_gland_x,
+        field_gland_y_start,
+        field_gland_z,
+        field_gland_boss_outer,
+        field_gland_thread_depth,
+        field_gland_thread_major,
+        field_gland_threads_per_inch,
+        field_gland_taper,
+        field_gland_clearance,
+    )
+    rear_pod_module = rear_pod_module.union(field_thread_boss)
+    field_gland_support_records: list[dict[str, Any]] = []
+    field_web_depth = min(field_gland_thread_depth, max(pod_wall * 2, 8.0))
+    field_web_y = field_gland_y_start + field_web_depth / 2 - 0.3
+    field_web_height = max(rib_height, macro_rib_height * 1.5)
+    for z_offset, label in (
+        (-field_gland_boss_outer / 2 + field_web_height / 2, "lower_saddle"),
+        (field_gland_boss_outer / 2 - field_web_height / 2, "upper_saddle"),
+    ):
+        rear_pod_module = add_box_feature(
+            rear_pod_module,
+            cq,
+            field_gland_boss_outer * 0.86,
+            field_web_depth,
+            field_web_height,
+            field_gland_x,
+            field_web_y,
+            field_gland_z + z_offset - field_web_height / 2,
+        )
+        field_gland_support_records.append(
+            {
+                "kind": label,
+                "center_x_mm": round(field_gland_x, 4),
+                "center_y_mm": round(field_web_y, 4),
+                "center_z_mm": round(field_gland_z + z_offset, 4),
+                "verification_status": "physical-print-required",
+            }
+        )
+    for x_offset, label in (
+        (-field_gland_boss_outer / 2 + field_web_height / 2, "left_side_web"),
+        (field_gland_boss_outer / 2 - field_web_height / 2, "right_side_web"),
+    ):
+        rear_pod_module = add_box_feature(
+            rear_pod_module,
+            cq,
+            field_web_height,
+            field_web_depth,
+            field_gland_boss_outer * 0.72,
+            field_gland_x + x_offset,
+            field_web_y,
+            field_gland_z - field_gland_boss_outer * 0.36,
+        )
+        field_gland_support_records.append(
+            {
+                "kind": label,
+                "center_x_mm": round(field_gland_x + x_offset, 4),
+                "center_y_mm": round(field_web_y, 4),
+                "center_z_mm": round(field_gland_z, 4),
+                "verification_status": "physical-print-required",
+            }
+        )
+
+    wire_route_records: list[dict[str, Any]] = []
+    route_rail_height = max(1.2, rib_height * 0.75)
+    route_z_base = top_z
+    route_rail_width = max(rib_width, min(2.4, wire_channel_width * 0.35))
+    field_route_start = (field_gland_x, pod_center_y + pod_outer_y / 2 - field_gland_boss_outer / 2)
+    field_route_end = (regulator_center[0], regulator_center[1])
+    rear_pod_module, records = _add_route_rail_pair_between(
+        rear_pod_module,
+        cq,
+        field_route_start,
+        field_route_end,
+        field_wire_trunk_width,
+        route_rail_width,
+        route_rail_height,
+        route_z_base,
+        "field_entry_to_regulator",
+        surface_chamfer,
+    )
+    wire_route_records.extend(records)
+    rear_pod_module, records = _add_route_rail_pair_between(
+        rear_pod_module,
+        cq,
+        field_route_end,
+        (heltec_center[0], heltec_center[1]),
+        wire_channel_width,
+        route_rail_width,
+        route_rail_height,
+        route_z_base,
+        "regulator_to_heltec_power",
+        surface_chamfer,
+    )
+    wire_route_records.extend(records)
+    rear_pod_module, records = _add_route_rail_pair_between(
+        rear_pod_module,
+        cq,
+        (heltec_center[0], heltec_center[1]),
+        (sma_x, pod_center_y + pod_outer_y / 2 - 12.0),
+        wire_channel_width,
+        route_rail_width,
+        route_rail_height,
+        route_z_base,
+        "heltec_to_sma_rf",
+        surface_chamfer,
+    )
+    wire_route_records.extend(records)
+
     tray = rear_panel_core.union(rear_pod_module)
 
     battery_reference = rounded_plate(
@@ -1787,6 +2349,15 @@ def _build_p070_heltec_outdoor_controller_enclosure(
             min(pod_center_y + pod_outer_y / 2 - 12.0, heltec_center[1] + 4.0),
             top_z + standoff_height + 2.0,
         )
+    )
+    field_gland_reference = _cylinder_y(
+        cq,
+        field_gland_x,
+        field_gland_y_start + field_gland_thread_depth,
+        field_gland_z,
+        field_gland.dimensions["outer_diameter_a_mm"],
+        field_gland.dimensions["dimension_d_mm"],
+        field_gland.dimensions["cable_clamp_max_mm"],
     )
 
     door = _part_model(base.assembly.parts, "front_display_door")
@@ -1906,6 +2477,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
         sma_bulkhead_reference,
         antenna_keepout_reference,
         wire_channel_reference,
+        field_gland_reference,
     ]
     closed = _combine_models(
         cq,
@@ -1934,6 +2506,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
             heltec_reference.translate((-18, 18, 26)),
             regulator_reference.translate((18, -18, 26)),
             sma_bulkhead_reference.translate((16, 8, 10)),
+            field_gland_reference.translate((-18, 24, 14)),
             antenna_keepout_reference.translate((24, 16, 0)),
             wire_channel_reference.translate((0, 12, 20)),
         ],
@@ -1945,6 +2518,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
             heltec_reference.translate((0, 0, -top_z - standoff_height)),
             regulator_reference.translate((0, 0, -top_z - standoff_height)),
             sma_bulkhead_reference.translate((0, 0, -sma_z)),
+            field_gland_reference.translate((0, 0, -field_gland_z)),
             wire_channel_reference.translate((0, 0, -top_z - standoff_height)),
             antenna_keepout_reference.translate((0, 0, -sma_z)),
         ],
@@ -2071,6 +2645,14 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                 role="hardware-reference",
                 material_hint="reference only",
                 notes="SMA versus RP-SMA and panel stack must be physically verified.",
+            ),
+            GeneratedAssemblyPart(
+                id="field_gland_reference",
+                name="LAPP SKINTOP STR NPT 3/4 field-entry reference",
+                model=field_gland_reference,
+                role="hardware-reference",
+                material_hint="reference only",
+                notes="Article 53016150 fit, torque, cable stack, and printed thread behavior must be physically verified.",
             ),
             GeneratedAssemblyPart(
                 id="antenna_keepout_reference",
@@ -2231,6 +2813,80 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                 "Confirm RF behavior with printed material and installed display electronics.",
             ],
         },
+        "field_cable_entry": {
+            "schema": "cbbs-cad/field-cable-entry/v1",
+            "hardware_ref": "lapp_skintop_str_npt_3_4_reference",
+            "article_number": str(field_gland.features.get("article_number", "53016150")),
+            "thread": "3/4 NPT",
+            "thread_mode": "segmented_printed_internal_thread",
+            "thread_generation_status": "prototype-modeled; coupon-fit-required",
+            "placement": {
+                "part": "rear_battery_pod",
+                "face": "+Y side wall",
+                "center_mm": {
+                    "x": round(field_gland_x, 4),
+                    "y": round(field_gland_y_start, 4),
+                    "z": round(field_gland_z, 4),
+                },
+                "separated_from_rf_sma": True,
+            },
+            "boss_outer_diameter_mm": round(field_gland_boss_outer, 4),
+            "prototype_thread": field_thread_record,
+            "support_features": {
+                "count": len(field_gland_support_records),
+                "records": field_gland_support_records,
+                "verification_status": "physical-print-required",
+            },
+            "source_refs": [
+                "p070_npt_thread_entry_findings",
+                "lapp_skintop_str_npt_3_4_reference",
+            ],
+            "blocked_claims": [
+                "enclosure rating",
+                "cable pullout rating",
+                "thread torque rating",
+                "field readiness",
+            ],
+            "validation_required": [
+                "thread-fit coupon",
+                "physical LAPP 53016150 gland engagement",
+                "service torque check",
+                "cable stack and bend-radius measurement",
+                "cable retention test",
+            ],
+        },
+        "wire_routing": {
+            "schema": "cbbs-cad/wire-routing/v1",
+            "truth_state": "internal review",
+            "routes": [
+                {
+                    "id": "field_entry_to_regulator",
+                    "purpose": "main field-wire trunk from 3/4 NPT entry toward regulator bay",
+                    "channel_width_mm": round(field_wire_trunk_width, 4),
+                    "verification_status": "pending-measurement",
+                },
+                {
+                    "id": "regulator_to_heltec_power",
+                    "purpose": "low-voltage regulator-to-Heltec routing aid",
+                    "channel_width_mm": round(wire_channel_width, 4),
+                    "verification_status": "pending-measurement",
+                },
+                {
+                    "id": "heltec_to_sma_rf",
+                    "purpose": "RF pigtail routing aid kept separate from main field-wire trunk",
+                    "channel_width_mm": round(wire_channel_width, 4),
+                    "verification_status": "pending-measurement",
+                },
+            ],
+            "rail_count": len(wire_route_records),
+            "rail_records": wire_route_records,
+            "blocked_claims": [
+                "measured bend radius",
+                "field cable stack fit",
+                "RF performance",
+                "strain-relief acceptance",
+            ],
+        },
         "mechanical_reinforcement": {
             **base.assembly.metadata.get("mechanical_reinforcement", {}),
             "rear_pod_wall_thickness_mm": pod_wall,
@@ -2252,6 +2908,16 @@ def _build_p070_heltec_outdoor_controller_enclosure(
             "ribbed_battery_pod_walls": True,
             "battery_strap_slots": 2,
             "reinforced_wall_tabs": len(wall_points),
+            "field_gland_support_webs": {
+                "count": len(field_gland_support_records),
+                "records": field_gland_support_records,
+                "threaded_boss_outer_diameter_mm": round(field_gland_boss_outer, 4),
+            },
+            "wire_route_rails": {
+                "count": len(wire_route_records),
+                "records": wire_route_records,
+                "verification_status": "pending-measurement",
+            },
             "drip_lip_reference_surface": True,
             "gasket_reference_surface": True,
             "venting_review": "blocked",
@@ -2269,6 +2935,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                 "regulator screw-hole coordinates",
                 "heat-set insert hole sizes",
                 "RF route strain-relief acceptance",
+                "field-wire cable-stack fit",
             ],
             "heat_set_inserts": {
                 "status": "deferred",
@@ -2280,6 +2947,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
             },
             "source_refs": [
                 "p070_structural_strengthening_findings",
+                "p070_npt_thread_entry_findings",
                 "heltec_v2_pdf",
                 "pololu_s13v30f5_product_page",
                 "cbbs_candidate_bom_standards",
@@ -2373,11 +3041,13 @@ def _build_p070_heltec_outdoor_controller_enclosure(
             "truth_state": concept.truth_state,
             "source_refs": [
                 "p070_structural_strengthening_findings",
+                "p070_npt_thread_entry_findings",
                 "p070_hinged_wall_enclosure_spec",
                 "p070_futuristic_surface_reinforcement_findings",
                 "p070_heltec_power_rf_findings",
                 "heltec_v2_pdf",
                 "pololu_s13v30f5_product_page",
+                "lapp_skintop_str_npt_3_4_reference",
                 "prusa_fdm_modeling_guidance",
                 "prusa_asa_guidance",
             ],
@@ -2396,6 +3066,9 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                 "rf_route_alignment_rails": hardware_alignment_records["rf_route"][
                     "feature_count"
                 ],
+                "field_gland_threaded_boss": 1,
+                "field_gland_support_webs": len(field_gland_support_records),
+                "wire_route_rails": len(wire_route_records),
             },
             "k1_margins_mm": {
                 "by_part": k1_margins,
@@ -2409,6 +3082,8 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                 ),
                 "rear pod floor flex",
                 "rear pod side-wall flex",
+                "large cable-entry boss root stress",
+                "field-wire route ambiguity",
                 "unmeasured electronics placement ambiguity",
                 "RF pigtail route ambiguity",
             ],
@@ -2417,6 +3092,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                 "physical ASA print of rear panel, rear pod, and front door",
                 "hinge cycling and pin retention",
                 "fastener pullout and printed-pilot behavior",
+                "3/4 NPT printed thread fit, torque, cable stack, and cable retention",
                 "heat, RF, and service validation with actual hardware",
             ],
             "blocked_claims": [
@@ -2434,6 +3110,8 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                 "physical ASA print",
                 "hinge cycling",
                 "fastener pullout",
+                "3/4 NPT thread-fit coupon",
+                "field cable retention",
                 "heat validation",
                 "RF validation",
                 "service validation",
@@ -2520,6 +3198,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                     "lifepo4_battery_reference",
                     "buckboost_regulator_reference",
                     "sma_bulkhead_reference",
+                    "field_gland_reference",
                     "antenna_keepout_reference",
                     "wire_channel_reference",
                 ],
@@ -2802,6 +3481,8 @@ def _build_model(cq: Any, concept: ConceptSpec, hardware_by_id: dict[str, Hardwa
         )
     if concept.model_family == "p070_heltec_outdoor_controller_enclosure":
         return _build_p070_heltec_outdoor_controller_enclosure(cq, concept, hardware_by_id)
+    if concept.model_family == "npt_3_4_thread_fit_coupon":
+        return _build_npt_3_4_thread_fit_coupon(cq, concept)
     if concept.model_family == "p070_surface_treatment_coupon":
         return _build_p070_surface_treatment_coupon(cq, concept)
     if concept.model_family == "rugged_wall_section_coupon":

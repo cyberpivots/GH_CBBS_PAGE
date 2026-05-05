@@ -1,0 +1,127 @@
+schema: cbbs-cad/hardware/v1
+id: lapp_skintop_str_npt_3_4_reference
+name: LAPP SKINTOP STR NPT 3/4 cable gland reference
+units: mm
+truth_state: proof/simulator
+measurement_status: source-derived
+derivation_state: source-derived
+public_release: false
+dimensions:
+  cable_clamp_min_mm: 9.0
+  cable_clamp_max_mm: 16.0
+  wrench_size_mm: 33.0
+  outer_diameter_a_mm: 36.2
+  dimension_c_mm: 43.5
+  dimension_d_mm: 53.0
+  dimension_f_mm: 15.0
+  npt_3_4_major_diameter_mm: 26.67
+  npt_3_4_threads_per_inch: 14.0
+  npt_3_4_pitch_mm: 1.8143
+  npt_3_4_taper_diameter_per_length_mm_per_mm: 0.0625
+  npt_3_4_taper_angle_degrees: 1.7899
+  npt_3_4_thread_angle_degrees: 60.0
+dimension_sources:
+  cable_clamp_min_mm:
+    source_ref: lapp_skintop_str_npt_3_4_product
+    locator: "Product page for article 53016150: clamping range min. 0.354 in"
+    retrieved_on: 2026-05-05
+    evidence_type: vendor-product-page
+    verification_status: verified
+  cable_clamp_max_mm:
+    source_ref: lapp_skintop_str_npt_3_4_product
+    locator: "Product page for article 53016150: clamping range max. 0.63 in"
+    retrieved_on: 2026-05-05
+    evidence_type: vendor-product-page
+    verification_status: verified
+  wrench_size_mm:
+    source_ref: lapp_skintop_str_npt_3_4_pdf
+    locator: "SKINTOP STR NPT dimension table: NPT 3/4 row SW = 33 mm"
+    retrieved_on: 2026-05-05
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  outer_diameter_a_mm:
+    source_ref: lapp_skintop_str_npt_3_4_pdf
+    locator: "SKINTOP STR NPT dimension table: NPT 3/4 row ØA = 36.2 mm"
+    retrieved_on: 2026-05-05
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  dimension_c_mm:
+    source_ref: lapp_skintop_str_npt_3_4_pdf
+    locator: "SKINTOP STR NPT dimension table: NPT 3/4 row C = 43.5 mm"
+    retrieved_on: 2026-05-05
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  dimension_d_mm:
+    source_ref: lapp_skintop_str_npt_3_4_pdf
+    locator: "SKINTOP STR NPT dimension table: NPT 3/4 row D = 53.0 mm"
+    retrieved_on: 2026-05-05
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  dimension_f_mm:
+    source_ref: lapp_skintop_str_npt_3_4_pdf
+    locator: "SKINTOP STR NPT dimension table: NPT 3/4 row ØF = 15 mm"
+    retrieved_on: 2026-05-05
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  npt_3_4_major_diameter_mm:
+    source_ref: engineering_toolbox_npt
+    locator: "ANSI B1.20.1 NPT table: 3/4 inch OD = 1.050 in"
+    retrieved_on: 2026-05-05
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  npt_3_4_threads_per_inch:
+    source_ref: engineering_toolbox_npt
+    locator: "ANSI B1.20.1 NPT table: 3/4 inch TPI = 14"
+    retrieved_on: 2026-05-05
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  npt_3_4_pitch_mm:
+    source_ref: engineering_toolbox_npt
+    locator: "3/4 inch NPT has 14 TPI; pitch calculated as 25.4 / 14"
+    retrieved_on: 2026-05-05
+    evidence_type: design-parameter
+    verification_status: verified
+  npt_3_4_taper_diameter_per_length_mm_per_mm:
+    source_ref: engineering_toolbox_npt
+    locator: "NPT taper rate is 1 in 16 on diameter"
+    retrieved_on: 2026-05-05
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  npt_3_4_taper_angle_degrees:
+    source_ref: engineering_toolbox_npt
+    locator: "NPT taper angle to center axis is 1 deg 47 min 24 sec"
+    retrieved_on: 2026-05-05
+    evidence_type: vendor-datasheet
+    verification_status: verified
+  npt_3_4_thread_angle_degrees:
+    source_ref: engineering_toolbox_npt
+    locator: "NPT thread form uses a 60 degree thread angle"
+    retrieved_on: 2026-05-05
+    evidence_type: vendor-datasheet
+    verification_status: verified
+features:
+  article_number: "53016150"
+  article_designation: SKINTOP STR NPT 3/4IN RAL 7001 SGY
+  selected_for: P070 Heltec outdoor-blocked controller rear-pod field entry prototype
+  cad_thread_status: segmented printed-thread prototype only
+source_refs:
+  - id: lapp_skintop_str_npt_3_4_product
+    title: LAPP SKINTOP STR NPT 3/4 product page for article 53016150
+    status: approved-public
+    url: https://www.lapp.com/en_US/us/skintop-st-npt/skintop-str-npt/p/53016150
+  - id: lapp_skintop_str_npt_3_4_pdf
+    title: LAPP SKINTOP ST NPT / STR NPT data sheet
+    status: approved-public
+    url: https://imager.lapp.com/e/lapp/KzjVn7imdUf9vJ1LttiCMA~~/DB53016010EN.pdf
+  - id: engineering_toolbox_npt
+    title: Engineering ToolBox ANSI B1.20.1 NPT reference table
+    status: approved-public
+    url: https://www.engineeringtoolbox.com/npt-national-pipe-taper-threads-d_750.html
+open_measurement_blockers:
+  - Confirm the purchased cable gland is LAPP article 53016150.
+  - Confirm actual cable count, outside diameters, bend radius, nut/washer stack, and panel thickness.
+  - Print the thread-fit coupon and test gland engagement before relying on the enclosure boss.
+notes: >
+  Reference for an internal-review printed 3/4 NPT entry boss. Vendor component
+  ratings do not create an enclosure claim; thread fit, torque, cable retention,
+  and service behavior remain physical validation blockers.

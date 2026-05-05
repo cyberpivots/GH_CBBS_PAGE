@@ -32,6 +32,7 @@ def test_default_specs_validate() -> None:
         "heltec_wifi_lora_32_v2",
         "jst_xh_4p_reference",
         "lapp_skintop_st_m12x15_reference",
+        "lapp_skintop_str_npt_3_4_reference",
         "m3_pin_clearance_reference",
         "nextion_nx8048p070_011c",
         "p800_display_unselected",
@@ -45,6 +46,7 @@ def test_default_specs_validate() -> None:
         "p070_fit_frame",
         "p070_hinged_wall_enclosure",
         "p070_heltec_outdoor_controller_enclosure",
+        "npt_3_4_thread_fit_coupon",
         "p070_rugged_bezel_fit_frame",
         "p070_surface_treatment_coupon",
         "rugged_wall_section_coupon",
@@ -328,6 +330,7 @@ def test_p070_heltec_outdoor_concept_is_internal_review_and_rating_blocked() -> 
         "bioenno_blf_0612c_lifepo4_pack",
         "pololu_s13v30f5_regulator",
         "bioenno_bpc_0602dc_charger_reference",
+        "lapp_skintop_str_npt_3_4_reference",
     }
 
     assert concept.truth_state == "internal review"
@@ -340,9 +343,13 @@ def test_p070_heltec_outdoor_concept_is_internal_review_and_rating_blocked() -> 
     assert concept.parameters["front_contour_rail_width_mm"] == 1.8
     assert concept.parameters["rear_pod_macro_rib_pitch_mm"] == 18.0
     assert concept.parameters["raised_brand_text_font_size_mm"] == 10.0
+    assert concept.parameters["field_gland_boss_outer_diameter_mm"] == 44.0
+    assert concept.parameters["field_gland_thread_major_diameter_mm"] == 26.67
+    assert concept.parameters["field_gland_threads_per_inch"] == 14.0
     assert "p070_structural_strengthening_findings" in {
         source.id for source in concept.source_refs
     }
+    assert "p070_npt_thread_entry_findings" in {source.id for source in concept.source_refs}
     for parameter in (
         "front_contour_rail_width_mm",
         "front_contour_rail_height_mm",
@@ -362,6 +369,18 @@ def test_p070_heltec_outdoor_concept_is_internal_review_and_rating_blocked() -> 
         concept.parameter_sources["surface_feature_edge_chamfer_mm"].source_ref
         == "p070_model_review"
     )
+    for parameter in (
+        "field_gland_boss_outer_diameter_mm",
+        "field_gland_thread_clearance_mm",
+        "field_wire_trunk_channel_width_mm",
+    ):
+        evidence = concept.parameter_sources[parameter]
+        assert evidence.source_ref == "p070_npt_thread_entry_findings"
+        assert evidence.verification_status == "pending-measurement"
+    assert (
+        concept.parameter_sources["field_gland_thread_major_diameter_mm"].source_ref
+        == "lapp_skintop_str_npt_3_4_reference"
+    )
 
 
 def test_p070_surface_treatment_coupon_is_internal_review() -> None:
@@ -376,6 +395,26 @@ def test_p070_surface_treatment_coupon_is_internal_review() -> None:
     assert concept.parameters["raised_brand_relief_mm"] == 1.2
     assert concept.parameters["surface_feature_edge_chamfer_mm"] == 0.2
     assert concept.parameter_sources["coupon_length_mm"].source_ref == "p070_model_review"
+
+
+def test_npt_thread_fit_coupon_is_measurement_gated() -> None:
+    bundle = load_specs(data_dir=DEFAULT_DATA_DIR)
+    concept = next(item for item in bundle.concepts if item.id == "npt_3_4_thread_fit_coupon")
+
+    assert concept.truth_state == "internal review"
+    assert concept.public_release is False
+    assert concept.blocked_full_case is True
+    assert concept.model_family == "npt_3_4_thread_fit_coupon"
+    assert "lapp_skintop_str_npt_3_4_reference" in concept.hardware_refs
+    assert concept.parameters["npt_thread_major_diameter_mm"] == 26.67
+    assert concept.parameters["npt_threads_per_inch"] == 14.0
+    assert concept.parameters["npt_thread_clearance_variants_mm"] == [0.35, 0.55]
+    assert (
+        concept.parameter_sources["npt_thread_clearance_variants_mm"].verification_status
+        == "pending-measurement"
+    )
+    assert concept.environmental_context
+    assert concept.environmental_context.rating_claims == []
 
 
 def test_p070_hinged_structural_strengthening_source_is_registered() -> None:
@@ -395,6 +434,9 @@ def test_p070_heltec_outdoor_hardware_specs_capture_selected_basis() -> None:
     assert hardware["adafruit_sma_ufl_pigtail_851"].dimensions["cable_length_mm"] == 150.0
     assert hardware["bioenno_blf_0612c_lifepo4_pack"].dimensions["case_length_mm"] == 115.0
     assert hardware["pololu_s13v30f5_regulator"].dimensions["board_length_mm"] == 22.9
+    assert hardware["lapp_skintop_str_npt_3_4_reference"].dimensions["cable_clamp_min_mm"] == 9.0
+    assert hardware["lapp_skintop_str_npt_3_4_reference"].dimensions["cable_clamp_max_mm"] == 16.0
+    assert hardware["lapp_skintop_str_npt_3_4_reference"].dimensions["npt_3_4_threads_per_inch"] == 14.0
     assert hardware["bioenno_bpc_0602dc_charger_reference"].features["enclosure_use"].startswith(
         "External charger"
     )
@@ -405,6 +447,7 @@ def test_p070_heltec_outdoor_hardware_specs_capture_selected_basis() -> None:
         "bioenno_blf_0612c_lifepo4_pack",
         "pololu_s13v30f5_regulator",
         "bioenno_bpc_0602dc_charger_reference",
+        "lapp_skintop_str_npt_3_4_reference",
     ):
         assert hardware[hardware_id].source_refs
         assert hardware[hardware_id].open_measurement_blockers
