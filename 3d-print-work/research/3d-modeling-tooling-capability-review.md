@@ -118,9 +118,13 @@ research-only records to optional CAD dependency groups:
   `sys_platform == 'win32'` marker, because Fusion UI automation evaluation
   requires a Windows/Fusion sandbox.
 
-The 2026-05-05 WSL import probe succeeded for PyVista, but emitted VTK
-`vtkGenericCell` unsupported-cell-type stderr during import. Keep PyVista out of
-automated gates until that behavior is isolated or suppressed.
+The 2026-05-05 WSL import probe succeeded for PyVista 0.48.0, but emitted VTK
+`vtkGenericCell` unsupported-cell-type stderr during import. Investigation found
+that `cadquery-ocp 7.8.1.1.post1` pins `vtk==9.3.1`, while PyVista 0.48 release
+notes add new `CellType` properties and `dimension_map`; PyVista 0.48.0's VTK
+9.3.1 fallback path triggers the native stderr. The mesh-eval dependency now
+pins `pyvista>=0.47.3,<0.48`, and an optional import regression test checks that
+simple cube creation no longer emits `vtkGenericCell`.
 
 These promotions do not change public-release status, G-code policy, CAD
 evidence rules, structural claims, print-success claims, or Fusion desktop
@@ -150,6 +154,7 @@ profiles, public asset approval, or credentials.
 - Open3D mesh tutorial: https://www.open3d.org/docs/release/tutorial/geometry/mesh.html
 - PyVista docs: https://docs.pyvista.org/
 - PyVista overview: https://pyvista.org/
+- PyVista 0.48 release notes: https://github.com/pyvista/pyvista/releases/tag/v0.48.0
 - manifold3d: https://pypi.org/project/manifold3d/
 - PrusaSlicer CLI: https://github.com/prusa3d/PrusaSlicer/wiki/Command-Line-Interface
 - CuraEngine: https://ultimaker.github.io/CuraEngine/

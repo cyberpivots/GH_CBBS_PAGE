@@ -30,7 +30,7 @@ fusion-ui-win = [
 mesh-eval = [
   "manifold3d>=3.4.1",
   "open3d>=0.19.0",
-  "pyvista>=0.48.0",
+  "pyvista>=0.47.3,<0.48",
 ]
 monitor = [
   "httpx>=0.28",

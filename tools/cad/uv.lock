@@ -351,7 +351,7 @@ fusion-ui-win = [{ name = "pywinauto", marker = "sys_platform == 'win32'", speci
 mesh-eval = [
     { name = "manifold3d", specifier = ">=3.4.1" },
     { name = "open3d", specifier = ">=0.19.0" },
-    { name = "pyvista", specifier = ">=0.48.0" },
+    { name = "pyvista", specifier = ">=0.47.3,<0.48" },
 ]
 monitor = [
     { name = "httpx", specifier = ">=0.28" },
@@ -2324,7 +2324,7 @@ wheels = [
 
 [[package]]
 name = "pyvista"
-version = "0.48.0"
+version = "0.47.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cyclopts" },
@@ -2336,9 +2336,9 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "vtk" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/80/24/a8bf4deb6521d4a26bdfe1262e2e942aaf49b866f8dc8395702d789e5089/pyvista-0.48.0.tar.gz", hash = "sha256:317c1590fce0d3777c34d7c2b4686dc52701a2ba03ab0a312bbd0bdae03f0d42", size = 2580723, upload-time = "2026-05-02T22:49:01.23Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ec/36/512c05b1cd431150d47479d1397013915eaf5c6d3f728eada53a601871b8/pyvista-0.47.3.tar.gz", hash = "sha256:03ce3923b42053cf8c9c151ea385431474f11b286d31fe9513cf5b7bf29fe848", size = 2463344, upload-time = "2026-04-10T17:47:07.39Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a5/e8/d057b011aee8df7fdb00e5e8f777cea160f2e97f65796bff7c81b85e398d/pyvista-0.48.0-py3-none-any.whl", hash = "sha256:cb6fe80d4a1a7e9ef512b9b555d8b16355ea97b07799fc4f73f2897ca0109e09", size = 2628237, upload-time = "2026-05-02T22:48:58.867Z" },
+    { url = "https://files.pythonhosted.org/packages/30/33/f2775b3c7ee908bdd96c665cb1d6658a02d123dea33b9ee861e7d56ad2ae/pyvista-0.47.3-py3-none-any.whl", hash = "sha256:8db0dd77c744d2673a1b34333694cb4e8828a9193bbe2c0a8b3ceb9bfc12dd0f", size = 2508590, upload-time = "2026-04-10T17:47:05.532Z" },
 ]
 
 [[package]]

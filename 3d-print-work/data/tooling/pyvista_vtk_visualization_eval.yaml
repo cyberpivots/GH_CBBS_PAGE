@@ -16,6 +16,10 @@ source_refs:
     title: PyVista project overview
     status: approved-public
     url: https://pyvista.org/
+  - id: pyvista_048_release
+    title: PyVista 0.48 release notes
+    status: approved-public
+    url: https://github.com/pyvista/pyvista/releases/tag/v0.48.0
   - id: tooling_capability_review
     title: CBBS 3D modeling tooling capability review
     status: internal-review
@@ -31,6 +35,11 @@ evidence_refs:
     retrieved_on: 2026-05-05
     evidence_type: tool-documentation
     verification_status: verified
+  - source_ref: pyvista_048_release
+    locator: Mesh validation and cell types section notes new CellType properties and dimension_map in 0.48
+    retrieved_on: 2026-05-05
+    evidence_type: tool-documentation
+    verification_status: verified
   - source_ref: tooling_capability_review
     locator: Rendering and diagnostics candidates
     retrieved_on: 2026-05-05
@@ -41,11 +50,11 @@ integration_paths:
   - Installed in the CAD mesh-eval dependency group for generated visualization experiments.
 risks:
   - VTK wheels are large; direct dependency adoption may slow setup.
-  - Current WSL import probe emits vtkGenericCell unsupported-cell-type stderr even though the probe exits successfully.
+  - PyVista 0.48.0 emits vtkGenericCell unsupported-cell-type stderr with the CadQuery-pinned VTK 9.3.1 runtime.
 blockers:
   - Direct VTK imports remain blocked unless separately promoted through a direct dependency decision.
-  - Do not use PyVista in automated gates until the VTK stderr behavior is isolated or suppressed.
+  - Keep PyVista pinned below 0.48 while cadquery-ocp pins VTK 9.3.1, unless a later probe proves the newer combination is quiet.
 direct_import_allowed: true
 blocked_claims:
   - Visualization output is advisory and cannot authorize CAD dimensions or product claims.
-notes: Promoted to an optional mesh evaluation dependency on 2026-05-05 after explicit user approval; use generated artifacts only. Runtime probe succeeded but produced VTK stderr, so this remains evaluation-only.
+notes: Promoted to an optional mesh evaluation dependency on 2026-05-05 after explicit user approval; use generated artifacts only. The noisy 0.48.0 runtime was resolved by pinning pyvista to >=0.47.3,<0.48 and adding a stderr regression test.
