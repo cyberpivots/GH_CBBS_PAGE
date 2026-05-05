@@ -17,12 +17,24 @@ dependencies = [
 cbbs-cad = "cbbs_cad.cli:app"
 
 [dependency-groups]
+cad-eval = [
+  "build123d>=0.10.0",
+]
 dev = [
   "pytest>=8.3",
   "ruff>=0.8",
 ]
+fusion-ui-win = [
+  "pywinauto>=0.6.9 ; sys_platform == 'win32'",
+]
+mesh-eval = [
+  "manifold3d>=3.4.1",
+  "open3d>=0.19.0",
+  "pyvista>=0.48.0",
+]
 monitor = [
   "httpx>=0.28",
+  "mss>=10.2.0",
   "opencv-python-headless>=4.10",
   "pillow>=11.0",
 ]

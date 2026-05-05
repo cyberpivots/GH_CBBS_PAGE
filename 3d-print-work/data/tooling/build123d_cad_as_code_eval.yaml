@@ -3,9 +3,9 @@ id: build123d_cad_as_code_eval
 name: build123d CAD-as-code evaluation
 truth_state: internal review
 category: 3d-modeling
-current_repo_status: not-present
+current_repo_status: optional-dependency
 recommendation: evaluate-sandbox
-dependency_policy: candidate-do-not-install
+dependency_policy: current-optional
 automation_safety: local-generated-artifacts
 source_refs:
   - id: build123d_docs
@@ -30,10 +30,12 @@ evidence_refs:
 integration_paths:
   - Evaluate on isolated coupons where build123d readability may reduce CadQuery complexity.
   - Do not port existing generators until a prototype proves lower maintenance cost.
+  - Installed in the CAD cad-eval dependency group for isolated coupon and API readability experiments.
 risks:
   - A second CAD-as-code API increases maintenance and contributor burden.
 blockers:
   - Requires side-by-side generated geometry comparison against existing CadQuery outputs.
+direct_import_allowed: true
 blocked_claims:
   - Alternative CAD syntax does not authorize new dimensions or hardware claims.
-
+notes: Promoted to an optional CAD evaluation dependency on 2026-05-05 after explicit user approval; CadQuery remains the production generator baseline.

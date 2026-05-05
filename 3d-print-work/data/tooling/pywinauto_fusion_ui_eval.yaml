@@ -3,9 +3,9 @@ id: pywinauto_fusion_ui_eval
 name: pywinauto Fusion UI wrapper evaluation
 truth_state: internal review
 category: computer-vision-screen
-current_repo_status: not-present
+current_repo_status: optional-dependency
 recommendation: evaluate-sandbox
-dependency_policy: candidate-do-not-install
+dependency_policy: current-optional
 automation_safety: read-only
 source_refs:
   - id: pywinauto_docs
@@ -39,10 +39,12 @@ evidence_refs:
 integration_paths:
   - Evaluate only if direct Microsoft UIA code becomes hard to maintain.
   - Keep any UI driving behind the same guarded Fusion command allowlists.
+  - Installed in the Windows-only CAD fusion-ui-win dependency group with a sys_platform == 'win32' marker.
 risks:
   - High-level UI wrappers can make destructive UI actions easier to call accidentally.
 blockers:
   - Requires a Windows/Fusion sandbox and regression tests before adoption.
+direct_import_allowed: true
 blocked_claims:
   - UI automation does not authorize product, CAD, or print capability claims.
-
+notes: Promoted to an optional Windows-only dependency on 2026-05-05 after explicit user approval; non-Windows syncs do not install it.

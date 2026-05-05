@@ -1342,7 +1342,6 @@ def _build_p070_heltec_outdoor_controller_enclosure(
     strap_slot_length = _number(params, "battery_strap_slot_length_mm", 82.0)
     standoff_height = _number(params, "electronics_standoff_height_mm", 4.0)
     standoff_outer = _number(params, "electronics_standoff_outer_diameter_mm", 7.0)
-    standoff_hole = _number(params, "electronics_standoff_hole_diameter_mm", 2.2)
     sma_boss_outer = _number(params, "sma_boss_outer_diameter_mm", 18.0)
     sma_clearance = _number(params, "sma_bulkhead_clearance_diameter_mm", 6.5)
     sma_boss_length = _number(params, "sma_boss_length_mm", 12.0)

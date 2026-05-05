@@ -100,6 +100,35 @@ RF behavior, runtime, or structural performance.
 - Generated evaluation outputs, if later approved, must stay under
   `3d-print-work/generated/tool-evals/`.
 
+## Optional Dependency Promotion Update
+
+Promotion date: 2026-05-05.
+
+After explicit user approval, the following candidates were promoted from
+research-only records to optional CAD dependency groups:
+
+- `mss` is in the `monitor` group for read-only desktop screenshot experiments
+  when Fusion viewport capture is insufficient.
+- `build123d` is in the `cad-eval` group for isolated CAD-as-code coupon
+  experiments. CadQuery remains the production generator baseline.
+- `open3d`, `pyvista`, and `manifold3d` are in the `mesh-eval` group for
+  generated mesh diagnostics, visualization, and mesh boolean coupon
+  experiments.
+- `pywinauto` is in the `fusion-ui-win` group with a
+  `sys_platform == 'win32'` marker, because Fusion UI automation evaluation
+  requires a Windows/Fusion sandbox.
+
+The 2026-05-05 WSL import probe succeeded for PyVista, but emitted VTK
+`vtkGenericCell` unsupported-cell-type stderr during import. Keep PyVista out of
+automated gates until that behavior is isolated or suppressed.
+
+These promotions do not change public-release status, G-code policy, CAD
+evidence rules, structural claims, print-success claims, or Fusion desktop
+safety boundaries. Blender CLI, PrusaSlicer, CuraEngine, Three.js/glTF
+Transform, and Autodesk Platform Services Fusion Automation remain uninstalled
+or deferred because they require external executables, verified printer
+profiles, public asset approval, or credentials.
+
 ## Source URLs
 
 - CadQuery import/export: https://cadquery.readthedocs.io/en/latest/importexport.html

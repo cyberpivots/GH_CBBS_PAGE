@@ -3,9 +3,9 @@ id: open3d_mesh_diagnostics_eval
 name: Open3D mesh diagnostics evaluation
 truth_state: internal review
 category: 3d-modeling
-current_repo_status: not-present
+current_repo_status: optional-dependency
 recommendation: evaluate-sandbox
-dependency_policy: candidate-do-not-install
+dependency_policy: current-optional
 automation_safety: local-generated-artifacts
 source_refs:
   - id: open3d_docs
@@ -38,10 +38,12 @@ evidence_refs:
     verification_status: verified
 integration_paths:
   - Evaluate as an optional diagnostics layer for manifold/self-intersection overlays that complement trimesh.
+  - Installed in the CAD mesh-eval dependency group for generated mesh diagnostics experiments.
 risks:
   - Adds a large dependency surface if adopted directly.
 blockers:
   - Requires measured benefit over existing trimesh mesh inspection.
+direct_import_allowed: true
 blocked_claims:
   - Mesh diagnostics do not prove structural strength, print success, or field readiness.
-
+notes: Promoted to an optional mesh evaluation dependency on 2026-05-05 after explicit user approval; diagnostics remain advisory.

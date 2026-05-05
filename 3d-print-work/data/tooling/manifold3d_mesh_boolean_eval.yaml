@@ -3,9 +3,9 @@ id: manifold3d_mesh_boolean_eval
 name: manifold3d mesh boolean evaluation
 truth_state: internal review
 category: 3d-modeling
-current_repo_status: transitive-dependency
+current_repo_status: optional-dependency
 recommendation: evaluate-sandbox
-dependency_policy: transitive-do-not-import
+dependency_policy: current-optional
 automation_safety: local-generated-artifacts
 source_refs:
   - id: manifold3d_pypi
@@ -28,11 +28,12 @@ evidence_refs:
     evidence_type: internal-review
     verification_status: verified
 integration_paths:
-  - Evaluate through trimesh boolean paths only; do not directly import manifold3d until promoted to a direct dependency.
+  - Evaluate through trimesh boolean paths first, then direct manifold3d imports only inside optional mesh-eval experiments.
 risks:
   - Mesh booleans can mask source CAD defects if used to replace BREP modeling.
 blockers:
-  - Requires explicit direct dependency decision before direct import or API use.
+  - Requires generated coupon comparisons before any production CAD use.
+direct_import_allowed: true
 blocked_claims:
   - Manifold mesh output does not prove CAD design validity, print success, or structural reliability.
-
+notes: Promoted from transitive-only to optional mesh-eval dependency on 2026-05-05 after explicit user approval; direct use remains evaluation-scoped.

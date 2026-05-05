@@ -3,9 +3,9 @@ id: mss_desktop_screenshot_eval
 name: MSS desktop screenshot evaluation
 truth_state: internal review
 category: computer-vision-screen
-current_repo_status: not-present
+current_repo_status: optional-dependency
 recommendation: evaluate-sandbox
-dependency_policy: candidate-do-not-install
+dependency_policy: current-optional
 automation_safety: read-only
 source_refs:
   - id: python_mss_docs
@@ -29,10 +29,12 @@ evidence_refs:
     verification_status: verified
 integration_paths:
   - Evaluate in a generated sandbox only for deterministic desktop screenshot capture when Fusion viewport capture is insufficient.
+  - Installed in the CAD monitor dependency group for read-only screenshot experiments with explicit output scoping.
 risks:
   - Desktop screenshots can expose private windows, file paths, or logs.
 blockers:
   - Add explicit output scoping and redaction review before any adoption.
+direct_import_allowed: true
 blocked_claims:
   - Desktop screenshots are never public assets without separate approval.
-
+notes: Promoted to an optional monitor dependency on 2026-05-05 after explicit user approval; generated screenshots remain internal-review artifacts only.

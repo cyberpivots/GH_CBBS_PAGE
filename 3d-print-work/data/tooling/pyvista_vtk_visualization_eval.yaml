@@ -3,9 +3,9 @@ id: pyvista_vtk_visualization_eval
 name: PyVista and VTK visualization evaluation
 truth_state: internal review
 category: rendering
-current_repo_status: not-present
+current_repo_status: optional-dependency
 recommendation: evaluate-sandbox
-dependency_policy: candidate-do-not-install
+dependency_policy: current-optional
 automation_safety: local-generated-artifacts
 source_refs:
   - id: pyvista_docs
@@ -38,10 +38,14 @@ evidence_refs:
     verification_status: verified
 integration_paths:
   - Evaluate only in a generated visualization sandbox for mesh overlays or image regression.
+  - Installed in the CAD mesh-eval dependency group for generated visualization experiments.
 risks:
   - VTK wheels are large; direct dependency adoption may slow setup.
+  - Current WSL import probe emits vtkGenericCell unsupported-cell-type stderr even though the probe exits successfully.
 blockers:
-  - Direct VTK imports remain blocked unless promoted through a direct dependency decision.
+  - Direct VTK imports remain blocked unless separately promoted through a direct dependency decision.
+  - Do not use PyVista in automated gates until the VTK stderr behavior is isolated or suppressed.
+direct_import_allowed: true
 blocked_claims:
   - Visualization output is advisory and cannot authorize CAD dimensions or product claims.
-
+notes: Promoted to an optional mesh evaluation dependency on 2026-05-05 after explicit user approval; use generated artifacts only. Runtime probe succeeded but produced VTK stderr, so this remains evaluation-only.
