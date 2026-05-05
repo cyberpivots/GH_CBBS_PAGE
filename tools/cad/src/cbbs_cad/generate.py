@@ -132,7 +132,9 @@ def _fits_two_part_plate(
         "x": round(max(first["x"], second["x"]), 4),
         "y": round(first["y"] + second["y"] + spacing, 4),
     }
-    side_by_side_fits = _fits_single_plate(side_by_side_bounds, plate_x, plate_y, brim_margin_each_side)
+    side_by_side_fits = _fits_single_plate(
+        side_by_side_bounds, plate_x, plate_y, brim_margin_each_side
+    )
     stacked_fits = _fits_single_plate(stacked_bounds, plate_x, plate_y, brim_margin_each_side)
     return {
         "side_by_side_bounds_mm": side_by_side_bounds,
@@ -189,12 +191,7 @@ def _build_p070_fit_frame(cq: Any, concept: ConceptSpec, hardware: HardwareSpec)
         (hole_span_x / 2, -hole_span_y / 2),
         (hole_span_x / 2, hole_span_y / 2),
     ]
-    model = (
-        model.faces(">Z")
-        .workplane()
-        .pushPoints(hole_points)
-        .hole(d["mount_hole_diameter_mm"])
-    )
+    model = model.faces(">Z").workplane().pushPoints(hole_points).hole(d["mount_hole_diameter_mm"])
     return model
 
 
@@ -271,10 +268,10 @@ def _build_reinforced_mount_tab_coupon(cq: Any, concept: ConceptSpec) -> Any:
 
     model = rounded_plate(cq, body_x, body_y, thickness, corner)
     tab_center_x = body_x / 2 + tab_x / 2
-    model = model.union(rounded_plate(cq, tab_x, tab_y, thickness, corner).translate((tab_center_x, 0, 0)))
-    model = add_cylindrical_boss(
-        model, cq, tab_center_x, 0, boss_outer, boss_height, thickness
+    model = model.union(
+        rounded_plate(cq, tab_x, tab_y, thickness, corner).translate((tab_center_x, 0, 0))
     )
+    model = add_cylindrical_boss(model, cq, tab_center_x, 0, boss_outer, boss_height, thickness)
     rib_center_x = body_x / 2 + rib_length / 2 - 2
     rib_y = max(0.0, tab_y / 2 - rib_width)
     for y in (-rib_y, rib_y):
@@ -387,7 +384,9 @@ def _build_drip_lip_seam_coupon(cq: Any, concept: ConceptSpec) -> Any:
     lip_height = _number(params, "lip_height_mm", 2.0)
 
     model = rounded_plate(cq, base_x, base_y, base_thickness, corner)
-    wall = rectangular_ring(cq, wall_outer_x, wall_outer_y, wall_opening_x, wall_opening_y, wall_height)
+    wall = rectangular_ring(
+        cq, wall_outer_x, wall_outer_y, wall_opening_x, wall_opening_y, wall_height
+    )
     lip = rectangular_ring(cq, lip_outer_x, lip_outer_y, lip_opening_x, lip_opening_y, lip_height)
     model = model.union(wall.translate((0, 0, base_thickness)))
     model = model.union(lip.translate((0, 0, base_thickness + wall_height)))
@@ -469,8 +468,11 @@ def _cone_y(
         pnt=cq.Vector(0, 0, 0),
         dir=cq.Vector(0, 0, 1),
     )
-    return cq.Workplane("XY").add(cone).rotate((0, 0, 0), (1, 0, 0), -90).translate(
-        (center_x, y_start, center_z)
+    return (
+        cq.Workplane("XY")
+        .add(cone)
+        .rotate((0, 0, 0), (1, 0, 0), -90)
+        .translate((center_x, y_start, center_z))
     )
 
 
@@ -667,6 +669,11 @@ def _build_p070_hinged_wall_enclosure(
     corner = _number(params, "corner_radius_mm", 4.0)
     rib_width = _number(params, "asa_rib_width_mm", 1.6)
     rib_height = _number(params, "asa_rib_height_mm", 2.4)
+    reinforcement_chamfer = min(
+        _number(params, "hinge_barrel_end_chamfer_mm", 0.25),
+        rib_width / 3,
+        rib_height / 4,
+    )
 
     cavity_x = d["outsize_x_mm"] + side_clearance * 2
     cavity_y = d["outsize_y_mm"] + side_clearance * 2
@@ -690,7 +697,9 @@ def _build_p070_hinged_wall_enclosure(
             "display_mount_thread_mode must be 'm3_printed_pilot' for generated P070 trays"
         )
     if display_mount_thread_pilot >= d["mount_hole_diameter_mm"]:
-        raise ValueError("display_mount_thread_pilot_diameter_mm must be smaller than display holes")
+        raise ValueError(
+            "display_mount_thread_pilot_diameter_mm must be smaller than display holes"
+        )
     boss_hole = display_mount_thread_pilot
     hole_span_x = d["mount_hole_span_x_mm"]
     hole_span_y = d["mount_hole_span_y_mm"]
@@ -714,34 +723,39 @@ def _build_p070_hinged_wall_enclosure(
         sy = 1.0 if y >= 0 else -1.0
         x_web_center = x + sx * (boss_outer / 2 + boss_web_length / 2 - boss_web_overlap)
         y_web_center = y + sy * (boss_outer / 2 + boss_web_length / 2 - boss_web_overlap)
-        tray = add_box_feature(
-            tray,
-            cq,
-            boss_web_length,
-            rib_width,
-            rib_height,
-            x_web_center,
-            y,
-            floor,
+        tray = tray.union(
+            _rounded_raised_bar_between(
+                cq,
+                (x_web_center - boss_web_length / 2, y),
+                (x_web_center + boss_web_length / 2, y),
+                rib_width,
+                rib_height,
+                floor,
+                reinforcement_chamfer,
+            )
         )
-        tray = add_box_feature(
-            tray,
-            cq,
-            rib_width,
-            boss_web_length,
-            rib_height,
-            x,
-            y_web_center,
-            floor,
+        tray = tray.union(
+            _rounded_raised_bar_between(
+                cq,
+                (x, y_web_center - boss_web_length / 2),
+                (x, y_web_center + boss_web_length / 2),
+                rib_width,
+                rib_height,
+                floor,
+                reinforcement_chamfer,
+            )
         )
         display_boss_web_records.append(
             {
                 "boss_x_mm": round(x, 4),
                 "boss_y_mm": round(y, 4),
                 "webs": ["outboard-x", "outboard-y"],
+                "profile": "rounded_capsule_webs",
                 "web_length_mm": round(boss_web_length, 4),
                 "web_width_mm": round(rib_width, 4),
                 "web_height_mm": round(rib_height, 4),
+                "rounded_end_nodes": 4,
+                "edge_chamfer_mm": round(reinforcement_chamfer, 4),
             }
         )
 
@@ -750,24 +764,46 @@ def _build_p070_hinged_wall_enclosure(
     floor_lattice_records: list[dict[str, Any]] = []
     if rib_span_x > 20:
         for y in (-cavity_y / 3, 0.0, cavity_y / 3):
-            tray = add_box_feature(tray, cq, rib_span_x, rib_width, rib_height, 0, y, floor)
+            tray = tray.union(
+                _rounded_raised_bar_between(
+                    cq,
+                    (-rib_span_x / 2, y),
+                    (rib_span_x / 2, y),
+                    rib_width,
+                    rib_height,
+                    floor,
+                    reinforcement_chamfer,
+                )
+            )
             floor_lattice_records.append(
                 {
                     "axis": "X",
                     "center_x_mm": 0.0,
                     "center_y_mm": round(y, 4),
                     "length_mm": round(rib_span_x, 4),
+                    "profile": "rounded_capsule_rib",
                 }
             )
     if rib_span_y > 20:
         for x in (-cavity_x / 3, 0.0, cavity_x / 3):
-            tray = add_box_feature(tray, cq, rib_width, rib_span_y, rib_height, x, 0, floor)
+            tray = tray.union(
+                _rounded_raised_bar_between(
+                    cq,
+                    (x, -rib_span_y / 2),
+                    (x, rib_span_y / 2),
+                    rib_width,
+                    rib_height,
+                    floor,
+                    reinforcement_chamfer,
+                )
+            )
             floor_lattice_records.append(
                 {
                     "axis": "Y",
                     "center_x_mm": round(x, 4),
                     "center_y_mm": 0.0,
                     "length_mm": round(rib_span_y, 4),
+                    "profile": "rounded_capsule_rib",
                 }
             )
 
@@ -778,6 +814,13 @@ def _build_p070_hinged_wall_enclosure(
     rail_inner_x = max(rib_width, cavity_x - rib_width * 2)
     rail_inner_y = max(rib_width, cavity_y - rib_width * 2)
     rail = rectangular_ring(cq, rail_outer_x, rail_outer_y, rail_inner_x, rail_inner_y, rib_height)
+    rail = _try_chamfer_vertical_edges(
+        rail,
+        reinforcement_chamfer,
+        rail_outer_x - rail_inner_x,
+        rail_outer_y - rail_inner_y,
+        rib_height,
+    )
     tray = tray.union(rail.translate((0, 0, floor)))
     rail_x_length = rail_outer_x
     rail_y_length = rail_outer_y
@@ -847,23 +890,45 @@ def _build_p070_hinged_wall_enclosure(
     edge_rail_offset_y = window_y / 2 + wall / 2
     edge_rail_offset_x = window_x / 2 + wall / 2
     for y in (-edge_rail_offset_y, edge_rail_offset_y):
-        door = add_box_feature(door, cq, window_x, rib_width, rib_height, 0, y, door_top_z)
+        door = door.union(
+            _rounded_raised_bar_between(
+                cq,
+                (-window_x / 2, y),
+                (window_x / 2, y),
+                rib_width,
+                rib_height,
+                door_top_z,
+                reinforcement_chamfer,
+            )
+        )
         door_reinforcement_records.append(
             {
                 "kind": "edge_rail",
                 "axis": "X",
                 "center_y_mm": round(y, 4),
                 "outside_display_window": True,
+                "profile": "rounded_capsule_rail",
             }
         )
     for x in (-edge_rail_offset_x, edge_rail_offset_x):
-        door = add_box_feature(door, cq, rib_width, window_y, rib_height, x, 0, door_top_z)
+        door = door.union(
+            _rounded_raised_bar_between(
+                cq,
+                (x, -window_y / 2),
+                (x, window_y / 2),
+                rib_width,
+                rib_height,
+                door_top_z,
+                reinforcement_chamfer,
+            )
+        )
         door_reinforcement_records.append(
             {
                 "kind": "edge_rail",
                 "axis": "Y",
                 "center_x_mm": round(x, 4),
                 "outside_display_window": True,
+                "profile": "rounded_capsule_rail",
             }
         )
     corner_pad_x = max(wall * 2, rib_width * 4)
@@ -872,22 +937,28 @@ def _build_p070_hinged_wall_enclosure(
     corner_pad_center_y = window_y / 2 + wall + corner_pad_y / 2
     for x in (-corner_pad_center_x, corner_pad_center_x):
         for y in (-corner_pad_center_y, corner_pad_center_y):
-            door = add_box_feature(
-                door,
+            corner_pad = rounded_plate(
                 cq,
                 corner_pad_x,
                 corner_pad_y,
                 rib_height,
-                x,
-                y,
-                door_top_z,
+                min(corner_pad_x, corner_pad_y) / 3,
+            ).translate((x, y, door_top_z))
+            corner_pad = _try_chamfer_vertical_edges(
+                corner_pad,
+                reinforcement_chamfer,
+                corner_pad_x,
+                corner_pad_y,
+                rib_height,
             )
+            door = door.union(corner_pad)
             door_reinforcement_records.append(
                 {
                     "kind": "corner_pad",
                     "center_x_mm": round(x, 4),
                     "center_y_mm": round(y, 4),
                     "outside_display_window": True,
+                    "profile": "rounded_corner_load_pad",
                 }
             )
 
@@ -944,15 +1015,21 @@ def _build_p070_hinged_wall_enclosure(
     root_pad_y_trim = min(0.6, hinge_gap / 2)
     root_pad_y_length = max(rib_width, hinge_length - root_pad_y_trim * 2)
     root_pad_x_min = hinge_x - hinge_outer / 2 + min(0.4, rib_width / 4)
-    root_pad_x_max = -outer_x / 2 + min(1.0, wall / 3)
+    root_pad_x_max = -outer_x / 2 + min(1.8, wall * 0.6)
     root_pad_x_length = max(rib_width, root_pad_x_max - root_pad_x_min)
     root_pad_x_center = root_pad_x_min + root_pad_x_length / 2
     root_pad_z_base = hinge_z - hinge_outer / 2 + max(0.0, hinge_flat_depth - 0.1)
     root_pad_z_height = max(rib_height, hinge_outer - hinge_flat_depth)
     for record in hinge_records:
         y_center = record["center_y_mm"]
-        pad = _box(cq, root_pad_x_length, root_pad_y_length, root_pad_z_height).translate(
-            (root_pad_x_center, y_center, root_pad_z_base)
+        pad = _rounded_raised_bar_between(
+            cq,
+            (root_pad_x_center, y_center - root_pad_y_length / 2),
+            (root_pad_x_center, y_center + root_pad_y_length / 2),
+            root_pad_x_length,
+            root_pad_z_height,
+            root_pad_z_base,
+            reinforcement_chamfer,
         )
         if record["owner"] == "tray":
             tray = tray.union(pad)
@@ -969,6 +1046,8 @@ def _build_p070_hinged_wall_enclosure(
                 "z_base_mm": round(root_pad_z_base, 4),
                 "height_mm": round(root_pad_z_height, 4),
                 "owner_specific": True,
+                "profile": "rounded_capsule_root_saddle",
+                "edge_chamfer_mm": round(reinforcement_chamfer, 4),
             }
         )
     hinge_post_root_pad_bounds = {
@@ -977,12 +1056,12 @@ def _build_p070_hinged_wall_enclosure(
     }
     hinge_backer_rail_records: list[dict[str, Any]] = []
     hinge_gusset_records: list[dict[str, Any]] = []
-    backer_x_length = max(wall * 2.0, rib_width * 4)
+    backer_x_length = max(wall * 2.5, rib_width * 5.5)
     backer_x_center = -outer_x / 2 + wall + backer_x_length / 2
-    backer_z_height = min(rib_height * 1.1, hinge_outer / 2 - door_thickness / 2)
-    gusset_y_length = max(rib_width, min(3.2, root_pad_y_length / 4))
+    backer_z_height = min(rib_height * 1.25, hinge_outer / 2 - door_thickness / 2)
+    gusset_y_length = max(rib_width, min(4.8, root_pad_y_length / 3))
     gusset_x_start = root_pad_x_min + min(rib_width, hinge_outer / 5)
-    gusset_x_end = -outer_x / 2 + max(wall * 2.2, backer_x_length)
+    gusset_x_end = -outer_x / 2 + max(wall * 2.8, backer_x_length)
     gusset_z_start = root_pad_z_base + min(0.3, rib_height / 6)
     gusset_z_end = min(
         hinge_z + hinge_outer / 2 - 0.2,
@@ -992,27 +1071,29 @@ def _build_p070_hinged_wall_enclosure(
         y_center = record["center_y_mm"]
         if record["owner"] == "tray":
             z_base = max(floor, hinge_z - backer_z_height / 2)
-            tray = add_box_feature(
-                tray,
-                cq,
-                backer_x_length,
-                root_pad_y_length,
-                backer_z_height,
-                backer_x_center,
-                y_center,
-                z_base,
+            tray = tray.union(
+                _rounded_raised_bar_between(
+                    cq,
+                    (backer_x_center, y_center - root_pad_y_length / 2),
+                    (backer_x_center, y_center + root_pad_y_length / 2),
+                    backer_x_length,
+                    backer_z_height,
+                    z_base,
+                    reinforcement_chamfer,
+                )
             )
         else:
             z_base = door_top_z
-            door = add_box_feature(
-                door,
-                cq,
-                backer_x_length,
-                root_pad_y_length,
-                backer_z_height,
-                backer_x_center,
-                y_center,
-                z_base,
+            door = door.union(
+                _rounded_raised_bar_between(
+                    cq,
+                    (backer_x_center, y_center - root_pad_y_length / 2),
+                    (backer_x_center, y_center + root_pad_y_length / 2),
+                    backer_x_length,
+                    backer_z_height,
+                    z_base,
+                    reinforcement_chamfer,
+                )
             )
         hinge_backer_rail_records.append(
             {
@@ -1023,22 +1104,23 @@ def _build_p070_hinged_wall_enclosure(
                 "y_length_mm": round(root_pad_y_length, 4),
                 "height_mm": round(backer_z_height, 4),
                 "owner_specific": True,
+                "profile": "rounded_capsule_load_spreader",
+                "rounded_end_nodes": 2,
+                "edge_chamfer_mm": round(reinforcement_chamfer, 4),
             }
         )
 
         for y_offset in (-root_pad_y_length * 0.32, root_pad_y_length * 0.32):
-            gusset = (
-                cq.Workplane("XZ")
-                .polyline(
-                    [
-                        (gusset_x_start, gusset_z_start),
-                        (gusset_x_end, gusset_z_start),
-                        (gusset_x_end, gusset_z_end),
-                    ]
-                )
-                .close()
-                .extrude(gusset_y_length)
-                .translate((0, y_center + y_offset - gusset_y_length / 2, 0))
+            gusset = _softened_triangular_web_y(
+                cq,
+                [
+                    (gusset_x_start, gusset_z_start),
+                    (gusset_x_end, gusset_z_start),
+                    (gusset_x_end, gusset_z_end),
+                ],
+                y_center + y_offset,
+                gusset_y_length,
+                reinforcement_chamfer,
             )
             if record["owner"] == "tray":
                 tray = tray.union(gusset)
@@ -1055,6 +1137,8 @@ def _build_p070_hinged_wall_enclosure(
                     "z_start_mm": round(gusset_z_start, 4),
                     "z_end_mm": round(gusset_z_end, 4),
                     "owner_specific": True,
+                    "profile": "softened_triangular_web",
+                    "edge_chamfer_mm": round(reinforcement_chamfer, 4),
                 }
             )
 
@@ -1068,11 +1152,21 @@ def _build_p070_hinged_wall_enclosure(
     latch_protrusion = min(1.2, latch_depth / 3)
     latch_x = outer_x / 2 - latch_depth / 2 + latch_protrusion
     latch_z = door_z + max(0.0, door_thickness - latch_height / 2)
-    door = add_box_feature(door, cq, latch_depth, latch_width, latch_height, latch_x, 0, latch_z)
+    door = _add_softened_box_feature(
+        door,
+        cq,
+        latch_depth,
+        latch_width,
+        latch_height,
+        latch_x,
+        0,
+        latch_z,
+        reinforcement_chamfer,
+    )
 
     catch_depth = max(latch_depth, wall)
     catch_z = max(floor, shell_z - latch_height)
-    tray = add_box_feature(
+    tray = _add_softened_box_feature(
         tray,
         cq,
         catch_depth,
@@ -1081,6 +1175,7 @@ def _build_p070_hinged_wall_enclosure(
         outer_x / 2 - catch_depth / 2 + latch_protrusion,
         0,
         catch_z,
+        reinforcement_chamfer,
     )
 
     display_reference_z = max(floor + 1.0, door_z - d["front_stack_thickness_mm"] - 0.2)
@@ -1227,9 +1322,7 @@ def _build_p070_hinged_wall_enclosure(
     ]
 
     print_part_bounds = {
-        part.id: _model_bounds_mm(part.model)
-        for part in parts
-        if part.role == "print"
+        part.id: _model_bounds_mm(part.model) for part in parts if part.role == "print"
     }
     fits_k1_with_brim = all(
         bounds["x"] + 12.0 <= 220.0 and bounds["y"] + 12.0 <= 220.0
@@ -1367,15 +1460,26 @@ def _build_p070_hinged_wall_enclosure(
                 "count": len(hinge_root_pad_records),
                 "records": hinge_root_pad_records,
                 "owner_pattern": [record["owner"] for record in hinge_root_pad_records],
+                "profile": "rounded owner-specific capsule root saddles",
+                "edge_chamfer_mm": round(reinforcement_chamfer, 4),
                 "backer_rails": {
                     "count": len(hinge_backer_rail_records),
                     "records": hinge_backer_rail_records,
                     "owner_pattern": [record["owner"] for record in hinge_backer_rail_records],
+                    "profile": "rounded capsule load-spreader rails",
                 },
                 "gusset_webs": {
                     "count": len(hinge_gusset_records),
                     "records": hinge_gusset_records,
                     "owner_pattern": [record["owner"] for record in hinge_gusset_records],
+                    "profile": "softened triangular load webs",
+                },
+                "rounded_transition_nodes": {
+                    "root_saddle_end_nodes": len(hinge_root_pad_records) * 2,
+                    "backer_rail_end_nodes": len(hinge_backer_rail_records) * 2,
+                    "door_corner_load_pads": sum(
+                        1 for item in door_reinforcement_records if item.get("kind") == "corner_pad"
+                    ),
                 },
                 "minimum_gap_between_pads_mm": round(
                     hinge_gap + root_pad_y_trim * 2,
@@ -1421,6 +1525,20 @@ def _build_p070_hinged_wall_enclosure(
                 "records": door_reinforcement_records,
                 "outside_display_window": True,
             },
+            "edge_softening": {
+                "mode": "rounded_capsule_ribs_and_chamfered_load_edges",
+                "edge_chamfer_mm": round(reinforcement_chamfer, 4),
+                "feature_classes": [
+                    "display_boss_webs",
+                    "rear_floor_lattice",
+                    "front_door_edge_rails",
+                    "front_door_corner_pads",
+                    "hinge_root_saddles",
+                    "hinge_backer_rails",
+                    "hinge_gusset_webs",
+                    "latch_and_catch_edges",
+                ],
+            },
         },
         "structural_review": {
             "schema": "cbbs-cad/structural-review/v1",
@@ -1436,10 +1554,16 @@ def _build_p070_hinged_wall_enclosure(
                 "hinge_root_pads": len(hinge_root_pad_records),
                 "hinge_backer_rails": len(hinge_backer_rail_records),
                 "hinge_gusset_webs": len(hinge_gusset_records),
+                "softened_hinge_root_saddles": len(hinge_root_pad_records),
+                "rounded_hinge_backer_nodes": len(hinge_backer_rail_records) * 2,
+                "softened_hinge_gusset_webs": len(hinge_gusset_records),
                 "rear_panel_floor_ribs": len(floor_lattice_records),
                 "rear_panel_inner_perimeter_rails": len(inner_perimeter_rail_records),
                 "display_boss_webs": len(display_boss_web_records) * 2,
                 "front_door_edge_corner_features": len(door_reinforcement_records),
+                "rounded_front_door_corner_pads": sum(
+                    1 for item in door_reinforcement_records if item.get("kind") == "corner_pad"
+                ),
             },
             "k1_margins_mm": {
                 "rear_tray": {
@@ -1458,6 +1582,8 @@ def _build_p070_hinged_wall_enclosure(
                 "rear panel floor oil-canning",
                 "display mount boss floor pull-through",
                 "front display door corner and edge flex",
+                "sharp hinge-root stress transitions",
+                "sharp reinforced-door contour transitions",
             ],
             "remaining_blockers": concept.open_measurement_blockers,
             "blocked_claims": [
@@ -1522,9 +1648,7 @@ def _hardware_by_required_id(
 
 def _build_reference_board(cq: Any, x: float, y: float, z: float, corner: float = 1.0) -> Any:
     board = rounded_plate(cq, x, y, z, corner)
-    face = _box(cq, max(2.0, x * 0.35), max(2.0, y * 0.45), 0.45).translate(
-        (0, 0, z + 0.05)
-    )
+    face = _box(cq, max(2.0, x * 0.35), max(2.0, y * 0.45), 0.45).translate((0, 0, z + 0.05))
     return board.union(face)
 
 
@@ -1587,7 +1711,7 @@ def _add_route_rail_pair_between(
         rail_start = (start[0] + px * offset, start[1] + py * offset)
         rail_end = (end[0] + px * offset, end[1] + py * offset)
         model = model.union(
-            _raised_bar_between(
+            _rounded_raised_bar_between(
                 cq,
                 rail_start,
                 rail_end,
@@ -1606,6 +1730,8 @@ def _add_route_rail_pair_between(
                 "length_mm": round(length, 4),
                 "rail_width_mm": round(rail_width, 4),
                 "rail_height_mm": round(rail_height, 4),
+                "profile": "rounded_capsule_route_rail",
+                "rounded_end_nodes": 2,
             }
         )
     return model, records
@@ -1646,6 +1772,224 @@ def _try_chamfer_vertical_edges(model: Any, chamfer: float, *dimensions: float) 
         return model.edges("|Z").chamfer(safe)
     except Exception:
         return model
+
+
+def _try_chamfer_y_edges(model: Any, chamfer: float, *dimensions: float) -> Any:
+    if chamfer <= 0:
+        return model
+    positive = [dimension for dimension in dimensions if dimension > 0]
+    if not positive:
+        return model
+    safe = min(chamfer, min(positive) / 3)
+    if safe <= 0:
+        return model
+    try:
+        return model.edges("|Y").chamfer(safe)
+    except Exception:
+        return model
+
+
+def _try_chamfer_x_edges(model: Any, chamfer: float, *dimensions: float) -> Any:
+    if chamfer <= 0:
+        return model
+    positive = [dimension for dimension in dimensions if dimension > 0]
+    if not positive:
+        return model
+    safe = min(chamfer, min(positive) / 3)
+    if safe <= 0:
+        return model
+    try:
+        return model.edges("|X").chamfer(safe)
+    except Exception:
+        return model
+
+
+def _softened_box(
+    cq: Any,
+    x: float,
+    y: float,
+    z: float,
+    chamfer: float,
+) -> Any:
+    return _try_chamfer_vertical_edges(_box(cq, x, y, z), chamfer, x, y, z)
+
+
+def _add_softened_box_feature(
+    model: Any,
+    cq: Any,
+    x: float,
+    y: float,
+    z: float,
+    center_x: float,
+    center_y: float,
+    z_base: float,
+    chamfer: float,
+) -> Any:
+    feature = _softened_box(cq, x, y, z, chamfer).translate((center_x, center_y, z_base))
+    return model.union(feature)
+
+
+def _rounded_raised_bar_between(
+    cq: Any,
+    start: tuple[float, float],
+    end: tuple[float, float],
+    width: float,
+    height: float,
+    z_base: float,
+    chamfer: float = 0.0,
+) -> Any:
+    """Raised XY bar whose start/end points are the final footprint envelope."""
+    length = hypot(end[0] - start[0], end[1] - start[1])
+    radius = width / 2
+    if length <= 0:
+        feature = (
+            cq.Workplane("XY")
+            .center(start[0], start[1])
+            .circle(radius)
+            .extrude(height)
+            .translate((0, 0, z_base))
+        )
+        return _try_chamfer_vertical_edges(feature, chamfer, width, height)
+    if length <= width:
+        midpoint = ((start[0] + end[0]) / 2, (start[1] + end[1]) / 2)
+        feature = (
+            cq.Workplane("XY")
+            .center(midpoint[0], midpoint[1])
+            .circle(radius)
+            .extrude(height)
+            .translate((0, 0, z_base))
+        )
+        return _try_chamfer_vertical_edges(feature, chamfer, width, height)
+
+    angle = degrees(atan2(end[1] - start[1], end[0] - start[0]))
+    midpoint = ((start[0] + end[0]) / 2, (start[1] + end[1]) / 2)
+    span = length - width
+    feature = (
+        _box(cq, span, width, height)
+        .rotate((0, 0, 0), (0, 0, 1), angle)
+        .translate((midpoint[0], midpoint[1], z_base))
+    )
+    dx = (end[0] - start[0]) / length
+    dy = (end[1] - start[1]) / length
+    for point in (
+        (start[0] + dx * radius, start[1] + dy * radius),
+        (end[0] - dx * radius, end[1] - dy * radius),
+    ):
+        cap = (
+            cq.Workplane("XY")
+            .center(point[0], point[1])
+            .circle(radius)
+            .extrude(height)
+            .translate((0, 0, z_base))
+        )
+        feature = feature.union(cap)
+    return _try_chamfer_vertical_edges(feature, chamfer, width, height, span)
+
+
+def _cylinder_x(
+    cq: Any,
+    x_start: float,
+    center_y: float,
+    center_z: float,
+    outer_diameter: float,
+    length: float,
+    hole_diameter: float | None = None,
+) -> Any:
+    profile = cq.Workplane("YZ").center(center_y, center_z).circle(outer_diameter / 2)
+    if hole_diameter:
+        profile = profile.circle(hole_diameter / 2)
+    return profile.extrude(length).translate((x_start, 0, 0))
+
+
+def _rounded_bar_xz_y(
+    cq: Any,
+    start: tuple[float, float],
+    end: tuple[float, float],
+    width: float,
+    depth_y: float,
+    center_y: float,
+    chamfer: float = 0.0,
+) -> Any:
+    """Capsule bar in the XZ plane, extruded along Y, preserving start/end extents."""
+    length = hypot(end[0] - start[0], end[1] - start[1])
+    radius = width / 2
+    y_start = center_y - depth_y / 2
+    if length <= width:
+        midpoint = ((start[0] + end[0]) / 2, (start[1] + end[1]) / 2)
+        feature = _cylinder_y(cq, midpoint[0], y_start, midpoint[1], width, depth_y)
+        return _try_chamfer_y_edges(feature, chamfer, width, depth_y)
+
+    span = length - width
+    angle = degrees(atan2(end[1] - start[1], end[0] - start[0]))
+    midpoint = ((start[0] + end[0]) / 2, (start[1] + end[1]) / 2)
+    feature = (
+        _box(cq, span, depth_y, width)
+        .translate((0, 0, -width / 2))
+        .rotate((0, 0, 0), (0, 1, 0), -angle)
+        .translate((midpoint[0], center_y, midpoint[1]))
+    )
+    dx = (end[0] - start[0]) / length
+    dz = (end[1] - start[1]) / length
+    for point in (
+        (start[0] + dx * radius, start[1] + dz * radius),
+        (end[0] - dx * radius, end[1] - dz * radius),
+    ):
+        feature = feature.union(_cylinder_y(cq, point[0], y_start, point[1], width, depth_y))
+    return _try_chamfer_y_edges(feature, chamfer, width, depth_y, span)
+
+
+def _rounded_bar_yz_x(
+    cq: Any,
+    start: tuple[float, float],
+    end: tuple[float, float],
+    width: float,
+    depth_x: float,
+    center_x: float,
+    chamfer: float = 0.0,
+) -> Any:
+    """Capsule bar in the YZ plane, extruded along X, preserving start/end extents."""
+    length = hypot(end[0] - start[0], end[1] - start[1])
+    radius = width / 2
+    x_start = center_x - depth_x / 2
+    if length <= width:
+        midpoint = ((start[0] + end[0]) / 2, (start[1] + end[1]) / 2)
+        feature = _cylinder_x(cq, x_start, midpoint[0], midpoint[1], width, depth_x)
+        return _try_chamfer_x_edges(feature, chamfer, width, depth_x)
+
+    span = length - width
+    angle = degrees(atan2(end[1] - start[1], end[0] - start[0]))
+    midpoint = ((start[0] + end[0]) / 2, (start[1] + end[1]) / 2)
+    feature = (
+        _box(cq, depth_x, span, width)
+        .translate((0, 0, -width / 2))
+        .rotate((0, 0, 0), (1, 0, 0), angle)
+        .translate((center_x, midpoint[0], midpoint[1]))
+    )
+    dy = (end[0] - start[0]) / length
+    dz = (end[1] - start[1]) / length
+    for point in (
+        (start[0] + dy * radius, start[1] + dz * radius),
+        (end[0] - dy * radius, end[1] - dz * radius),
+    ):
+        feature = feature.union(_cylinder_x(cq, x_start, point[0], point[1], width, depth_x))
+    return _try_chamfer_x_edges(feature, chamfer, width, depth_x, span)
+
+
+def _softened_triangular_web_y(
+    cq: Any,
+    points_xz: list[tuple[float, float]],
+    center_y: float,
+    length_y: float,
+    chamfer: float,
+) -> Any:
+    web = (
+        cq.Workplane("XZ")
+        .polyline(points_xz)
+        .close()
+        .extrude(length_y)
+        .translate((0, center_y - length_y / 2, 0))
+    )
+    return _try_chamfer_y_edges(web, chamfer, length_y)
 
 
 def _add_raised_text(
@@ -1784,48 +2128,58 @@ def _build_p070_heltec_outdoor_controller_enclosure(
     # release surface treatment is still blocked on printed samples.
     pod_shell = _box(cq, pod_outer_x, pod_outer_y, pod_outer_z)
     pod_shell = pod_shell.translate((0, pod_center_y, pod_base_z))
-    pod_shell = pod_shell.faces(">Z").workplane().rect(battery_bay_x, battery_bay_y).cutBlind(
-        -battery_bay_z
+    pod_shell = (
+        pod_shell.faces(">Z")
+        .workplane()
+        .rect(battery_bay_x, battery_bay_y)
+        .cutBlind(-battery_bay_z)
     )
 
     rear_pod_floor_rib_records: list[dict[str, Any]] = []
+    rear_pod_floor_rib_node_count = 0
     pod_floor_rib_span_y = max(rib_width, battery_bay_y - rib_width * 2)
     pod_floor_rib_span_x = max(rib_width, battery_bay_x - rib_width * 2)
     pod_floor_z = pod_base_z + pod_floor
     for x in (-battery_bay_x / 4, 0.0, battery_bay_x / 4):
-        pod_shell = add_box_feature(
-            pod_shell,
-            cq,
-            rib_width,
-            pod_floor_rib_span_y,
-            rib_height,
-            x,
-            pod_center_y,
-            pod_floor_z,
+        pod_shell = pod_shell.union(
+            _rounded_raised_bar_between(
+                cq,
+                (x, pod_center_y - pod_floor_rib_span_y / 2),
+                (x, pod_center_y + pod_floor_rib_span_y / 2),
+                rib_width,
+                rib_height,
+                pod_floor_z,
+                surface_chamfer,
+            )
         )
+        rear_pod_floor_rib_node_count += 2
         rear_pod_floor_rib_records.append(
             {
                 "axis": "Y",
                 "center_x_mm": round(x, 4),
                 "length_mm": round(pod_floor_rib_span_y, 4),
+                "profile": "rounded_capsule_rib",
             }
         )
     for y in (-battery_bay_y / 4, battery_bay_y / 4):
-        pod_shell = add_box_feature(
-            pod_shell,
-            cq,
-            pod_floor_rib_span_x,
-            rib_width,
-            rib_height,
-            0,
-            pod_center_y + y,
-            pod_floor_z,
+        pod_shell = pod_shell.union(
+            _rounded_raised_bar_between(
+                cq,
+                (-pod_floor_rib_span_x / 2, pod_center_y + y),
+                (pod_floor_rib_span_x / 2, pod_center_y + y),
+                rib_width,
+                rib_height,
+                pod_floor_z,
+                surface_chamfer,
+            )
         )
+        rear_pod_floor_rib_node_count += 2
         rear_pod_floor_rib_records.append(
             {
                 "axis": "X",
                 "center_y_mm": round(pod_center_y + y, 4),
                 "length_mm": round(pod_floor_rib_span_x, 4),
+                "profile": "rounded_capsule_rib",
             }
         )
 
@@ -1835,39 +2189,43 @@ def _build_p070_heltec_outdoor_controller_enclosure(
         pod_center_y - battery_bay_y / 2 + rib_width / 2,
         pod_center_y + battery_bay_y / 2 - rib_width / 2,
     ):
-        pod_shell = add_box_feature(
-            pod_shell,
-            cq,
-            battery_bay_x,
-            rib_width,
-            rib_height,
-            0,
-            y,
-            pod_side_ledge_z,
+        pod_shell = pod_shell.union(
+            _rounded_raised_bar_between(
+                cq,
+                (-battery_bay_x / 2, y),
+                (battery_bay_x / 2, y),
+                rib_width,
+                rib_height,
+                pod_side_ledge_z,
+                surface_chamfer,
+            )
         )
         rear_pod_side_ledge_records.append(
             {
                 "axis": "X",
                 "center_y_mm": round(y, 4),
                 "length_mm": round(battery_bay_x, 4),
+                "profile": "rounded_capsule_ledge",
             }
         )
     for x in (-battery_bay_x / 2 + rib_width / 2, battery_bay_x / 2 - rib_width / 2):
-        pod_shell = add_box_feature(
-            pod_shell,
-            cq,
-            rib_width,
-            battery_bay_y,
-            rib_height,
-            x,
-            pod_center_y,
-            pod_side_ledge_z,
+        pod_shell = pod_shell.union(
+            _rounded_raised_bar_between(
+                cq,
+                (x, pod_center_y - battery_bay_y / 2),
+                (x, pod_center_y + battery_bay_y / 2),
+                rib_width,
+                rib_height,
+                pod_side_ledge_z,
+                surface_chamfer,
+            )
         )
         rear_pod_side_ledge_records.append(
             {
                 "axis": "Y",
                 "center_x_mm": round(x, 4),
                 "length_mm": round(battery_bay_y, 4),
+                "profile": "rounded_capsule_ledge",
             }
         )
 
@@ -1879,7 +2237,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
 
     rib_z = max(8.0, heltec_bay["z"] / 2)
     for y in (-pod_outer_y / 2 + pod_wall / 2, pod_outer_y / 2 - pod_wall / 2):
-        pod_shell = add_box_feature(
+        pod_shell = _add_softened_box_feature(
             pod_shell,
             cq,
             pod_outer_x - 18.0,
@@ -1888,9 +2246,10 @@ def _build_p070_heltec_outdoor_controller_enclosure(
             0,
             pod_center_y + y,
             pod_base_z + pod_floor,
+            surface_chamfer,
         )
     for x in (-pod_outer_x / 2 + pod_wall / 2, pod_outer_x / 2 - pod_wall / 2):
-        pod_shell = add_box_feature(
+        pod_shell = _add_softened_box_feature(
             pod_shell,
             cq,
             rib_width,
@@ -1899,37 +2258,43 @@ def _build_p070_heltec_outdoor_controller_enclosure(
             x,
             pod_center_y,
             pod_base_z + pod_floor,
+            surface_chamfer,
         )
 
     macro_rib_count = 0
+    macro_rib_contour_node_count = 0
     macro_rib_z_base = pod_base_z + pod_floor + 6.0
     macro_rib_z = max(12.0, pod_outer_z - pod_floor - 18.0)
     for x in _centered_pattern_positions(pod_outer_x - 28.0, macro_rib_pitch):
         for y in (-pod_outer_y / 2 - macro_rib_height / 2, pod_outer_y / 2 + macro_rib_height / 2):
-            pod_shell = add_box_feature(
-                pod_shell,
-                cq,
-                macro_rib_width,
-                macro_rib_height,
-                macro_rib_z,
-                x,
-                pod_center_y + y,
-                macro_rib_z_base,
+            pod_shell = pod_shell.union(
+                _rounded_bar_xz_y(
+                    cq,
+                    (x, macro_rib_z_base),
+                    (x, macro_rib_z_base + macro_rib_z),
+                    macro_rib_width,
+                    macro_rib_height,
+                    pod_center_y + y,
+                    surface_chamfer,
+                )
             )
             macro_rib_count += 1
+            macro_rib_contour_node_count += 2
     for y in _centered_pattern_positions(pod_outer_y - 28.0, macro_rib_pitch):
         for x in (-pod_outer_x / 2 - macro_rib_height / 2, pod_outer_x / 2 + macro_rib_height / 2):
-            pod_shell = add_box_feature(
-                pod_shell,
-                cq,
-                macro_rib_height,
-                macro_rib_width,
-                macro_rib_z,
-                x,
-                pod_center_y + y,
-                macro_rib_z_base,
+            pod_shell = pod_shell.union(
+                _rounded_bar_yz_x(
+                    cq,
+                    (pod_center_y + y, macro_rib_z_base),
+                    (pod_center_y + y, macro_rib_z_base + macro_rib_z),
+                    macro_rib_width,
+                    macro_rib_height,
+                    x,
+                    surface_chamfer,
+                )
             )
             macro_rib_count += 1
+            macro_rib_contour_node_count += 2
 
     rear_panel_core = _part_model(base.assembly.parts, "rear_tray")
     connector_center_y = outer_y / 2 + pod_connector_length / 2
@@ -1959,15 +2324,16 @@ def _build_p070_heltec_outdoor_controller_enclosure(
         pad = rounded_plate(cq, 22.0, 16.0, rib_height, 2.0).translate((x, y, floor))
         rear_panel_core = rear_panel_core.union(pad)
         for rail_y in (y - 4.0, y + 4.0):
-            rear_panel_core = add_box_feature(
-                rear_panel_core,
-                cq,
-                14.0,
-                macro_rib_width,
-                macro_rib_height,
-                x,
-                rail_y,
-                floor + rib_height,
+            rear_panel_core = rear_panel_core.union(
+                _rounded_raised_bar_between(
+                    cq,
+                    (x - 7.0, rail_y),
+                    (x + 7.0, rail_y),
+                    macro_rib_width,
+                    macro_rib_height,
+                    floor + rib_height,
+                    surface_chamfer,
+                )
             )
             mount_tab_accent_count += 1
 
@@ -2011,17 +2377,20 @@ def _build_p070_heltec_outdoor_controller_enclosure(
             board_x / 2 + clearance + rail_width / 2,
         )
         records: list[dict[str, Any]] = []
+        rounded_node_count = 0
         for y in (center[1] - y_offset, center[1] + y_offset):
-            model = add_box_feature(
-                model,
-                cq,
-                rail_x,
-                rail_width,
-                feature_height,
-                center[0],
-                y,
-                z_base,
+            model = model.union(
+                _rounded_raised_bar_between(
+                    cq,
+                    (center[0] - rail_x / 2, y),
+                    (center[0] + rail_x / 2, y),
+                    rail_width,
+                    feature_height,
+                    z_base,
+                    surface_chamfer,
+                )
             )
+            rounded_node_count += 2
             records.append(
                 {
                     "kind": "side_rail",
@@ -2029,19 +2398,22 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                     "center_x_mm": round(center[0], 4),
                     "center_y_mm": round(y, 4),
                     "length_mm": round(rail_x, 4),
+                    "profile": "rounded_capsule_alignment_rail",
                 }
             )
         for x in (center[0] - x_offset, center[0] + x_offset):
-            model = add_box_feature(
-                model,
-                cq,
-                rail_width,
-                rail_y,
-                feature_height,
-                x,
-                center[1],
-                z_base,
+            model = model.union(
+                _rounded_raised_bar_between(
+                    cq,
+                    (x, center[1] - rail_y / 2),
+                    (x, center[1] + rail_y / 2),
+                    rail_width,
+                    feature_height,
+                    z_base,
+                    surface_chamfer,
+                )
             )
+            rounded_node_count += 2
             records.append(
                 {
                     "kind": "end_stop",
@@ -2049,6 +2421,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                     "center_x_mm": round(x, 4),
                     "center_y_mm": round(center[1], 4),
                     "length_mm": round(rail_y, 4),
+                    "profile": "rounded_capsule_alignment_stop",
                 }
             )
         if label in {"heltec_v2", "regulator"}:
@@ -2057,27 +2430,29 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                 for sy in (-1.0, 1.0):
                     pad_x = center[0] + sx * x_offset
                     pad_y = center[1] + sy * y_offset
-                    model = add_box_feature(
-                        model,
+                    capture_pad = rounded_plate(
                         cq,
                         corner_pad,
                         corner_pad,
                         feature_height,
-                        pad_x,
-                        pad_y,
-                        z_base,
-                    )
+                        min(corner_pad / 2.4, surface_chamfer * 4),
+                    ).translate((pad_x, pad_y, z_base))
+                    model = model.union(capture_pad)
+                    rounded_node_count += 1
                     records.append(
                         {
                             "kind": "corner_capture_pad",
                             "center_x_mm": round(pad_x, 4),
                             "center_y_mm": round(pad_y, 4),
                             "length_mm": round(corner_pad, 4),
+                            "profile": "rounded_corner_capture_pad",
                         }
                     )
         hardware_alignment_records[label] = {
-            "type": "alignment rails and stops",
+            "type": "softened alignment rails and rounded stops",
             "feature_count": len(records),
+            "rounded_node_count": rounded_node_count,
+            "edge_chamfer_mm": round(surface_chamfer, 4),
             "records": records,
             "verified_screw_holes": False,
             "mounting_holes_modeled": False,
@@ -2136,27 +2511,33 @@ def _build_p070_heltec_outdoor_controller_enclosure(
     rear_pod_module = rear_pod_module.union(sma_print_boss)
     rf_route_alignment_records: list[dict[str, Any]] = []
     for x_offset in (-wire_channel_width, wire_channel_width):
-        rear_pod_module = add_box_feature(
-            rear_pod_module,
-            cq,
-            4.0,
-            18.0,
-            3.0,
-            sma_x + x_offset,
-            pod_center_y + pod_outer_y / 2 - 12.0,
-            sma_z - 1.5,
+        rail_center_y = pod_center_y + pod_outer_y / 2 - 12.0
+        rear_pod_module = rear_pod_module.union(
+            _rounded_raised_bar_between(
+                cq,
+                (sma_x + x_offset, rail_center_y - 9.0),
+                (sma_x + x_offset, rail_center_y + 9.0),
+                4.0,
+                3.0,
+                sma_z - 1.5,
+                surface_chamfer,
+            )
         )
         rf_route_alignment_records.append(
             {
                 "kind": "rf_pigtail_channel_rail",
                 "center_x_mm": round(sma_x + x_offset, 4),
-                "center_y_mm": round(pod_center_y + pod_outer_y / 2 - 12.0, 4),
+                "center_y_mm": round(rail_center_y, 4),
+                "profile": "rounded_capsule_alignment_rail",
+                "rounded_end_nodes": 2,
                 "verification_status": "pending-measurement",
             }
         )
     hardware_alignment_records["rf_route"] = {
-        "type": "alignment rails for RF pigtail route",
+        "type": "softened alignment rails for RF pigtail route",
         "feature_count": len(rf_route_alignment_records),
+        "rounded_node_count": len(rf_route_alignment_records) * 2,
+        "edge_chamfer_mm": round(surface_chamfer, 4),
         "records": rf_route_alignment_records,
         "verified_screw_holes": False,
         "mounting_holes_modeled": False,
@@ -2195,29 +2576,65 @@ def _build_p070_heltec_outdoor_controller_enclosure(
     )
     rear_pod_module = rear_pod_module.union(field_thread_boss)
     field_gland_support_records: list[dict[str, Any]] = []
+    field_gland_transition_records: list[dict[str, Any]] = []
     field_web_depth = min(field_gland_thread_depth, max(pod_wall * 2, 8.0))
     field_web_y = field_gland_y_start + field_web_depth / 2 - 0.3
     field_web_height = max(rib_height, macro_rib_height * 1.5)
+    field_collar_depth = min(field_web_depth, pod_wall + macro_rib_height * 2)
+    field_collar_outer = min(
+        field_gland_boss_outer + macro_rib_height * 2, field_gland_boss_outer + pod_wall
+    )
+    field_collar = _cylinder_y(
+        cq,
+        field_gland_x,
+        field_gland_y_start - 0.6,
+        field_gland_z,
+        field_collar_outer,
+        field_collar_depth,
+        field_gland_thread_major + field_gland_clearance * 2,
+    )
+    field_collar = _try_chamfer_y_edges(
+        field_collar,
+        surface_chamfer,
+        field_collar_outer,
+        field_collar_depth,
+    )
+    rear_pod_module = rear_pod_module.union(field_collar)
+    field_gland_transition_records.append(
+        {
+            "kind": "rounded_boss_collar",
+            "outer_diameter_mm": round(field_collar_outer, 4),
+            "depth_mm": round(field_collar_depth, 4),
+            "edge_chamfer_mm": round(surface_chamfer, 4),
+            "verification_status": "physical-print-required",
+        }
+    )
     for z_offset, label in (
         (-field_gland_boss_outer / 2 + field_web_height / 2, "lower_saddle"),
         (field_gland_boss_outer / 2 - field_web_height / 2, "upper_saddle"),
     ):
-        rear_pod_module = add_box_feature(
-            rear_pod_module,
-            cq,
-            field_gland_boss_outer * 0.86,
-            field_web_depth,
-            field_web_height,
-            field_gland_x,
-            field_web_y,
-            field_gland_z + z_offset - field_web_height / 2,
+        center_z = field_gland_z + z_offset
+        saddle_span_x = field_gland_boss_outer * 0.86
+        rear_pod_module = rear_pod_module.union(
+            _rounded_bar_xz_y(
+                cq,
+                (field_gland_x - saddle_span_x / 2, center_z),
+                (field_gland_x + saddle_span_x / 2, center_z),
+                field_web_height,
+                field_web_depth,
+                field_web_y,
+                surface_chamfer,
+            )
         )
         field_gland_support_records.append(
             {
                 "kind": label,
                 "center_x_mm": round(field_gland_x, 4),
                 "center_y_mm": round(field_web_y, 4),
-                "center_z_mm": round(field_gland_z + z_offset, 4),
+                "center_z_mm": round(center_z, 4),
+                "profile": "rounded_capsule_saddle_web",
+                "rounded_end_nodes": 2,
+                "edge_chamfer_mm": round(surface_chamfer, 4),
                 "verification_status": "physical-print-required",
             }
         )
@@ -2225,22 +2642,28 @@ def _build_p070_heltec_outdoor_controller_enclosure(
         (-field_gland_boss_outer / 2 + field_web_height / 2, "left_side_web"),
         (field_gland_boss_outer / 2 - field_web_height / 2, "right_side_web"),
     ):
-        rear_pod_module = add_box_feature(
-            rear_pod_module,
-            cq,
-            field_web_height,
-            field_web_depth,
-            field_gland_boss_outer * 0.72,
-            field_gland_x + x_offset,
-            field_web_y,
-            field_gland_z - field_gland_boss_outer * 0.36,
+        center_x = field_gland_x + x_offset
+        side_span_z = field_gland_boss_outer * 0.72
+        rear_pod_module = rear_pod_module.union(
+            _rounded_bar_xz_y(
+                cq,
+                (center_x, field_gland_z - side_span_z / 2),
+                (center_x, field_gland_z + side_span_z / 2),
+                field_web_height,
+                field_web_depth,
+                field_web_y,
+                surface_chamfer,
+            )
         )
         field_gland_support_records.append(
             {
                 "kind": label,
-                "center_x_mm": round(field_gland_x + x_offset, 4),
+                "center_x_mm": round(center_x, 4),
                 "center_y_mm": round(field_web_y, 4),
                 "center_z_mm": round(field_gland_z, 4),
+                "profile": "rounded_capsule_side_web",
+                "rounded_end_nodes": 2,
+                "edge_chamfer_mm": round(surface_chamfer, 4),
                 "verification_status": "physical-print-required",
             }
         )
@@ -2366,7 +2789,10 @@ def _build_p070_heltec_outdoor_controller_enclosure(
     gland_reference = _part_model(base.assembly.parts, "m12_gland_reference")
 
     front_contour_rail_count = 0
-    horizontal_span = min(outer_x - 36.0, window_x + front_rail_clearance * 2 + front_rail_width * 2)
+    front_contour_node_count = 0
+    horizontal_span = min(
+        outer_x - 36.0, window_x + front_rail_clearance * 2 + front_rail_width * 2
+    )
     center_gap = min(32.0, max(20.0, horizontal_span * 0.22))
     horizontal_segment = max(front_rail_width * 3, (horizontal_span - center_gap) / 2)
     rail_y = window_y / 2 + front_rail_clearance + front_rail_width / 2
@@ -2374,7 +2800,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
         for sx in (-1.0, 1.0):
             center_x = sx * (center_gap / 2 + horizontal_segment / 2)
             door = door.union(
-                _raised_bar_between(
+                _rounded_raised_bar_between(
                     cq,
                     (center_x - horizontal_segment / 2, y),
                     (center_x + horizontal_segment / 2, y),
@@ -2385,12 +2811,13 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                 )
             )
             front_contour_rail_count += 1
+            front_contour_node_count += 2
 
     vertical_span = min(outer_y - 36.0, window_y + front_rail_clearance * 2)
     rail_x = window_x / 2 + front_rail_clearance + front_rail_width / 2
     for x in (-rail_x, rail_x):
         door = door.union(
-            _raised_bar_between(
+            _rounded_raised_bar_between(
                 cq,
                 (x, -vertical_span / 2),
                 (x, vertical_span / 2),
@@ -2401,6 +2828,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
             )
         )
         front_contour_rail_count += 1
+        front_contour_node_count += 2
 
     brand_text_y = -outer_y / 2 + max(raised_brand_text_font_size * 0.78, 7.6)
     door, brand_text_font_used = _add_raised_text(
@@ -2452,7 +2880,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
         ((4.4, -3.4), (0.0, 0.0)),
     ]:
         door = door.union(
-            _raised_bar_between(
+            _rounded_raised_bar_between(
                 cq,
                 (
                     icon_center[0] + start[0] * icon_scale,
@@ -2674,9 +3102,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
     )
 
     print_part_bounds = {
-        part.id: _model_bounds_mm(part.model)
-        for part in parts
-        if part.role == "print"
+        part.id: _model_bounds_mm(part.model) for part in parts if part.role == "print"
     }
     brim_margin = 6.0
     layout_spacing = 8.0
@@ -2747,10 +3173,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
         },
     }
     k1_margins = {
-        part_id: {
-            axis: round(effective_xy_limit[axis] - bounds[axis], 4)
-            for axis in ("x", "y")
-        }
+        part_id: {axis: round(effective_xy_limit[axis] - bounds[axis], 4) for axis in ("x", "y")}
         for part_id, bounds in print_part_bounds.items()
     }
     minimum_k1_margin = round(
@@ -2835,6 +3258,12 @@ def _build_p070_heltec_outdoor_controller_enclosure(
             "support_features": {
                 "count": len(field_gland_support_records),
                 "records": field_gland_support_records,
+                "profile": "rounded capsule saddle and side webs",
+                "rounded_end_nodes": sum(
+                    int(record.get("rounded_end_nodes", 0))
+                    for record in field_gland_support_records
+                ),
+                "transition_features": field_gland_transition_records,
                 "verification_status": "physical-print-required",
             },
             "source_refs": [
@@ -2880,6 +3309,10 @@ def _build_p070_heltec_outdoor_controller_enclosure(
             ],
             "rail_count": len(wire_route_records),
             "rail_records": wire_route_records,
+            "rounded_end_nodes": sum(
+                int(record.get("rounded_end_nodes", 0)) for record in wire_route_records
+            ),
+            "profile": "paired rounded capsule rails",
             "blocked_claims": [
                 "measured bend radius",
                 "field cable stack fit",
@@ -2897,6 +3330,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                 "records": rear_pod_floor_rib_records,
                 "width_mm": rib_width,
                 "height_mm": rib_height,
+                "rounded_end_nodes": rear_pod_floor_rib_node_count,
                 "symmetric": True,
             },
             "rear_pod_side_wall_ledges": {
@@ -2912,11 +3346,38 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                 "count": len(field_gland_support_records),
                 "records": field_gland_support_records,
                 "threaded_boss_outer_diameter_mm": round(field_gland_boss_outer, 4),
+                "profile": "rounded capsule saddle webs plus chamfered collar",
+            },
+            "field_gland_transition_features": {
+                "count": len(field_gland_transition_records),
+                "records": field_gland_transition_records,
+                "verification_status": "physical-print-required",
             },
             "wire_route_rails": {
                 "count": len(wire_route_records),
                 "records": wire_route_records,
+                "rounded_end_nodes": sum(
+                    int(record.get("rounded_end_nodes", 0)) for record in wire_route_records
+                ),
                 "verification_status": "pending-measurement",
+            },
+            "edge_softening": {
+                **base.assembly.metadata.get("mechanical_reinforcement", {}).get(
+                    "edge_softening",
+                    {},
+                ),
+                "rear_pod_surface_chamfer_mm": round(surface_chamfer, 4),
+                "added_feature_classes": [
+                    "rear_pod_floor_ribs",
+                    "rear_pod_side_ledges",
+                    "rear_pod_macro_ribs",
+                    "hardware_alignment_aids",
+                    "rf_route_alignment",
+                    "field_gland_support_webs",
+                    "field_gland_transition_collar",
+                    "wire_route_rails",
+                    "front_contour_rails",
+                ],
             },
             "drip_lip_reference_surface": True,
             "gasket_reference_surface": True,
@@ -2976,7 +3437,8 @@ def _build_p070_heltec_outdoor_controller_enclosure(
         },
         "surface_treatment": {
             "truth_state": "internal review",
-            "style_intent": "futuristic macro contour ribs with raised CBBS marking",
+            "style_intent": "engineered softened macro contour ribs with raised CBBS marking",
+            "contour_language": "rounded capsule ribs, chamfered transitions, and load-spread nodes",
             "source_refs": [
                 "p070_futuristic_surface_reinforcement_findings",
                 "cbbs_brand_assets",
@@ -2990,6 +3452,8 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                 "count": front_contour_rail_count,
                 "width_mm": front_rail_width,
                 "height_mm": front_rail_height,
+                "rounded_end_nodes": front_contour_node_count,
+                "profile": "rounded segmented capsule rails",
                 "window_clearance_mm": front_rail_clearance,
                 "placement": "raised segmented rails outside the P070 display window",
             },
@@ -2998,6 +3462,8 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                 "width_mm": macro_rib_width,
                 "protrusion_mm": macro_rib_height,
                 "pitch_mm": macro_rib_pitch,
+                "rounded_end_nodes": macro_rib_contour_node_count,
+                "profile": "vertical rounded capsule contour ribs",
                 "placement": "external sidecar pod rails outside the display enclosure footprint",
             },
             "mount_tab_accent_ribs": {
@@ -3019,6 +3485,15 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                 "exact_brand_font_blocker": (
                     "Inter and Space Grotesk font files are not present in this repository."
                 ),
+            },
+            "edge_softening": {
+                "edge_chamfer_mm": round(surface_chamfer, 4),
+                "rounded_surface_node_count": (
+                    front_contour_node_count
+                    + macro_rib_contour_node_count
+                    + mount_tab_accent_count * 2
+                ),
+                "claim_status": "visual and print-review geometry only",
             },
             "printability_blockers": [
                 "Print raised lettering and contour rails before accepting relief heights.",
@@ -3063,12 +3538,16 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                 "regulator_alignment_aids": hardware_alignment_records["regulator"][
                     "feature_count"
                 ],
-                "rf_route_alignment_rails": hardware_alignment_records["rf_route"][
-                    "feature_count"
-                ],
+                "rf_route_alignment_rails": hardware_alignment_records["rf_route"]["feature_count"],
                 "field_gland_threaded_boss": 1,
                 "field_gland_support_webs": len(field_gland_support_records),
+                "field_gland_transition_collar": len(field_gland_transition_records),
                 "wire_route_rails": len(wire_route_records),
+                "rounded_wire_route_nodes": sum(
+                    int(record.get("rounded_end_nodes", 0)) for record in wire_route_records
+                ),
+                "rounded_front_contour_nodes": front_contour_node_count,
+                "rounded_rear_pod_macro_rib_nodes": macro_rib_contour_node_count,
             },
             "k1_margins_mm": {
                 "by_part": k1_margins,
@@ -3086,6 +3565,9 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                 "field-wire route ambiguity",
                 "unmeasured electronics placement ambiguity",
                 "RF pigtail route ambiguity",
+                "sharp field-gland support transitions",
+                "sharp rear-pod exterior rib ends",
+                "blocky hardware alignment stops",
             ],
             "remaining_blockers": [
                 *concept.open_measurement_blockers,
@@ -3307,9 +3789,13 @@ def _build_oled_window_coupon(cq: Any, concept: ConceptSpec) -> Any:
     thickness = _number(params, "thickness_mm", 2.0)
     window_x = _number(params, "window_x_mm", 28.0)
     window_y = _number(params, "window_y_mm", 12.0)
-    return _box(cq, outer_x, outer_y, thickness).faces(">Z").workplane().rect(
-        window_x, window_y
-    ).cutThruAll()
+    return (
+        _box(cq, outer_x, outer_y, thickness)
+        .faces(">Z")
+        .workplane()
+        .rect(window_x, window_y)
+        .cutThruAll()
+    )
 
 
 def _build_cable_relief_coupon(cq: Any, concept: ConceptSpec) -> Any:
@@ -3365,7 +3851,7 @@ def _build_p070_surface_treatment_coupon(cq: Any, concept: ConceptSpec) -> Any:
         for sx in (-1.0, 1.0):
             center_x = sx * (rail_gap / 2 + rail_span / 2)
             model = model.union(
-                _raised_bar_between(
+                _rounded_raised_bar_between(
                     cq,
                     (center_x - rail_span / 2, y),
                     (center_x + rail_span / 2, y),
@@ -3381,7 +3867,7 @@ def _build_p070_surface_treatment_coupon(cq: Any, concept: ConceptSpec) -> Any:
         if abs(x) < brand_font_size * 1.8:
             continue
         model = model.union(
-            _raised_bar_between(
+            _rounded_raised_bar_between(
                 cq,
                 (x, -rib_span / 2),
                 (x, rib_span / 2),
@@ -3442,7 +3928,7 @@ def _build_p070_surface_treatment_coupon(cq: Any, concept: ConceptSpec) -> Any:
         ((4.4, -3.4), (0.0, 0.0)),
     ]:
         model = model.union(
-            _raised_bar_between(
+            _rounded_raised_bar_between(
                 cq,
                 (
                     icon_center[0] + start[0] * icon_scale,
@@ -3676,5 +4162,7 @@ def generate_concepts(
         "artifacts": records,
         "skipped_artifacts": skipped_records,
     }
-    (output_dir / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    (output_dir / "manifest.json").write_text(
+        json.dumps(manifest, indent=2) + "\n", encoding="utf-8"
+    )
     return manifest

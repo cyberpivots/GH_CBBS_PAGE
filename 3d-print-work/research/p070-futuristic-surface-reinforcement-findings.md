@@ -46,6 +46,8 @@ field-readiness claim.
 - Front contour rails: 1.8 mm wide x 1.2 mm raised, offset at least 3.0 mm from
   the display window.
 - Rear pod macro ribs: 1.8 mm wide x 1.2 mm protrusion, 18.0 mm nominal pitch.
+- Surface-feature edge softening: 0.2 mm chamfer where CadQuery export remains
+  stable, with rounded/capsule rail ends used instead of square-ended bars.
 - Raised CBBS text: 10.0 mm font size x 1.2 mm relief.
 - Raised brand icon badge: 14.0 mm reference diameter x 1.2 mm relief, recreated
   from simple circle and line primitives visible in the approved public CBBS
@@ -60,6 +62,9 @@ field-readiness claim.
 - Keep RF antenna, SMA boss, cable channel, gasket/drip-lip references, battery
   service bay, and regulator/Heltec alignment aids clear of surface treatment
   features.
+- Prefer rounded or chamfered rib endpoints, boss collars, and route nodes over
+  sharp rectangular blocks when the change does not increase the accepted K1
+  component footprint.
 - Treat all surface features as prototype print-review geometry until actual
   ASA samples are printed and checked for readability, warping, handling, edge
   feel, service access, and mesh/export quality.
