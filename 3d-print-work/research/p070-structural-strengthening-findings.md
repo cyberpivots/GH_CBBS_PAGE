@@ -48,9 +48,10 @@ range, or field-readiness claim.
 - Add tray-owned reinforcement only to tray-owned hinge knuckles and door-owned
   reinforcement only to door-owned knuckles. Pads and webs must remain inside
   the existing hinge barrel bounds and must not bridge the alternating owners.
-- Use rounded root saddles, rounded load-spreader rails, and chamfered triangular
-  webs at the hinge root to reduce sharp stress transitions while preserving the
-  existing hinge owner pattern and K1 X/Y bounds.
+- Use rounded root saddles, rounded load-spreader rails, top-edge 3D fillets,
+  and chamfered triangular webs at the hinge root to reduce sharp stress
+  transitions while preserving the existing hinge owner pattern and K1 X/Y
+  bounds.
 - Add rear-panel floor ribs, display-boss webbing, and inner perimeter rails
   using existing wall and ASA rib parameters.
 - Add front-door edge and corner reinforcement outside the display window only.
@@ -58,9 +59,12 @@ range, or field-readiness claim.
 - Add rear-pod floor ribs and side-wall ledges inside the existing pod envelope.
   Re-cut battery strap slots after rib additions so the slots remain visible in
   the review mesh.
-- Prefer capsule-profile ribs, rounded route nodes, and chamfered cable-entry
-  saddle webs over square-ended rectangular ribs where the resulting mesh remains
-  watertight and print-package bounds remain accepted.
+- Prefer capsule-profile ribs, rounded route nodes, small 3D radii, and
+  rounded cable-entry saddle webs over square-ended rectangular ribs where the
+  resulting mesh remains watertight and print-package bounds remain accepted.
+- Apply 3D radius operations only where generated STL inspection stays
+  watertight; keep chamfer fallback for side-wall or saddle features where a
+  full fillet would damage the review mesh.
 - Use alignment rails/stops for battery, Heltec, regulator, and RF route. Do not
   model Heltec or regulator screw holes as verified features.
 - Keep component-level K1 plates limited to `rear_panel_core`,

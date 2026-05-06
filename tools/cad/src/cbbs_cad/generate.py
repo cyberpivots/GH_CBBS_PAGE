@@ -756,6 +756,7 @@ def _build_p070_hinged_wall_enclosure(
                 "web_height_mm": round(rib_height, 4),
                 "rounded_end_nodes": 4,
                 "edge_chamfer_mm": round(reinforcement_chamfer, 4),
+                "corner_radius_3d_mm": round(reinforcement_chamfer, 4),
             }
         )
 
@@ -814,7 +815,7 @@ def _build_p070_hinged_wall_enclosure(
     rail_inner_x = max(rib_width, cavity_x - rib_width * 2)
     rail_inner_y = max(rib_width, cavity_y - rib_width * 2)
     rail = rectangular_ring(cq, rail_outer_x, rail_outer_y, rail_inner_x, rail_inner_y, rib_height)
-    rail = _try_chamfer_vertical_edges(
+    rail = _try_radius_3d_edges(
         rail,
         reinforcement_chamfer,
         rail_outer_x - rail_inner_x,
@@ -944,7 +945,7 @@ def _build_p070_hinged_wall_enclosure(
                 rib_height,
                 min(corner_pad_x, corner_pad_y) / 3,
             ).translate((x, y, door_top_z))
-            corner_pad = _try_chamfer_vertical_edges(
+            corner_pad = _try_radius_3d_edges(
                 corner_pad,
                 reinforcement_chamfer,
                 corner_pad_x,
@@ -1048,6 +1049,7 @@ def _build_p070_hinged_wall_enclosure(
                 "owner_specific": True,
                 "profile": "rounded_capsule_root_saddle",
                 "edge_chamfer_mm": round(reinforcement_chamfer, 4),
+                "corner_radius_3d_mm": round(reinforcement_chamfer, 4),
             }
         )
     hinge_post_root_pad_bounds = {
@@ -1107,6 +1109,7 @@ def _build_p070_hinged_wall_enclosure(
                 "profile": "rounded_capsule_load_spreader",
                 "rounded_end_nodes": 2,
                 "edge_chamfer_mm": round(reinforcement_chamfer, 4),
+                "corner_radius_3d_mm": round(reinforcement_chamfer, 4),
             }
         )
 
@@ -1462,6 +1465,7 @@ def _build_p070_hinged_wall_enclosure(
                 "owner_pattern": [record["owner"] for record in hinge_root_pad_records],
                 "profile": "rounded owner-specific capsule root saddles",
                 "edge_chamfer_mm": round(reinforcement_chamfer, 4),
+                "corner_radius_3d_mm": round(reinforcement_chamfer, 4),
                 "backer_rails": {
                     "count": len(hinge_backer_rail_records),
                     "records": hinge_backer_rail_records,
@@ -1526,8 +1530,9 @@ def _build_p070_hinged_wall_enclosure(
                 "outside_display_window": True,
             },
             "edge_softening": {
-                "mode": "rounded_capsule_ribs_and_chamfered_load_edges",
+                "mode": "rounded_capsule_ribs_and_3d_radius_load_edges",
                 "edge_chamfer_mm": round(reinforcement_chamfer, 4),
+                "edge_radius_3d_mm": round(reinforcement_chamfer, 4),
                 "feature_classes": [
                     "display_boss_webs",
                     "rear_floor_lattice",
@@ -1557,6 +1562,9 @@ def _build_p070_hinged_wall_enclosure(
                 "softened_hinge_root_saddles": len(hinge_root_pad_records),
                 "rounded_hinge_backer_nodes": len(hinge_backer_rail_records) * 2,
                 "softened_hinge_gusset_webs": len(hinge_gusset_records),
+                "three_d_radius_hinge_features": (
+                    len(hinge_root_pad_records) + len(hinge_backer_rail_records)
+                ),
                 "rear_panel_floor_ribs": len(floor_lattice_records),
                 "rear_panel_inner_perimeter_rails": len(inner_perimeter_rail_records),
                 "display_boss_webs": len(display_boss_web_records) * 2,
@@ -1675,7 +1683,7 @@ def _raised_bar_between(
     length = hypot(end[0] - start[0], end[1] - start[1])
     if length <= 0:
         feature = _box(cq, width, width, height).translate((start[0], start[1], z_base))
-        return _try_chamfer_vertical_edges(feature, chamfer, width, width, height)
+        return _try_radius_3d_edges(feature, chamfer, width, width, height)
     angle = degrees(atan2(end[1] - start[1], end[0] - start[0]))
     midpoint = ((start[0] + end[0]) / 2, (start[1] + end[1]) / 2)
     feature = (
@@ -1683,7 +1691,7 @@ def _raised_bar_between(
         .rotate((0, 0, 0), (0, 0, 1), angle)
         .translate((midpoint[0], midpoint[1], z_base))
     )
-    return _try_chamfer_vertical_edges(feature, chamfer, length, width, height)
+    return _try_radius_3d_edges(feature, chamfer, length, width, height)
 
 
 def _add_route_rail_pair_between(
@@ -1756,7 +1764,7 @@ def _raised_annular_badge(
         .extrude(height)
         .translate((0, 0, z_base))
     )
-    return _try_chamfer_vertical_edges(badge, chamfer, wall_width, height)
+    return _try_radius_3d_edges(badge, chamfer, wall_width, height)
 
 
 def _try_chamfer_vertical_edges(model: Any, chamfer: float, *dimensions: float) -> Any:
@@ -1804,6 +1812,21 @@ def _try_chamfer_x_edges(model: Any, chamfer: float, *dimensions: float) -> Any:
         return model
 
 
+def _try_radius_3d_edges(model: Any, radius: float, *dimensions: float) -> Any:
+    if radius <= 0:
+        return model
+    positive = [dimension for dimension in dimensions if dimension > 0]
+    if not positive:
+        return model
+    safe = min(radius, min(positive) / 4)
+    if safe <= 0:
+        return model
+    try:
+        return model.edges(">Z").fillet(safe)
+    except Exception:
+        return _try_chamfer_vertical_edges(model, safe, *positive)
+
+
 def _softened_box(
     cq: Any,
     x: float,
@@ -1811,7 +1834,7 @@ def _softened_box(
     z: float,
     chamfer: float,
 ) -> Any:
-    return _try_chamfer_vertical_edges(_box(cq, x, y, z), chamfer, x, y, z)
+    return _try_radius_3d_edges(_box(cq, x, y, z), chamfer, x, y, z)
 
 
 def _add_softened_box_feature(
@@ -1849,7 +1872,7 @@ def _rounded_raised_bar_between(
             .extrude(height)
             .translate((0, 0, z_base))
         )
-        return _try_chamfer_vertical_edges(feature, chamfer, width, height)
+        return _try_radius_3d_edges(feature, chamfer, width, height)
     if length <= width:
         midpoint = ((start[0] + end[0]) / 2, (start[1] + end[1]) / 2)
         feature = (
@@ -1859,7 +1882,7 @@ def _rounded_raised_bar_between(
             .extrude(height)
             .translate((0, 0, z_base))
         )
-        return _try_chamfer_vertical_edges(feature, chamfer, width, height)
+        return _try_radius_3d_edges(feature, chamfer, width, height)
 
     angle = degrees(atan2(end[1] - start[1], end[0] - start[0]))
     midpoint = ((start[0] + end[0]) / 2, (start[1] + end[1]) / 2)
@@ -1883,7 +1906,7 @@ def _rounded_raised_bar_between(
             .translate((0, 0, z_base))
         )
         feature = feature.union(cap)
-    return _try_chamfer_vertical_edges(feature, chamfer, width, height, span)
+    return _try_radius_3d_edges(feature, chamfer, width, height, span)
 
 
 def _cylinder_x(
@@ -1982,6 +2005,10 @@ def _softened_triangular_web_y(
     length_y: float,
     chamfer: float,
 ) -> Any:
+    x_values = [point[0] for point in points_xz]
+    z_values = [point[1] for point in points_xz]
+    x_span = max(x_values) - min(x_values)
+    z_span = max(z_values) - min(z_values)
     web = (
         cq.Workplane("XZ")
         .polyline(points_xz)
@@ -1989,7 +2016,7 @@ def _softened_triangular_web_y(
         .extrude(length_y)
         .translate((0, center_y - length_y / 2, 0))
     )
-    return _try_chamfer_y_edges(web, chamfer, length_y)
+    return _try_chamfer_y_edges(web, chamfer, length_y, x_span, z_span)
 
 
 def _add_raised_text(
@@ -2453,6 +2480,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
             "feature_count": len(records),
             "rounded_node_count": rounded_node_count,
             "edge_chamfer_mm": round(surface_chamfer, 4),
+            "edge_radius_3d_mm": round(surface_chamfer, 4),
             "records": records,
             "verified_screw_holes": False,
             "mounting_holes_modeled": False,
@@ -2538,6 +2566,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
         "feature_count": len(rf_route_alignment_records),
         "rounded_node_count": len(rf_route_alignment_records) * 2,
         "edge_chamfer_mm": round(surface_chamfer, 4),
+        "edge_radius_3d_mm": round(surface_chamfer, 4),
         "records": rf_route_alignment_records,
         "verified_screw_holes": False,
         "mounting_holes_modeled": False,
@@ -3367,6 +3396,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                     {},
                 ),
                 "rear_pod_surface_chamfer_mm": round(surface_chamfer, 4),
+                "rear_pod_surface_radius_3d_mm": round(surface_chamfer, 4),
                 "added_feature_classes": [
                     "rear_pod_floor_ribs",
                     "rear_pod_side_ledges",
@@ -3437,8 +3467,8 @@ def _build_p070_heltec_outdoor_controller_enclosure(
         },
         "surface_treatment": {
             "truth_state": "internal review",
-            "style_intent": "engineered softened macro contour ribs with raised CBBS marking",
-            "contour_language": "rounded capsule ribs, chamfered transitions, and load-spread nodes",
+            "style_intent": "engineered 3D-rounded macro contour ribs with raised CBBS marking",
+            "contour_language": "3D rounded capsule ribs, radius transitions, and load-spread nodes",
             "source_refs": [
                 "p070_futuristic_surface_reinforcement_findings",
                 "cbbs_brand_assets",
@@ -3488,6 +3518,7 @@ def _build_p070_heltec_outdoor_controller_enclosure(
             },
             "edge_softening": {
                 "edge_chamfer_mm": round(surface_chamfer, 4),
+                "edge_radius_3d_mm": round(surface_chamfer, 4),
                 "rounded_surface_node_count": (
                     front_contour_node_count
                     + macro_rib_contour_node_count
@@ -3548,6 +3579,13 @@ def _build_p070_heltec_outdoor_controller_enclosure(
                 ),
                 "rounded_front_contour_nodes": front_contour_node_count,
                 "rounded_rear_pod_macro_rib_nodes": macro_rib_contour_node_count,
+                "three_d_radius_surface_features": (
+                    front_contour_rail_count
+                    + len(rear_pod_floor_rib_records)
+                    + len(rear_pod_side_ledge_records)
+                    + mount_tab_accent_count
+                    + len(wire_route_records)
+                ),
             },
             "k1_margins_mm": {
                 "by_part": k1_margins,

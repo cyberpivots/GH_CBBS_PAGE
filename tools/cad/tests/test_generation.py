@@ -299,6 +299,7 @@ def test_p070_heltec_outdoor_enclosure_exports_power_rf_references(tmp_path) -> 
     assert reinforcement["wire_route_rails"]["count"] == 6
     assert reinforcement["wire_route_rails"]["rounded_end_nodes"] == 12
     assert reinforcement["edge_softening"]["rear_pod_surface_chamfer_mm"] == pytest.approx(0.2)
+    assert reinforcement["edge_softening"]["rear_pod_surface_radius_3d_mm"] == pytest.approx(0.2)
     assert "rear_pod_macro_ribs" in reinforcement["edge_softening"]["added_feature_classes"]
     _assert_p070_display_mount(metadata["display_mount"])
     hardware_placement = metadata["hardware_placement"]
@@ -309,6 +310,7 @@ def test_p070_heltec_outdoor_enclosure_exports_power_rf_references(tmp_path) -> 
         assert aid["mounting_holes_modeled"] is False
         assert aid["verification_status"] == "pending-measurement"
         assert aid["edge_chamfer_mm"] == pytest.approx(0.2)
+        assert aid["edge_radius_3d_mm"] == pytest.approx(0.2)
         assert aid["rounded_node_count"] > 0
     interface = metadata["mechanical_interface"]
     assert interface["rear_pod_relation"] == "sidecar-connected"
@@ -352,7 +354,7 @@ def test_p070_heltec_outdoor_enclosure_exports_power_rf_references(tmp_path) -> 
     assert surface["truth_state"] == "internal review"
     assert (
         surface["contour_language"]
-        == "rounded capsule ribs, chamfered transitions, and load-spread nodes"
+        == "3D rounded capsule ribs, radius transitions, and load-spread nodes"
     )
     assert surface["front_contour_rails"]["count"] >= 6
     assert surface["front_contour_rails"]["width_mm"] == pytest.approx(1.8)
@@ -362,6 +364,7 @@ def test_p070_heltec_outdoor_enclosure_exports_power_rf_references(tmp_path) -> 
     assert surface["rear_pod_macro_ribs"]["rounded_end_nodes"] > 0
     assert "outside the display enclosure footprint" in surface["rear_pod_macro_ribs"]["placement"]
     assert surface["edge_softening"]["rounded_surface_node_count"] > 0
+    assert surface["edge_softening"]["edge_radius_3d_mm"] == pytest.approx(0.2)
     assert surface["raised_brand"]["text"] == "CBBS"
     assert surface["raised_brand"]["text_source"] == "public/assets/brand/logo-primary.svg"
     assert surface["raised_brand"]["relief_mm"] == pytest.approx(1.2)
@@ -383,6 +386,7 @@ def test_p070_heltec_outdoor_enclosure_exports_power_rf_references(tmp_path) -> 
     assert structural["strengthened_features"]["rounded_wire_route_nodes"] == 12
     assert structural["strengthened_features"]["rounded_front_contour_nodes"] >= 12
     assert structural["strengthened_features"]["rounded_rear_pod_macro_rib_nodes"] > 0
+    assert structural["strengthened_features"]["three_d_radius_surface_features"] > 0
     assert structural["k1_margins_mm"]["legacy_or_combined_plate_accepted"] is False
     assert "3/4 NPT thread-fit coupon" in structural["validation_required"]
     assert "heat validation" in structural["validation_required"]
@@ -454,6 +458,7 @@ def test_p070_hinge_is_symmetric_and_k1_print_parts_fit(tmp_path) -> None:
     assert root["does_not_bridge_opposing_owners"] is True
     assert root["profile"] == "rounded owner-specific capsule root saddles"
     assert root["edge_chamfer_mm"] == pytest.approx(0.25)
+    assert root["corner_radius_3d_mm"] == pytest.approx(0.25)
     assert root["rounded_transition_nodes"]["root_saddle_end_nodes"] == 10
     assert root["rounded_transition_nodes"]["backer_rail_end_nodes"] == 10
     assert [item["owner"] for item in root["records"]] == owners
@@ -472,6 +477,7 @@ def test_p070_hinge_is_symmetric_and_k1_print_parts_fit(tmp_path) -> None:
     assert reinforcement["hinge_backer_rails"]["count"] == 5
     assert reinforcement["hinge_gusset_webs"]["count"] == 10
     assert reinforcement["edge_softening"]["edge_chamfer_mm"] == pytest.approx(0.25)
+    assert reinforcement["edge_softening"]["edge_radius_3d_mm"] == pytest.approx(0.25)
     assert "hinge_root_saddles" in reinforcement["edge_softening"]["feature_classes"]
     assert reinforcement["rear_panel_floor_rib_lattice"]["count"] == 6
     assert reinforcement["rear_panel_floor_rib_lattice"]["symmetric"] is True
@@ -484,6 +490,7 @@ def test_p070_hinge_is_symmetric_and_k1_print_parts_fit(tmp_path) -> None:
     assert structural["strengthened_features"]["softened_hinge_root_saddles"] == 5
     assert structural["strengthened_features"]["rounded_hinge_backer_nodes"] == 10
     assert structural["strengthened_features"]["softened_hinge_gusset_webs"] == 10
+    assert structural["strengthened_features"]["three_d_radius_hinge_features"] == 10
     assert structural["strengthened_features"]["rear_panel_floor_ribs"] == 6
     assert structural["strengthened_features"]["rear_panel_inner_perimeter_rails"] == 4
     assert structural["strengthened_features"]["display_boss_webs"] == 8
