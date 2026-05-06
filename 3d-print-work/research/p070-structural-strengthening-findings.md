@@ -48,6 +48,13 @@ range, or field-readiness claim.
 - Add tray-owned reinforcement only to tray-owned hinge knuckles and door-owned
   reinforcement only to door-owned knuckles. Pads and webs must remain inside
   the existing hinge barrel bounds and must not bridge the alternating owners.
+- Add a tray-owned continuous rear-body hinge-side spine only inboard of the
+  rotating hinge barrel lane. It may span the lower half's usable hinge-side
+  height to increase modeled contact length, but it must not fill the rotating
+  knuckle gaps, change the alternating owner pattern, or create new hardware
+  claims.
+- Keep that long rear-body spine as a rounded capsule footprint without a top
+  fillet if the radius operation creates non-watertight STL review output.
 - Use rounded root saddles, rounded load-spreader rails, top-edge 3D fillets,
   and chamfered triangular webs at the hinge root to reduce sharp stress
   transitions while preserving the existing hinge owner pattern and K1 X/Y

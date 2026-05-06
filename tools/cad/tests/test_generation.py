@@ -59,6 +59,39 @@ def _assert_p070_display_mount(display_mount: dict) -> None:
     assert display_mount["validation_status"] == "physical-print-required"
 
 
+def _assert_rear_body_hinge_spine(metadata: dict) -> None:
+    hinge = metadata["hinge"]
+    root = hinge["root_reinforcement"]
+    spine = root["rear_body_full_height_spine"]
+    record = spine["records"][0]
+    hinge_span = (
+        max(item["center_y_mm"] for item in hinge["knuckles"])
+        - min(item["center_y_mm"] for item in hinge["knuckles"])
+        + hinge["knuckles"][0]["length_mm"]
+    )
+
+    assert spine["count"] == 1
+    assert spine["owner"] == "tray"
+    assert spine["axis"] == "Y"
+    assert spine["bounds_unchanged"] is True
+    assert spine["rotating_hinge_pattern_preserved"] is True
+    assert spine["does_not_fill_rotating_knuckle_gaps"] is True
+    assert spine["verified_hardware_claims_added"] is False
+    assert root["rounded_transition_nodes"]["rear_body_spine_end_nodes"] == 2
+    assert record["owner"] == "tray"
+    assert record["axis"] == "Y"
+    assert record["owner_specific"] is True
+    assert record["verified_hardware_claims_added"] is False
+    assert record["inboard_of_barrel_lane"] is True
+    assert record["does_not_fill_rotating_knuckle_gaps"] is True
+    assert record["length_mm"] > hinge_span
+    assert record["length_mm"] > max(item["length_mm"] for item in root["records"])
+    assert record["continuous_length_minus_tray_root_pads_mm"] > 0.0
+    assert record["x_min_mm"] > hinge["axis_x_mm"] + hinge["barrel_outer_diameter_mm"] / 2
+    assert record["capsule_end_radius_mm"] == pytest.approx(record["width_mm"] / 2)
+    assert record["edge_mode"] == "rounded_capsule_footprint_without_top_fillet"
+
+
 def test_generate_heltec_fit_card_and_p070_frame(tmp_path) -> None:
     bundle = load_specs(data_dir=DEFAULT_DATA_DIR)
     manifest = generate_concepts(
@@ -371,10 +404,14 @@ def test_p070_heltec_outdoor_enclosure_exports_power_rf_references(tmp_path) -> 
     assert surface["raised_brand"]["edge_chamfer_mm"] == pytest.approx(0.2)
     assert "weatherproofing" in surface["blocked_claims"]
     assert metadata["blocked_claims"]
+    _assert_rear_body_hinge_spine(metadata)
+    assert metadata["mechanical_reinforcement"]["rear_body_full_height_hinge_spine"]["count"] == 1
     structural = metadata["structural_review"]
     assert structural["schema"] == "cbbs-cad/structural-review/v1"
     assert structural["strengthened_features"]["hinge_root_pads"] == 5
     assert structural["strengthened_features"]["hinge_backer_rails"] == 5
+    assert structural["strengthened_features"]["rear_body_full_height_hinge_spines"] == 1
+    assert structural["strengthened_features"]["rear_body_hinge_spine_contact_length_mm"] > 0.0
     assert structural["strengthened_features"]["hinge_gusset_webs"] == 10
     assert structural["strengthened_features"]["rear_pod_floor_ribs"] == 5
     assert structural["strengthened_features"]["heltec_alignment_aids"] == 8
@@ -472,13 +509,18 @@ def test_p070_hinge_is_symmetric_and_k1_print_parts_fit(tmp_path) -> None:
     assert root["gusset_webs"]["count"] == 10
     assert set(root["gusset_webs"]["owner_pattern"]) == {"tray", "door"}
     assert root["gusset_webs"]["profile"] == "softened triangular load webs"
+    _assert_rear_body_hinge_spine(metadata)
 
     reinforcement = metadata["mechanical_reinforcement"]
     assert reinforcement["hinge_backer_rails"]["count"] == 5
+    assert reinforcement["rear_body_full_height_hinge_spine"]["count"] == 1
+    assert reinforcement["rear_body_full_height_hinge_spine"]["owner"] == "tray"
+    assert reinforcement["rear_body_full_height_hinge_spine"]["bounds_unchanged"] is True
     assert reinforcement["hinge_gusset_webs"]["count"] == 10
     assert reinforcement["edge_softening"]["edge_chamfer_mm"] == pytest.approx(0.25)
     assert reinforcement["edge_softening"]["edge_radius_3d_mm"] == pytest.approx(0.25)
     assert "hinge_root_saddles" in reinforcement["edge_softening"]["feature_classes"]
+    assert "rear_body_full_height_hinge_spine" in reinforcement["edge_softening"]["feature_classes"]
     assert reinforcement["rear_panel_floor_rib_lattice"]["count"] == 6
     assert reinforcement["rear_panel_floor_rib_lattice"]["symmetric"] is True
     assert reinforcement["display_boss_to_floor_webs"]["count"] == 8
@@ -486,6 +528,8 @@ def test_p070_hinge_is_symmetric_and_k1_print_parts_fit(tmp_path) -> None:
     structural = metadata["structural_review"]
     assert structural["strengthened_features"]["hinge_root_pads"] == 5
     assert structural["strengthened_features"]["hinge_backer_rails"] == 5
+    assert structural["strengthened_features"]["rear_body_full_height_hinge_spines"] == 1
+    assert structural["strengthened_features"]["rear_body_hinge_spine_contact_length_mm"] > 0.0
     assert structural["strengthened_features"]["hinge_gusset_webs"] == 10
     assert structural["strengthened_features"]["softened_hinge_root_saddles"] == 5
     assert structural["strengthened_features"]["rounded_hinge_backer_nodes"] == 10

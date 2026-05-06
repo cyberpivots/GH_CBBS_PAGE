@@ -1058,6 +1058,7 @@ def _build_p070_hinged_wall_enclosure(
     }
     hinge_backer_rail_records: list[dict[str, Any]] = []
     hinge_gusset_records: list[dict[str, Any]] = []
+    rear_body_hinge_spine_records: list[dict[str, Any]] = []
     backer_x_length = max(wall * 2.5, rib_width * 5.5)
     backer_x_center = -outer_x / 2 + wall + backer_x_length / 2
     backer_z_height = min(rib_height * 1.25, hinge_outer / 2 - door_thickness / 2)
@@ -1144,6 +1145,67 @@ def _build_p070_hinged_wall_enclosure(
                     "edge_chamfer_mm": round(reinforcement_chamfer, 4),
                 }
             )
+
+    spine_pre_bounds = _model_bounds_mm(tray)
+    spine_barrel_clearance = max(0.2, min(hinge_gap / 6, rib_width / 8))
+    spine_x_min = hinge_x + hinge_outer / 2 + spine_barrel_clearance
+    spine_x_max_limit = -cavity_x / 2 - min(0.2, rib_width / 8)
+    spine_x_length = min(
+        max(wall * 1.25, rib_width * 2.5),
+        spine_x_max_limit - spine_x_min,
+    )
+    if spine_x_length <= 0:
+        raise ValueError("rear-body hinge spine does not fit in the hinge-side wall band")
+    spine_x_center = spine_x_min + spine_x_length / 2
+    spine_x_max = spine_x_min + spine_x_length
+    spine_y_margin = max(wall, rib_width * 2)
+    spine_y_min = -outer_y / 2 + spine_y_margin
+    spine_y_max = outer_y / 2 - spine_y_margin
+    spine_y_length = max(rib_width, spine_y_max - spine_y_min)
+    spine_z_base = shell_z - min(rib_height / 2, wall / 2)
+    spine_z_height = max(rib_height, min(root_pad_z_height, rib_height + wall / 2))
+    tray = tray.union(
+        _rounded_raised_bar_between(
+            cq,
+            (spine_x_center, spine_y_min),
+            (spine_x_center, spine_y_max),
+            spine_x_length,
+            spine_z_height,
+            spine_z_base,
+            0.0,
+        )
+    )
+    spine_post_bounds = _model_bounds_mm(tray)
+    tray_root_contact_length = sum(
+        root_pad_y_length for record in hinge_records if record["owner"] == "tray"
+    )
+    rear_body_hinge_spine_records.append(
+        {
+            "owner": "tray",
+            "axis": "Y",
+            "profile": "continuous_rounded_rear_body_spine",
+            "x_min_mm": round(spine_x_min, 4),
+            "x_max_mm": round(spine_x_max, 4),
+            "y_min_mm": round(spine_y_min, 4),
+            "y_max_mm": round(spine_y_max, 4),
+            "length_mm": round(spine_y_length, 4),
+            "width_mm": round(spine_x_length, 4),
+            "z_base_mm": round(spine_z_base, 4),
+            "height_mm": round(spine_z_height, 4),
+            "modeled_footprint_area_mm2": round(spine_y_length * spine_x_length, 4),
+            "capsule_end_radius_mm": round(spine_x_length / 2, 4),
+            "baseline_tray_root_contact_length_mm": round(tray_root_contact_length, 4),
+            "continuous_length_minus_tray_root_pads_mm": round(
+                max(0.0, spine_y_length - tray_root_contact_length),
+                4,
+            ),
+            "inboard_of_barrel_lane": True,
+            "does_not_fill_rotating_knuckle_gaps": True,
+            "owner_specific": True,
+            "verified_hardware_claims_added": False,
+            "edge_mode": "rounded_capsule_footprint_without_top_fillet",
+        }
+    )
 
     pin_y_start = hinge_y_start - 1.0
     pin_length = total_hinge_span + 2.0
@@ -1478,9 +1540,23 @@ def _build_p070_hinged_wall_enclosure(
                     "owner_pattern": [record["owner"] for record in hinge_gusset_records],
                     "profile": "softened triangular load webs",
                 },
+                "rear_body_full_height_spine": {
+                    "count": len(rear_body_hinge_spine_records),
+                    "records": rear_body_hinge_spine_records,
+                    "owner": "tray",
+                    "axis": "Y",
+                    "profile": "continuous rear-body load-spreader spine",
+                    "bounds_before_mm": {"rear_tray": spine_pre_bounds},
+                    "bounds_after_mm": {"rear_tray": spine_post_bounds},
+                    "bounds_unchanged": spine_pre_bounds == spine_post_bounds,
+                    "rotating_hinge_pattern_preserved": True,
+                    "does_not_fill_rotating_knuckle_gaps": True,
+                    "verified_hardware_claims_added": False,
+                },
                 "rounded_transition_nodes": {
                     "root_saddle_end_nodes": len(hinge_root_pad_records) * 2,
                     "backer_rail_end_nodes": len(hinge_backer_rail_records) * 2,
+                    "rear_body_spine_end_nodes": len(rear_body_hinge_spine_records) * 2,
                     "door_corner_load_pads": sum(
                         1 for item in door_reinforcement_records if item.get("kind") == "corner_pad"
                     ),
@@ -1500,6 +1576,15 @@ def _build_p070_hinged_wall_enclosure(
                 "count": len(hinge_backer_rail_records),
                 "records": hinge_backer_rail_records,
                 "owner_specific": True,
+            },
+            "rear_body_full_height_hinge_spine": {
+                "count": len(rear_body_hinge_spine_records),
+                "records": rear_body_hinge_spine_records,
+                "owner": "tray",
+                "axis": "Y",
+                "profile": "continuous rounded rear-body load-spreader spine",
+                "bounds_unchanged": spine_pre_bounds == spine_post_bounds,
+                "verification_status": "physical-print-required",
             },
             "hinge_gusset_webs": {
                 "count": len(hinge_gusset_records),
@@ -1540,6 +1625,7 @@ def _build_p070_hinged_wall_enclosure(
                     "front_door_corner_pads",
                     "hinge_root_saddles",
                     "hinge_backer_rails",
+                    "rear_body_full_height_hinge_spine",
                     "hinge_gusset_webs",
                     "latch_and_catch_edges",
                 ],
@@ -1558,6 +1644,11 @@ def _build_p070_hinged_wall_enclosure(
             "strengthened_features": {
                 "hinge_root_pads": len(hinge_root_pad_records),
                 "hinge_backer_rails": len(hinge_backer_rail_records),
+                "rear_body_full_height_hinge_spines": len(rear_body_hinge_spine_records),
+                "rear_body_hinge_spine_contact_length_mm": round(
+                    sum(record["length_mm"] for record in rear_body_hinge_spine_records),
+                    4,
+                ),
                 "hinge_gusset_webs": len(hinge_gusset_records),
                 "softened_hinge_root_saddles": len(hinge_root_pad_records),
                 "rounded_hinge_backer_nodes": len(hinge_backer_rail_records) * 2,
@@ -1585,6 +1676,7 @@ def _build_p070_hinged_wall_enclosure(
             },
             "weak_points_addressed": [
                 "hinge barrel root contact",
+                "limited lower-half hinge-side surface connection area",
                 "hinge leaf root shear at printed door knuckles",
                 "hinge-side frame flex at alternating knuckle gaps",
                 "rear panel floor oil-canning",
